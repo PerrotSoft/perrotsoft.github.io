@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - PerrotSearch</title>
+    <link rel="stylesheet" href="css/style1.css"> <!-- Link to the CSS file -->
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="search-bar">
+        <form action="results.html" method="get">
+            <input type="text" name="query" placeholder="Enter your query" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <h2>Search Results for: "<span id="searchQuery"></span>"</h2>
+
+    <div id="results">
+        <!-- Search results will appear here -->
+    </div>
+
+    <script>
+        // Sample data to simulate search results
+        const knownSites = [
+			{ title: "PerrotSoft", url: "https://perrotsoft.github.io/Site/", description: "Homepage of PerrotSoft." },
+			{ title: "YouTube", url: "https://youtube.com", description: "video." },
+			{ title: "Instagram", url: "https://instagram.com", description: "social network." },
+			{ title: "Facebook", url: "https://facebook.com", description: "social network." },
+			{ title: "Github", url: "https://github.com/", description: "a program for programmers." },
+			{ title: "Chatgpt", url: "https://chatgpt.com", description: "artificial intelligence." },
+			{ title: "Amazon", url: "https://amazon.com", description: "online store." },
+			{ title: "Reddit", url: "https://reddit.com", description: "social network." },
+			{ title: "Tiktok", url: "https://tiktok.com", description: "video." },
+            { title: "Google", url: "https://www.google.com", description: "The world's most popular search engine." },
+            { title: "Wikipedia", url: "https://www.wikipedia.org", description: "Free encyclopedia." },
+            // Add more known sites as needed
+        ];
+
+        // Fetch the search query from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query');
+        document.getElementById('searchQuery').innerText = query;
+
+        function performSearch() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            // Filter results based on the query
+            const filteredResults = knownSites.filter(site =>
+                site.title.toLowerCase().includes(query.toLowerCase()) ||
+                site.description.toLowerCase().includes(query.toLowerCase())
+            );
+
+            // Generate search results with favicons
+            filteredResults.forEach(site => {
+                const resultDiv = document.createElement('div');
+                resultDiv.classList.add('result');
+                const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(site.url).hostname}`;
+
+                resultDiv.innerHTML = `
+                        <img src="${faviconUrl}" alt="Favicon" onerror="this.src='https://via.placeholder.com/32'">
+                        <div>
+                            <h3><a href="${site.url}" target="_blank">${site.title}</a></h3>
+                            <p>${site.description}</p>
+                        </div>
+                    `;
+                resultsDiv.appendChild(resultDiv);
+            });
+
+            if (filteredResults.length === 0) {
+                resultsDiv.innerHTML = '<p>No results found.</p>';
+            }
+        }
+
+        // Run the search on page load
+        if (query) {
+            performSearch();
+        }
+    </script>
+</body>
+</html>

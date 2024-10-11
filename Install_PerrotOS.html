@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PerrotSoft</title>
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #search {
+            padding: 10px;
+            width: 200px;
+        }
+
+        main {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li.app {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .app-info h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .app-info p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .install-btn {
+            padding: 10px 15px;
+            background-color: #007acc;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .install-btn:hover {
+            background-color: #005f99;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href=menu.html>
+                <img class="header-logo-image" src="img/ico.png" alt="Logo">
+            </a><h1>PerrotOS Installer</h1>
+            <input type="text" id="search" placeholder="Search perrotOS..." oninput="filterApps()">
+        </header>
+        <main>
+            <ul id="app-list">
+            </ul>
+        </main>
+    </div>
+
+    <script>
+        function filterApps() {
+            const searchValue = document.getElementById('search').value.toLowerCase();
+            const appList = document.getElementById('app-list');
+            const apps = appList.getElementsByTagName('li');
+
+            for (let i = 0; i < apps.length; i++) {
+                const app = apps[i];
+                const appName = app.getElementsByTagName('h2')[0].innerText.toLowerCase();
+
+                if (appName.includes(searchValue)) {
+                    app.style.display = '';
+                } else {
+                    app.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
