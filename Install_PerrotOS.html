@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ParrotSoft</title>
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <style>
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #d1e4ff, #f4f4f4); color: #333; text-align: center; }
+        header { background: #0078D7; color: white; padding: 10px; border-radius: 10px; }
+        .versions { min-height: 90%; min-width: 90%; margin: 20px; padding: 10px; background: white; border-radius: 10px; box-shadow: 0px 0px 15px rgba(0,0,0,0.2); }
+        .category { margin: 10px 0; padding: 10px; background: #e3f2fd; border-radius: 5px; cursor: pointer; }
+        .version { padding: 10px; border-bottom: 1px solid #ddd; display: none; }
+        .version-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .version-content { display: none; padding: 10px; background: #f9f9f9; border-radius: 5px; }
+        .toggle { background: blue; border: darkblue; font-size: 16px; cursor: pointer; }
+        .download { margin-top: 10px; padding: 5px 10px; background: #28a745; color: white; border: none; cursor: pointer; }
+    </style>
+    <script>
+        function toggleCategory(category) {
+            const versions = category.nextElementSibling.querySelectorAll('.version');
+            versions.forEach(version => version.style.display = version.style.display === 'block' ? 'none' : 'block');
+        }
+        function toggleVersionContent(button) {
+            const content = button.parentElement.nextElementSibling;
+            const isVisible = content.style.display === 'block';
+            content.style.display = isVisible ? 'none' : 'block';
+            button.textContent = isVisible ? '▶' : '▼';
+        }
+        function downloadEngine(url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = '';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        function translatePage() {
+            window.open('https://translate.google.com/translate?sl=auto&tl=ru&u=' + encodeURIComponent(window.location.href), '_blank');
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style1.css">
+        <link rel="stylesheet" href="css/style1.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f0f0f0;
+                margin: 0;
+                display: flex;
+                height: 100vh; /* Полная высота вьюпорта */
+                position: relative; /* Относительное позиционирование для контента */
+                overflow: hidden; /* Запрет на прокрутку тела */
+            }
+    
+            .menuContainer {
+                position: absolute; /* Позиционирование относительно кнопки */
+                top: 65px; /* Увеличенное расстояние от кнопки */
+                left: 20px; /* Фиксированное левое положение */
+                width: 250px; /* Ширина меню */
+                max-height: 300px; /* Максимальная высота меню */
+                overflow-y: auto; /* Вертикальная прокрутка */
+                background-color: #ffffff; /* Цвет фона */
+                border-radius: 8px; /* Закругленные углы */
+                border: 1px solid #ccc; /* Граница */
+                display: none; /* Скрыто по умолчанию */
+                transition: all 0.3s ease; /* Плавный переход */
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Тень контейнера */
+                z-index: 1000; /* Повышенный z-index, чтобы быть выше других элементов */
+                pointer-events: auto; /* Разрешить взаимодействие с меню */
+            }
+    
+            .menuContainer.open {
+                display: block; /* Показать, когда открыто */
+            }
+    
+            .appItem {
+                display: flex; /* Flexbox для иконок и текста */
+                align-items: center; /* Вертикальное выравнивание */
+                padding: 12px 15px; /* Отступ внутри элементов */
+                cursor: pointer; /* Указатель при наведении */
+                transition: background-color 0.3s, color 0.3s; /* Плавный переход цвета фона */
+                border-bottom: 1px solid #eee; /* Разделитель между элементами */
+            }
+    
+            .appItem:last-child {
+                border-bottom: none; /* Удалить границу для последнего элемента */
+            }
+    
+            .appItem:hover {
+                background-color: #e0f7fa; /* Цвет фона при наведении */
+                color: #007BFF; /* Цвет текста при наведении */
+            }
+    
+            .appIcon {
+                margin-right: 10px; /* Промежуток между иконкой и текстом */
+                font-size: 20px; /* Размер иконки */
+            }
+    
+            .toggleButton {
+                position: fixed; /* Фиксированное положение */
+                top: 20px; /* Верхнее положение */
+                left: 20px; /* Левое положение */
+                padding: 10px 13px; /* Отступ кнопки */
+                cursor: pointer; /* Указатель при наведении */
+                background-color: #ffffff; /* Цвет фона кнопки */
+                color: rgb(0, 0, 0); /* Цвет текста */
+                border: none; /* Без границы */
+                border-radius: 100px; /* Закругленные углы */
+                transition: background-color 0.3s; /* Плавный переход цвета фона */
+                z-index: 2000; /* Выше других элементов */
+                font-size: 16px; /* Размер текста кнопки */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень кнопки */
+            }
+    
+            .toggleButton:hover {
+                background-color: #0056b3; /* Цвет при наведении */
+            }
+    
+            .content {
+                margin-left: 20px; /* Промежуток для кнопки */
+                text-align: center; /* Центрирование текста */
+                flex-grow: 1; /* Занять оставшееся пространство */
+                padding: 20px; /* Отступ для контента */
+            }
+        </style>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+        </div>
+
+    </header>
+    <main>
+        <section class="versions">
+            <h3>ParrotOS Available Versions</h3>
+            
+            <div class="category" onclick="toggleCategory(this)">ParrotOS Cosmos Versions</div>
+            <div>
+                <ul>
+                    <li class="version">
+                        <div class="version-header" onclick="toggleVersionContent(this.querySelector('.toggle'))">
+                            <span>ParrotOS 0.0.0.0.1.0</span>
+                            <button class="toggle">▶</button>
+                        </div>
+                        <div class="version-content">
+                            <p>this version about that works only well on a virtual machine VMware because there is a file system cosmos files system.</p>
+                            <a href="https://github.com/PerrotSoft/ParrotOS-Cosmos">⬇️ Download Source Code</a>
+                            <button class="download" onclick="downloadEngine('https://codeload.github.com/PerrotSoft/ParrotOS-Cosmos/zip/refs/heads/OS')">⬇️ Download</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="category" onclick="toggleCategory(this)">ParrotOS Windows Versions</div>
+            <div>
+                <ul>
+                    <li class="version">
+                        <div class="version-header" onclick="toggleVersionContent(this.querySelector('.toggle'))">
+                            <span>ParrotOS 0.0.0.1.0</span>
+                            <button class="toggle">▶</button>
+                        </div>
+                        <div class="version-content">
+                            <p>This version of the system runs on the Windows NT kernel.</p>
+                            <a href="https://github.com/PerrotSoft/ParrotOS-Windows/tree/main">⬇️ Download Source Code</a>
+                            <button class="download" onclick="downloadEngine('https://codeload.github.com/PerrotSoft/ParrotOS-Windows/zip/refs/heads/OS')">⬇️ Download</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+        <script>
+        function openApp(link) {
+            // Изменить текущий URL на указанный
+            window.location.href = link; // Переход на указанный URL
+        }
+        
+            function toggleMenu() {
+                const menuContainer = document.getElementById('menuContainer');
+                menuContainer.classList.toggle('open'); // Переключить класс open
+            }
+        </script>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - ParrotSearch</title>
+    <link rel="stylesheet" href="css/style1.css"> <!-- Link to the CSS file -->
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+</head>
+<body>
+    <div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="css/style1.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f0f0f0;
+                margin: 0;
+                display: flex;
+                height: 100vh; /* Полная высота вьюпорта */
+                position: relative; /* Относительное позиционирование для контента */
+                overflow: hidden; /* Запрет на прокрутку тела */
+            }
+    
+            .menuContainer {
+                position: absolute; /* Позиционирование относительно кнопки */
+                top: 65px; /* Увеличенное расстояние от кнопки */
+                left: 20px; /* Фиксированное левое положение */
+                width: 250px; /* Ширина меню */
+                max-height: 300px; /* Максимальная высота меню */
+                overflow-y: auto; /* Вертикальная прокрутка */
+                background-color: #ffffff; /* Цвет фона */
+                border-radius: 8px; /* Закругленные углы */
+                border: 1px solid #ccc; /* Граница */
+                display: none; /* Скрыто по умолчанию */
+                transition: all 0.3s ease; /* Плавный переход */
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Тень контейнера */
+                z-index: 1000; /* Повышенный z-index, чтобы быть выше других элементов */
+                pointer-events: auto; /* Разрешить взаимодействие с меню */
+            }
+    
+            .menuContainer.open {
+                display: block; /* Показать, когда открыто */
+            }
+    
+            .appItem {
+                display: flex; /* Flexbox для иконок и текста */
+                align-items: center; /* Вертикальное выравнивание */
+                padding: 12px 15px; /* Отступ внутри элементов */
+                cursor: pointer; /* Указатель при наведении */
+                transition: background-color 0.3s, color 0.3s; /* Плавный переход цвета фона */
+                border-bottom: 1px solid #eee; /* Разделитель между элементами */
+            }
+    
+            .appItem:last-child {
+                border-bottom: none; /* Удалить границу для последнего элемента */
+            }
+    
+            .appItem:hover {
+                background-color: #e0f7fa; /* Цвет фона при наведении */
+                color: #007BFF; /* Цвет текста при наведении */
+            }
+    
+            .appIcon {
+                margin-right: 10px; /* Промежуток между иконкой и текстом */
+                font-size: 20px; /* Размер иконки */
+            }
+    
+            .toggleButton {
+                position: fixed; /* Фиксированное положение */
+                top: 20px; /* Верхнее положение */
+                left: 20px; /* Левое положение */
+                padding: 10px 13px; /* Отступ кнопки */
+                cursor: pointer; /* Указатель при наведении */
+                background-color: #ffffff; /* Цвет фона кнопки */
+                color: rgb(0, 0, 0); /* Цвет текста */
+                border: none; /* Без границы */
+                border-radius: 100px; /* Закругленные углы */
+                transition: background-color 0.3s; /* Плавный переход цвета фона */
+                z-index: 2000; /* Выше других элементов */
+                font-size: 16px; /* Размер текста кнопки */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень кнопки */
+            }
+    
+            .toggleButton:hover {
+                background-color: #0056b3; /* Цвет при наведении */
+            }
+    
+            .content {
+                margin-left: 20px; /* Промежуток для кнопки */
+                text-align: center; /* Центрирование текста */
+                flex-grow: 1; /* Занять оставшееся пространство */
+                padding: 20px; /* Отступ для контента */
+            }
+        </style>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+        </div>
+
+
+        <div class="search-bar"style="color: #000;position: fixed;top: 65px;">
+            <form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    
+        <h2 style="color: #000;position: fixed;top: 13px;left: 70px;">Search Results for: "<span id="searchQuery"></span>"</h2>
+    
+        <div id="results"style="color: #000;position: fixed;top: 159px;">
+            <!-- Search results will appear here -->
+        </div>
+    
+        <script>
+            // Sample data to simulate search results
+            const knownSites = [
+                { title: "PerrotSoft", url: "https://perrotsoft.github.io", description: "Homepage of PerrotSoft." },
+                { title: "YouTube", url: "https://youtube.com", description: "video." },
+                { title: "Instagram", url: "https://instagram.com", description: "social network." },
+                { title: "Facebook", url: "https://facebook.com", description: "social network." },
+                { title: "Github", url: "https://github.com/", description: "a program for programmers." },
+                { title: "Chatgpt", url: "https://chatgpt.com", description: "artificial intelligence." },
+                { title: "Amazon", url: "https://amazon.com", description: "online store." },
+                { title: "Reddit", url: "https://reddit.com", description: "social network." },
+                { title: "Tiktok", url: "https://tiktok.com", description: "video." },
+                { title: "Google", url: "https://www.google.com", description: "The world's most popular search engine." },
+                { title: "Wikipedia", url: "https://www.wikipedia.org", description: "Free encyclopedia." },
+                // Add more known sites as needed
+            ];
+    
+            // Fetch the search query from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('query');
+            document.getElementById('searchQuery').innerText = query;
+    
+            function performSearch() {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = ''; // Clear previous results
+    
+                // Filter results based on the query
+                const filteredResults = knownSites.filter(site =>
+                    site.title.toLowerCase().includes(query.toLowerCase()) ||
+                    site.description.toLowerCase().includes(query.toLowerCase())
+                );
+    
+                // Generate search results with favicons
+                filteredResults.forEach(site => {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.classList.add('result');
+                    const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(site.url).hostname}`;
+    
+                    resultDiv.innerHTML = `
+                            <img src="${faviconUrl}" alt="Favicon" onerror="this.src='https://via.placeholder.com/32'">
+                            <div>
+                                <h3><a href="${site.url}" target="_blank">${site.title}</a></h3>
+                                <p>${site.description}</p>
+                            </div>
+                        `;
+                    resultsDiv.appendChild(resultDiv);
+                });
+    
+                if (filteredResults.length === 0) {
+                    resultsDiv.innerHTML = '<p>No results found.</p>';
+                }
+            }
+    
+            // Run the search on page load
+            if (query) {
+                performSearch();
+            }
+        </script>
+
+
+        <script>
+        function openApp(link) {
+            // Изменить текущий URL на указанный
+            window.location.href = link; // Переход на указанный URL
+        }
+        
+            function toggleMenu() {
+                const menuContainer = document.getElementById('menuContainer');
+                menuContainer.classList.toggle('open'); // Переключить класс open
+            }
+        </script>
+    </div>
+</body>
+</html>

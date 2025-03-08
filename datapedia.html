@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataPedia</title>
+  <link rel="icon" href="img/datapedia icon.png" type="image/x-icon">
+  <style>
+    /* Стиль Windows 11 */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #F2F2F2;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    header {
+      position: fixed;
+      background-color: #1A73E8;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      font-size: 35px;
+      width: 100%;
+      height: 5%;
+    }
+    nav {
+      background-color: #ffffff;
+      width: 250px;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      height: 100%;
+      overflow-y: scroll;
+      top: 0;
+      left: 0;
+    }
+    nav a {
+      text-decoration: none;
+      display: block;
+      margin: 10px 0;
+      color: #1A73E8;
+      font-size: 18px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    nav input[type="text"] {
+      display: flex;
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .main-content {
+      margin-left: 270px;
+      padding: 20px;
+      flex-grow: 1;
+      overflow-y: scroll;
+          }
+    h2 {
+      color: #333;
+    }
+    footer {
+      background-color: #00ff62;
+      padding: 10px;
+      position: fixed;
+      text-align: center;
+      color: #000000;
+      font-size: 14px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+    /* Стили для изображения страницы */
+    .page-image {
+      max-width: 100%;
+      height: auto;
+      margin: 20px 0;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>DataPedia</header>
+  
+  <div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style1.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            height: 100vh; /* Полная высота вьюпорта */
+            position: relative; /* Относительное позиционирование для контента */
+            overflow: hidden; /* Запрет на прокрутку тела */
+        }
+
+        .menuContainer {
+            position: absolute; /* Позиционирование относительно кнопки */
+            top: 75px; /* Увеличенное расстояние от кнопки */
+            right: 20px; /* Фиксированное левое положение */
+            width: 250px; /* Ширина меню */
+            max-height: 300px; /* Максимальная высота меню */
+            overflow-y: auto; /* Вертикальная прокрутка */
+            background-color: #ffffff; /* Цвет фона */
+            border-radius: 8px; /* Закругленные углы */
+            border: 1px solid #ccc; /* Граница */
+            display: none; /* Скрыто по умолчанию */
+            transition: all 0.3s ease; /* Плавный переход */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Тень контейнера */
+            z-index: 1000; /* Повышенный z-index, чтобы быть выше других элементов */
+            pointer-events: auto; /* Разрешить взаимодействие с меню */
+        }
+
+        .menuContainer.open {
+            display: block; /* Показать, когда открыто */
+        }
+
+        .appItem {
+            display: flex; /* Flexbox для иконок и текста */
+            align-items: center; /* Вертикальное выравнивание */
+            padding: 12px 15px; /* Отступ внутри элементов */
+            cursor: pointer; /* Указатель при наведении */
+            transition: background-color 0.3s, color 0.3s; /* Плавный переход цвета фона */
+            border-bottom: 1px solid #eee; /* Разделитель между элементами */
+        }
+
+        .appItem:last-child {
+            border-bottom: none; /* Удалить границу для последнего элемента */
+        }
+
+        .appItem:hover {
+            background-color: #e0f7fa; /* Цвет фона при наведении */
+            color: #007BFF; /* Цвет текста при наведении */
+        }
+
+        .appIcon {
+            margin-right: 10px; /* Промежуток между иконкой и текстом */
+            font-size: 20px; /* Размер иконки */
+        }
+
+        .toggleButton {
+            position: fixed; /* Фиксированное положение */
+            top: 30px; /* Верхнее положение */
+            right: 20px; /* Левое положение */
+            padding: 10px 13px; /* Отступ кнопки */
+            cursor: pointer; /* Указатель при наведении */
+            background-color: #ffffff; /* Цвет фона кнопки */
+            color: rgb(0, 0, 0); /* Цвет текста */
+            border: none; /* Без границы */
+            border-radius: 100px; /* Закругленные углы */
+            transition: background-color 0.3s; /* Плавный переход цвета фона */
+            z-index: 2000; /* Выше других элементов */
+            font-size: 16px; /* Размер текста кнопки */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень кнопки */
+        }
+
+        .toggleButton:hover {
+            background-color: #0056b3; /* Цвет при наведении */
+        }
+
+        .content {
+            margin-left: 20px; /* Промежуток для кнопки */
+            text-align: center; /* Центрирование текста */
+            flex-grow: 1; /* Занять оставшееся пространство */
+            padding: 20px; /* Отступ для контента */
+        }
+    </style>
+    <button class="toggleButton" onclick="toggleMenu()">☰</button>
+    <div class="menuContainer" id="menuContainer">
+        <div class="appItem"><form action="results.html" method="get">
+            <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+            <button type="submit"style="height: 40px;width: 80px;">Search</button>
+        </form></div>
+        <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+            <i class="fab fa-google-play appIcon"></i>
+            <span>Play</span>
+        </div>
+        <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+            <img src="img/Home.png" alt="png">
+            <span>Home</span>
+        </div>
+        <div class="appItem" onclick="openApp('Install_PerrotOS')">
+            <img src="img/ico1.png" alt="png">
+            <span>install OS</span>
+        </div>
+        <div class="appItem" onclick="openApp('datapedia')">
+          <img src="img/datapedia icon1.png" alt="png">
+          <span>dataPedia</span>
+      </div>
+    </div>
+  </div>
+  
+  <nav>
+    <input type="text" id="searchInput" placeholder="Поиск...">
+    <div id="pageList">
+      <!-- Ссылки на страницы будут добавляться здесь -->
+    </div>
+  </nav>
+  <div class="main-content" id="mainContent">
+    <h2>Загрузка...</h2>
+    <p>Пожалуйста, подождите, пока загружаются данные...</p>
+  </div>
+
+  <script>
+    // Встроенные данные JSON с примером изображения для страницы "Главная"
+    const data = {
+      "title": "DataPedia",
+      "pages": {
+        "P-Sharp coding": {
+          "title": "P-Sharp",
+          "content": "<h2>информация о P-Sharp этом языке</h2><p>язык P Sharp основан в 2025 году предназначен для разработки операционных систем в упрощение писания кода на ассемблер был этот язык компилируется напрямую в ассемблер и буквально работает со ассемблером</p><p>компания изготовитель ParrotSoft единственный доступный компилятор на данный момент P# сделай на этом сайте ссылка</p><img src=\"img/psicon.png\"></img><p> издатель Федоренко Евгений</p><p>язык написан на C++</p><p>скорость Почти как у языка B</p><p>суть облегчит написание ассемблер кода</p><p>вот список всех команд языка</p><p></p><p>goto - jamp to function</p><p>consolemode - set consolemode</p><p>asm - add nasm code</p><p>org - nasm org</p><p>sevemod - set save mode</p><p>loadbytes - load bytes</p><p>savebytes - save bytes</p><p>print - print text and munber</p><p>read - read text</p><p>var - set var </p><p>varbss - set var to bss data</p><p>valve - asm code #define</p><p>if - if data data</p><p>while - while c++</p><p>function - create function</p><p>call - nasm call</p>",
+        },
+        "ParrotSoft": {
+          "title": "ParrotSoft",
+          "content": "<h2>ParrotSoft</h2><p>ParrotSoft - это компания основанная в начале 2024 года первоначальное её имя Pahaprogromsoft она так называлась потому что её автор очень сильно любил своего попугая по имени Паша а про гром - это по сути программа а софт - это тоже программа компания занималась и до сих пор занимается веб-разработка Разработка и приложений и сайтов</p>",
+      }
+    }
+    };
+
+    const pages = data.pages;
+    const pageList = document.getElementById('pageList');
+    const mainContent = document.getElementById('mainContent');
+    const searchInput = document.getElementById('searchInput');
+
+    // Функция для отображения страницы (учитывает наличие изображения)
+    function showPage(page) {
+      let imageHtml = "";
+      if (page.image) {
+        imageHtml = `<img src="${page.image}" alt="${page.title}" class="page-image">`;
+      }
+      mainContent.innerHTML = `
+        <h2>${page.title}</h2>
+        ${imageHtml}
+        <div>${page.content}</div>
+      `;
+    }
+    function openApp(link) {
+            // Изменить текущий URL на указанный
+      window.location.href = link; // Переход на указанный URL
+    }
+        
+    function toggleMenu() {
+      const menuContainer = document.getElementById('menuContainer');
+      menuContainer.classList.toggle('open'); // Переключить класс open
+    }
+    // Функция для обновления списка страниц в боковом меню
+    function updatePageList() {
+      pageList.innerHTML = '';
+      Object.keys(pages).forEach(pageName => {
+        const pageLink = document.createElement('a');
+        pageLink.href = '#';
+        pageLink.textContent = pages[pageName].title;
+        pageLink.addEventListener('click', () => showPage(pages[pageName]));
+        pageList.appendChild(pageLink);
+      });
+    }
+
+    // Реализация поиска по страницам
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const filteredPages = Object.keys(pages).filter(pageName =>
+        pages[pageName].title.toLowerCase().includes(query)
+      );
+      
+      pageList.innerHTML = '';
+      filteredPages.forEach(pageName => {
+        const pageLink = document.createElement('a');
+        pageLink.href = '#';
+        pageLink.textContent = pages[pageName].title;
+        pageLink.addEventListener('click', () => showPage(pages[pageName]));
+        pageList.appendChild(pageLink);
+      });
+    });
+
+    // Изначально обновляем список страниц и отображаем "Главную"
+    updatePageList();
+    showPage(pages['ParrotSoft']);
+  </script>
+</body>
+</html>
