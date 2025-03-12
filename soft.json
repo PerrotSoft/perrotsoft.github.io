@@ -4,14 +4,14 @@
         "description": "AL 1.0 @ 2025.3.9 PerrotSoft C++ C#",
         "type": "development",
         "installations": 56,
-        "downloadLink": "https://raw.githubusercontent.com/PerrotSoft/perrotsoft.github.io/refs/heads/1.1/lib/CPP_AND_CS.zip"
+        "downloadLink": "https://raw.githubusercontent.com/PerrotSoft/perrotsoft.github.io/refs/heads/1.2/lib/CPP_AND_CS.zip"
     },
     {
         "name": "PsdFile",
         "description": "PsdFile 1.0 @ 2024.11.8 PerrotSoft",
         "type": "development",
         "installations": 105,
-        "downloadLink": "https://raw.githubusercontent.com/PerrotSoft/PerrotSoft-lib/refs/heads/main/PsdFile.dll"
+        "downloadLink": "https://raw.githubusercontent.com/PerrotSoft/perrotsoft.github.io/refs/heads/1.2/lib/PsdFile.dll"
     },
     {
         "name": "Eelectronic Craft",
