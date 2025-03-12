@@ -14,6 +14,13 @@
         "downloadLink": "https://raw.githubusercontent.com/PerrotSoft/PerrotSoft-lib/refs/heads/main/PsdFile.dll"
     },
     {
+        "name": "Eelectronic Craft",
+        "description": "Eelectronic Craft alfa 0.1 @ 2025.2.20 PerrotSoft",
+        "type": "development",
+        "installations": 105,
+        "downloadLink": "https://perrotsoft.github.io/electronic-craft.github.io/"
+    },
+    {
         "name": "Programming language P#",
         "description": "Programming language P-Sharp 0.0.1 @ 2025.2.09 PerrotSoft",
         "type": "development",
