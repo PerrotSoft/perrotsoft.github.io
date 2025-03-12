@@ -4,7 +4,7 @@
         "description": "AL 1.0 @ 2025.3.9 PerrotSoft C++ C#",
         "type": "development",
         "installations": 56,
-        "downloadLink": "https://raw.githubusercontent.com/PerrotSoft/PerrotSoft-lib/refs/heads/main/CPP_AND_CS.zip"
+        "downloadLink": "https://raw.githubusercontent.com/PerrotSoft/PerrotSoft-lib/refs/heads/main/lib/CPP_AND_CS.zip"
     },
     {
         "name": "PsdFile",
