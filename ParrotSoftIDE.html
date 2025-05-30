@@ -1,1073 +1,920 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account settings</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="img/ico.ico" type="image/x-icon">
-    <link rel="stylesheet" href="css/style1.css">
-    <script src="js/sitefun.js" type="module"></script> 
-    <script src="js/user.js"></script> 
+    <title>ParrotIDE</title>
     <style>
-        /* CSS стили остаются без изменений */
+        /* Общие стили */
         body {
-            font-family: Arial, sans-serif;
-            background: #f1f3f4;
             margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             height: 100vh;
+            overflow: hidden;
+            background-color: #1e1e1e;
+            color: #CCCCCC;
         }
 
-        .account-panel {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 600px;
-            padding: 40px;
+        /* Верхнее меню (для вида) */
+        #top-menu {
+            background-color: #3c3c3c;
+            padding: 4px 10px;
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            border-bottom: 1px solid #252526;
+            flex-shrink: 0;
+            position: relative; /* Для позиционирования выпадающего меню */
+        }
+        .menu-item {
+            cursor: pointer;
+            padding: 2px 0;
+            transition: background-color 0.1s;
+            position: relative; /* Для выпадающих подменю */
+        }
+        .menu-item:hover {
+            background-color: #4a4a4a;
+        }
+
+        /* Выпадающее меню */
+        .dropdown-menu {
+            position: absolute;
+            background-color: #252526;
+            border: 1px solid #007acc;
+            padding: 5px 0;
+            z-index: 100;
+            min-width: 150px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: none; /* Скрыто по умолчанию */
+            top: 100%; /* Позиционирование под родительским пунктом меню */
+            left: 0;
+        }
+        .dropdown-menu-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.1s;
+            white-space: nowrap;
+        }
+        .dropdown-menu-item:hover {
+            background-color: #007acc;
+        }
+
+        /* Основная рабочая область */
+        #main-area {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Панель активности (слева) */
+        #activity-bar {
+            width: 50px;
+            background-color: #333333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+            border-right: 1px solid #252526;
+            flex-shrink: 0;
+        }
+        .activity-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #CCCCCC;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s, color 0.2s;
+        }
+        .activity-icon:hover {
+            opacity: 1;
+            color: white;
+        }
+        .activity-icon.active {
+            color: #007acc;
+            opacity: 1;
+        }
+
+        /* Боковая панель */
+        #sidebar {
+            width: 250px;
+            background-color: #252526;
+            padding: 10px;
             box-sizing: border-box;
-            text-align: center;
+            overflow-y: auto;
+            border-right: 1px solid #3c3c3c;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
         }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #ccc;
-            margin: 0 auto 20px;
+        #sidebar-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .file-item, .folder-item {
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            transition: background-color 0.1s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
+            gap: 8px;
+        }
+        .file-item:hover, .folder-item:hover {
+            background-color: #3a3a3a;
+        }
+        .file-item.active {
+            background-color: #007acc;
             color: white;
         }
-
-        .username {
-            font-size: 24px;
+        .folder-item {
             font-weight: bold;
-            margin-bottom: 6px;
-        }
-
-        .email {
-            font-size: 16px;
-            color: gray;
-            margin-bottom: 20px;
-        }
-
-        hr {
-            border: none;
-            height: 1px;
-            background-color: #e0e0e0;
-            margin: 24px 0;
-        }
-
-        .button {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: #1ae84e;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-bottom: 16px;
-        }
-
-        .button:hover {
-            background: #0cc00c;
-        }
-
-        .note {
-            font-size: 14px;
-            color: #666;
-            margin-top: -10px;
-            margin-bottom: 16px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
+            color: #e0e0e0;
+            display: flex;
             align-items: center;
-            z-index: 999;
+            gap: 8px;
+        }
+        .folder-item .folder-toggle {
+            margin-right: 5px;
+            color: #888;
+        }
+        .folder-item.expanded .folder-toggle .fa-chevron-right {
+            transform: rotate(90deg);
+        }
+        .folder-contents {
+            margin-left: 15px; /* Отступ для вложенных файлов/папок */
+            border-left: 1px solid rgba(204, 204, 204, 0.2); /* Линия, имитирующая структуру */
+            padding-left: 5px;
         }
 
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-sizing: border-box;
-            text-align: left;
+        /* Область редактора и панели */
+        #editor-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .modal input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+        /* Верхняя панель редактора (вкладки и кнопки) */
+        #editor-top-bar {
+            background-color: #2d2d2d;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 40px;
+            border-bottom: 1px solid #3c3c3c;
+            flex-shrink: 0;
         }
-
-        .modal-buttons {
-            text-align: right;
-        }
-
-        .modal-buttons button {
-            margin-left: 10px;
-        }
-
-        /* NEW: Styles for project items in the modal */
-        .project-item {
-            border: 1px solid #eee;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            position: relative; /* Для позиционирования кнопок */
-        }
-
-        .project-item h4 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .project-item p {
-            margin: 3px 0;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .project-item .actions {
-            margin-top: 10px;
+        #file-tabs {
             display: flex;
             gap: 5px;
-            justify-content: flex-end; /* Выравнивание кнопок вправо */
+            overflow-x: auto;
+            padding-bottom: 5px;
         }
-
-        .project-item button {
-            padding: 6px 12px;
-            font-size: 14px;
-            background-color: #007bff;
+        .file-tab {
+            background-color: #1e1e1e;
+            padding: 5px 10px;
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid transparent;
+            border-bottom: none;
+            transition: background-color 0.1s;
+        }
+        .file-tab:hover {
+             background-color: #3a3a3a;
+        }
+        .file-tab.active {
+            background-color: #1e1e1e;
+            border-color: #007acc;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+        }
+        .file-tab .close-tab-btn {
+            background: none;
+            border: none;
+            color: #CCCCCC;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0 3px;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .file-tab .close-tab-btn:hover {
+            opacity: 1;
+            color: white;
+        }
+        #editor-controls button {
+            background-color: #007acc;
             color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: auto; 
-            display: inline-block; 
-        }
-
-        .project-item button:hover {
-            background-color: #0056b3;
-        }
-
-        .project-item button.delete-btn { /* Отдельный класс для кнопки удаления */
-            background-color: #dc3545;
-        }
-
-        .project-item button.delete-btn:hover {
-            background-color: #c82333;
-        }
-
-        .modal label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* NEW: Styles for project type filter */
-        .project-filter {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .project-filter button {
             padding: 8px 15px;
-            margin: 0 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
             cursor: pointer;
+            border-radius: 3px;
+            margin-left: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        #editor-controls button:hover {
+            background-color: #005f9c;
         }
 
-        .project-filter button.active {
-            background-color: #007bff;
+        /* Контейнер для редактора */
+        #editor-container {
+            flex-grow: 1;
+        }
+
+        /* Панель вывода */
+        #panel {
+            height: 180px;
+            background-color: #1e1e1e;
+            color: #CCCCCC;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            border-top: 1px solid #3c3c3c;
+            flex-shrink: 0;
+        }
+        #panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #3c3c3c;
+            margin-bottom: 10px;
+        }
+        .panel-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.2s;
+        }
+        .panel-tab.active {
+            border-bottom-color: #007acc;
+        }
+        #output-console {
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+        }
+
+        /* Статус-бар */
+        #status-bar {
+            background-color: #007acc;
             color: white;
-            border-color: #007bff;
+            padding: 5px 10px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
         }
-
-
-        /* mcss: мобильная версия для accunt.html */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-                align-items: stretch;
-                justify-content: flex-start;
-                height: auto;
-                padding: 0;
-            }
-            .account-panel {
-                width: 98vw;
-                max-width: 100%;
-                padding: 16px;
-                border-radius: 8px;
-                margin: 10px auto;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            }
-            .avatar, .user-icn1 {
-                width: 70px !important;
-                height: 70px !important;
-                font-size: 24px !important;
-                margin-bottom: 10px !important;
-            }
-            .username, .name1 {
-                font-size: 18px !important;
-            }
-            .email, .email1 {
-                font-size: 14px !important;
-            }
-            .button {
-                font-size: 16px;
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-            .modal-content {
-                width: 98vw;
-                max-width: 100%;
-                padding: 14px;
-                border-radius: 8px;
-            }
-            .modal input {
-                font-size: 15px;
-                padding: 8px;
-                margin: 8px 0;
-            }
-            .modal-buttons button {
-                font-size: 15px;
-                padding: 7px 14px;
-                margin-left: 6px;
-            }
-            .note {
-                font-size: 12px;
-                margin-bottom: 10px;
-            }
-            .menuContainer {
-                flex-direction: column;
-                gap: 6px;
-                padding: 0 4px;
-            }
-            .appItem {
-                flex-direction: row;
-                align-items: center;
-                padding: 7px 0;
-            }
-            .appItem img,
-            .appItem .appIcon {
-                width: 28px;
-                height: 28px;
-                margin-right: 8px;
-            }
+        .status-item {
+            margin-right: 15px;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div>
-        <button class="toggleButton" onclick="toggleMenu()">☰</button>
-        <div class="user-widget" onclick="toggleUserMenu()">
-            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
-            <div class="user-widget-info">
-                <div class="name">User Name</div>
-                <div class="email"></div>
-                <div class="pcoin">Pcoin 0</div>
+
+    <div id="top-menu">
+        <div class="menu-item" id="file-menu-item">Файл
+            <div class="dropdown-menu" id="file-dropdown">
+                <div class="dropdown-menu-item" id="new-file-option">Новый файл</div>
+                <div class="dropdown-menu-item" id="open-file-option">Открыть файл...</div>
+                <div class="dropdown-menu-item" id="open-folder-option">Открыть папку (имитация)</div>
+                <hr style="border-color: #3c3c3c; margin: 5px 0;">
+                <div class="dropdown-menu-item" id="save-as-option">Сохранить как...</div>
             </div>
         </div>
-        <div class="user-menu" id="userMenu" style="display: none;">
-            <button onclick="window.location.href='accunt'">Setings</button>
-            <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
-            <button onclick="window.location.href='riegist'">register or login</button>
-        </div>
-        <div class="menuContainer" id="menuContainer">
-            <div class="appItem">
-                <form action="results.html" method="get">
-                    <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
-                    <button type="submit" style="height: 40px;width: 80px;">Search</button>
-                </form>
-            </div>
-            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
-                <i class="fab fa-google-play appIcon"></i>
-                <span>Play</span>
-            </div>
-            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
-                <img src="img/Home.png" alt="png">
-                <span>Home</span>
-            </div>
-            <div class="appItem" onclick="openApp('Install_PerrotOS')">
-                <img src="img/ico1.png" alt="png">
-                <span>install OS</span>
-            </div>
-            <div class="appItem" onclick="openApp('datapedia')">
-                <img src="img/datapedia icon1.png" alt="png">
-                <span>dataPedia</span>
-            </div>
-            <div class="appItem" onclick="openApp('pmaill')">
-                <img src="img/PM.png" alt="png">
-                <span>Pmaill</span>
-            </div>
-            <div class="appItem" onclick="openApp('accunt')">
-                <img src="img/as.png" alt="png">
-                <span>Account settings.</span>
-            </div>
-            <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
-                <img src="img/PMS.png" alt="png">
-                <span>Parrot Soft Market</span>
-            </div>
-        </div>
-        <div class="account-panel">
-            <h2>Developent panel</h2>
-            <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
-            <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
-            <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
-            <button class="button" onclick="showProjects('all')">View/Manage My Projects</button>
-            <hr>
-            <div class="appItem" onclick="openApp('ParrotSoftIDE.html')">
-                <img src="img/ParrotIDE_mini.png" alt="png">
-                <span>ParrotSoftIDE</span>
-            </div>
+        <div class="menu-item">Правка</div>
+        <div class="menu-item">Выделение</div>
+        <div class="menu-item">Вид</div>
+        <div class="menu-item">Перейти</div>
+        <div class="menu-item">Выполнить</div>
+        <div class="menu-item">Терминал</div>
+        <div class="menu-item">Справка</div>
+    </div>
+
+    <div id="main-area">
+        <div id="activity-bar">
+            <div class="activity-icon active" data-panel="explorer" title="Проводник"><i class="fas fa-files"></i></div>
+            <div class="activity-icon" data-panel="search" title="Поиск"><i class="fas fa-search"></i></div>
+            <div class="activity-icon" data-panel="source-control" title="Система управления версиями"><i class="fas fa-code-branch"></i></div>
+            <div class="activity-icon" data-panel="debug" title="Запуск и отладка"><i class="fas fa-bug"></i></div>
+            <div class="activity-icon" data-panel="extensions" title="Расширения"><i class="fas fa-puzzle-piece"></i></div>
         </div>
 
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">Add Search</h3>
-                <div id="modal-fields">
-                    <input type="text" name="searchName" placeholder="Search Name" required>
-                    <input type="text" name="searchUrl" placeholder="Search URL" required>
-                    <input type="text" name="searchdata" placeholder="Search data" required>
+        <div id="sidebar">
+            <div id="sidebar-header">Проводник</div>
+            <div id="file-tree">
                 </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('search')">Confirm</button>
-                </div>
-            </div>
         </div>
 
-        <div id="modal1" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">creating an article</h3>
-                <div id="modal1-fields">
-                    <input type="text" name="Name" placeholder="Name" required>
-                    <input type="text" name="img" placeholder="img" required>
-                    <input type="text" name="code" placeholder="code" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal1').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('datapedia')">Confirm</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal2" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">Add Game/App</h3>
-                <div id="modal2-fields">
-                    <input type="text" name="Name" placeholder="Name" required>
-                    <input type="text" name="price" placeholder="price" required>
-                    <input type="text" name="image" placeholder="image URL" required>
-                    <input type="text" name="installURL" placeholder="Install URL" required> 
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal2').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('gameApp')">Confirm</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal3" class="modal">
-            <div class="modal-content">
-                <h3>My Projects</h3>
-                <div class="project-filter">
-                    <button id="filter-all" class="active" onclick="showProjects('all')">All</button>
-                    <button id="filter-search" onclick="showProjects('search')">Search</button>
-                    <button id="filter-datapedia" onclick="showProjects('datapedia')">Datapedia</button>
-                    <button id="filter-gameApp" onclick="showProjects('gameApp')">Games/Apps</button>
-                </div>
-                <div id="projects-list">
-                    <p>No projects found. Add some projects using the buttons above!</p>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal3').style.display='none'">Close</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="editSearchModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Search Project</h3>
-                <div id="editSearchFields">
-                    <input type="hidden" id="editSearchOriginalString"> 
-                    <label for="editSearchName">Search Name:</label>
-                    <input type="text" id="editSearchName" placeholder="Search Name" required>
-                    <label for="editSearchUrl">Search URL:</label>
-                    <input type="text" id="editSearchUrl" placeholder="Search URL" required>
-                    <label for="editSearchData">Search Data:</label>
-                    <input type="text" id="editSearchData" placeholder="Search data" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editSearchModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('search')">Save Changes</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="editDatapediaModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Datapedia Article</h3>
-                <div id="editDatapediaFields">
-                    <input type="hidden" id="editDatapediaOriginalString"> 
-                    <label for="editDatapediaName">Article Name:</label>
-                    <input type="text" id="editDatapediaName" placeholder="Name" required>
-                    <label for="editDatapediaImg">Image URL:</label>
-                    <input type="text" id="editDatapediaImg" placeholder="img" required>
-                    <label for="editDatapediaCode">Code:</label>
-                    <input type="text" id="editDatapediaCode" placeholder="code" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editDatapediaModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('datapedia')">Save Changes</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="editGameAppModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Game/App Project</h3>
-                <div id="editGameAppFields">
-                    <input type="hidden" id="editGameAppProjectId"> <label for="editGameAppName">Name:</label>
-                    <input type="text" id="editGameAppName" placeholder="Name" required>
-                    <label for="editGameAppPrice">Price:</label>
-                    <input type="text" id="editGameAppPrice" placeholder="price" required>
-                    <label for="editGameAppImage">Image URL:</label>
-                    <input type="text" id="editGameAppImage" placeholder="image URL" required>
-                    <label for="editGameAppInstallURL">Install URL:</label>
-                    <input type="text" id="editGameAppInstallURL" placeholder="Install URL" required>
+        <div id="editor-area">
+            <div id="editor-top-bar">
+                <div id="file-tabs">
                     </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editGameAppModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('gameApp')">Save Changes</button>
+                <div id="editor-controls">
+                    <span style="margin-right: 10px;">Язык: <span id="current-language"></span></span>
+                    <button id="run-button">Запустить код</button>
                 </div>
             </div>
+            <div id="editor-container">
+                </div>
+            <div id="panel">
+                <div id="panel-tabs">
+                    <div class="panel-tab active" data-panel-content="output">Вывод</div>
+                    <div class="panel-tab" data-panel-content="problems">Проблемы</div>
+                    <div class="panel-tab" data-panel-content="terminal">Терминал</div>
+                </div>
+                <pre id="output-console"></pre>
+            </div>
         </div>
+    </div>
+
+    <div id="status-bar">
+        <div class="status-item">Строка: <span id="status-line">1</span>, Столбец: <span id="status-col">1</span></div>
+        <div class="status-item">LF</div>
+        <div class="status-item">UTF-8</div>
+        <div class="status-item"><span id="status-language"></span></div>
+        <div class="status-item">ParrotIDE</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs/loader.js"></script>
+
+    <script>
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs' } });
+
+        require(['vs/editor/editor.main'], function () {
+            let editor;
+            const outputConsole = document.getElementById('output-console');
+            const runButton = document.getElementById('run-button');
+            const fileTree = document.getElementById('file-tree');
+            const currentLanguageSpan = document.getElementById('current-language');
+            const fileTabsContainer = document.getElementById('file-tabs');
+            const statusBarLine = document.getElementById('status-line');
+            const statusBarCol = document.getElementById('status-col');
+            const statusBarLanguage = document.getElementById('status-language');
+            const panelTabs = document.getElementById('panel-tabs');
+
+            // File Menu elements
+            const fileMenuItem = document.getElementById('file-menu-item');
+            const fileDropdown = document.getElementById('file-dropdown');
+            const newFileOption = document.getElementById('new-file-option');
+            const openFileOption = document.getElementById('open-file-option');
+            const openFolderOption = document.getElementById('open-folder-option');
+            const saveAsOption = document.getElementById('save-as-option');
 
 
-        <script>
-            // Глобальные переменные
-            let userid = 0;
-            let allUserData = {
-                search: "",    // Соответствует 'L' + userid
-                datapedia: "", // Соответствует 'K' + userid
-                gameApp: ""    // Соответствует 'J' + userid
+            const files = {}; // Объект для хранения файлов: { id: { name, content, language, model, path } }
+            let fileCounter = 0; // Для генерации уникальных ID
+            let currentFileId = null; // ID текущего активного файла
+            const folderStructure = {}; // Для имитации иерархии папок
+
+            // --- Icon Mapping ---
+            function getFileIcon(fileName) {
+                const parts = fileName.split('.');
+                const ext = parts[parts.length - 1];
+                switch (ext) {
+                    case 'js': return '<i class="fab fa-js"></i>';
+                    case 'html': return '<i class="fab fa-html5"></i>';
+                    case 'css': return '<i class="fab fa-css3-alt"></i>';
+                    case 'json': return '<i class="fas fa-file-code"></i>';
+                    case 'py': return '<i class="fab fa-python"></i>';
+                    case 'c': return '<i class="fas fa-file-code"></i>';
+                    case 'cpp': return '<i class="fas fa-file-code"></i>';
+                    case 'cs': return '<i class="fas fa-file-code"></i>'; // C#
+                    case 'java': return '<i class="fab fa-java"></i>';
+                    case 'ts': return '<i class="fab fa-node-js"></i>'; // Using node-js for typescript
+                    case 'md': return '<i class="fab fa-markdown"></i>';
+                    case 'go': return '<i class="fab fa-go"></i>';
+                    case 'rs': return '<i class="fab fa-rust"></i>';
+                    case 'php': return '<i class="fab fa-php"></i>';
+                    case 'rb': return '<i class="fas fa-gem"></i>';
+                    case 'xml': return '<i class="fas fa-file-code"></i>';
+                    case 'yaml': case 'yml': return '<i class="fas fa-file-alt"></i>';
+                    case 'sh': return '<i class="fas fa-terminal"></i>';
+                    case 'txt': return '<i class="fas fa-file-alt"></i>';
+                    case 'wasm': return '<i class="fas fa-box"></i>'; // WebAssembly
+                    case 'asm': return '<i class="fas fa-microchip"></i>'; // Assembly
+                    case 'p#': return '<i class="fas fa-feather-alt"></i>'; // ParrotSharp, using a feather for "parrot"
+                    default: return '<i class="fas fa-file"></i>'; // Generic file icon
+                }
+            }
+
+            // Функция для определения языка по расширению файла
+            function getLanguageByFileName(fileName) {
+                const parts = fileName.split('.');
+                const ext = parts[parts.length - 1].toLowerCase(); // Приводим к нижнему регистру для сравнения
+                switch (ext) {
+                    case 'js': return 'javascript';
+                    case 'html': return 'html';
+                    case 'css': return 'css';
+                    case 'json': return 'json';
+                    case 'py': return 'python';
+                    case 'c': return 'c';
+                    case 'cpp': return 'cpp';
+                    case 'cs': return 'csharp';
+                    case 'java': return 'java';
+                    case 'ts': return 'typescript';
+                    case 'md': return 'markdown';
+                    case 'go': return 'go';
+                    case 'rs': return 'rust';
+                    case 'php': return 'php';
+                    case 'rb': return 'ruby';
+                    case 'xml': return 'xml';
+                    case 'yaml':
+                    case 'yml': return 'yaml';
+                    case 'sh': return 'shell';
+                    case 'wasm': return 'plaintext'; // Monaco doesn't have WASM language, use plaintext
+                    case 'asm': return 'plaintext'; // Monaco might not have assembly, use plaintext
+                    case 'p#': return 'plaintext'; // Custom language, use plaintext
+                    case 'txt': return 'plaintext';
+                    default: return 'plaintext';
+                }
+            }
+
+            // Добавление файла в память и в UI
+            function addFile(fullPath, content) {
+                const id = 'file-' + fileCounter++;
+                const pathParts = fullPath.split('/');
+                const fileName = pathParts.pop();
+                const language = getLanguageByFileName(fileName);
+                const model = monaco.editor.createModel(content, language);
+
+                files[id] = {
+                    id: id,
+                    name: fileName,
+                    content: content,
+                    language: language,
+                    model: model,
+                    path: fullPath
+                };
+
+                // Add to simulated folder structure
+                let currentLevel = folderStructure;
+                for (let i = 0; i < pathParts.length; i++) {
+                    const part = pathParts[i];
+                    if (!currentLevel[part]) {
+                        currentLevel[part] = { __isFolder: true, __files: [], __subfolders: {} };
+                    }
+                    currentLevel = currentLevel[part].__subfolders;
+                }
+                if (!currentLevel.__files) currentLevel.__files = [];
+                currentLevel.__files.push(id);
+
+                return id;
+            }
+
+            // Clear all files and folder structure
+            function clearAllFiles() {
+                for (const id in files) {
+                    files[id].model.dispose();
+                }
+                Object.keys(files).forEach(key => delete files[key]);
+                Object.keys(folderStructure).forEach(key => delete folderStructure[key]); // Clear top-level
+                fileCounter = 0;
+                currentFileId = null;
+                if (editor) {
+                    editor.dispose();
+                    editor = null;
+                }
+            }
+
+
+            // Рендеринг дерева файлов в сайдбаре
+            function renderFileTree() {
+                fileTree.innerHTML = '';
+                function renderLevel(container, level) {
+                    const sortedKeys = Object.keys(level).sort((a, b) => {
+                        const isAFolder = level[a].__isFolder;
+                        const isBFolder = level[b].__isFolder;
+                        if (isAFolder && !isBFolder) return -1; // Folders first
+                        if (!isAFolder && isBFolder) return 1;
+                        return a.localeCompare(b); // Alphabetical sort
+                    });
+
+                    sortedKeys.forEach(key => {
+                        if (level[key].__isFolder) {
+                            const folderId = 'folder-' + key.replace(/[^a-zA-Z0-9]/g, '-');
+                            const folderItem = document.createElement('div');
+                            folderItem.className = 'folder-item';
+                            folderItem.dataset.folderId = folderId; // Assign a unique ID for expansion state
+                            folderItem.innerHTML = `<span class="folder-toggle"><i class="fas fa-chevron-right"></i></span><i class="fas fa-folder"></i><span>${key}</span>`;
+                            container.appendChild(folderItem);
+
+                            const folderContentsDiv = document.createElement('div');
+                            folderContentsDiv.className = 'folder-contents';
+                            folderContentsDiv.style.display = 'none'; // Hidden by default
+                            folderContentsDiv.dataset.folderContentOf = folderId; // Link to parent folder
+                            container.appendChild(folderContentsDiv);
+
+                            folderItem.addEventListener('click', (e) => {
+                                if (e.target.closest('.folder-toggle')) { // Only toggle on icon click
+                                    folderItem.classList.toggle('expanded');
+                                    folderContentsDiv.style.display = folderItem.classList.contains('expanded') ? 'block' : 'none';
+                                } else {
+                                    // Optionally select folder, or do nothing.
+                                    // For now, it doesn't "open" a folder in editor.
+                                }
+                            });
+
+                            renderLevel(folderContentsDiv, level[key].__subfolders);
+
+                            // Render files directly under this folder
+                            if (level[key].__files) {
+                                level[key].__files.forEach(fileId => {
+                                    const fileItem = document.createElement('div');
+                                    fileItem.className = 'file-item';
+                                    fileItem.dataset.fileId = fileId;
+                                    fileItem.innerHTML = `${getFileIcon(files[fileId].name)}<span>${files[fileId].name}</span>`;
+                                    if (fileId === currentFileId) {
+                                        fileItem.classList.add('active');
+                                    }
+                                    folderContentsDiv.appendChild(fileItem);
+                                });
+                            }
+                        } else {
+                            // This case should ideally not happen if __isFolder is correctly set
+                            // But for standalone files at root, it would be handled here
+                            // This part is mostly covered by the file listing within the folderContents above
+                        }
+                    });
+                }
+                renderLevel(fileTree, folderStructure);
+
+                 // Render files directly at the root (not in any folder)
+                 Object.values(files).filter(file => !file.path.includes('/')).forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.dataset.fileId = file.id;
+                    fileItem.innerHTML = `${getFileIcon(file.name)}<span>${file.name}</span>`;
+                    if (file.id === currentFileId) {
+                        fileItem.classList.add('active');
+                    }
+                    fileTree.appendChild(fileItem);
+                });
+            }
+
+            // Рендеринг вкладок файлов
+            function renderFileTabs() {
+                fileTabsContainer.innerHTML = '';
+                for (const id in files) {
+                    const tab = document.createElement('div');
+                    tab.className = 'file-tab';
+                    tab.dataset.fileId = id;
+                    if (id === currentFileId) {
+                        tab.classList.add('active');
+                    }
+                    tab.innerHTML = `${getFileIcon(files[id].name)}<span>${files[id].name}</span><button class="close-tab-btn" data-file-id="${id}">&times;</button>`;
+                    fileTabsContainer.appendChild(tab);
+                }
+            }
+
+            // Открытие файла в редакторе
+            function openFile(fileId) {
+                if (!files[fileId]) {
+                    console.error('Файл не найден:', fileId);
+                    return;
+                }
+
+                currentFileId = fileId;
+
+                if (!editor) {
+                    editor = monaco.editor.create(document.getElementById('editor-container'), {
+                        model: files[fileId].model,
+                        theme: 'vs-dark',
+                        automaticLayout: true,
+                        minimap: { enabled: false },
+                        fontSize: 14,
+                        lineNumbers: 'on',
+                        scrollBeyondLastLine: false,
+                        autoClosingBrackets: 'always',
+                        autoClosingQuotes: 'always',
+                        formatOnType: true,
+                        formatOnPaste: true,
+                    });
+
+                    editor.onDidChangeCursorPosition((e) => {
+                        statusBarLine.textContent = e.position.lineNumber;
+                        statusBarCol.textContent = e.position.column;
+                    });
+                } else {
+                    editor.setModel(files[fileId].model);
+                }
+
+                statusBarLanguage.textContent = files[fileId].language.charAt(0).toUpperCase() + files[fileId].language.slice(1);
+                currentLanguageSpan.textContent = files[fileId].language;
+
+                renderFileTree();
+                renderFileTabs();
+            }
+
+            // Удаление файла
+            function deleteFile(fileIdToDelete) {
+                if (!files[fileIdToDelete]) return;
+
+                const modelToDispose = files[fileIdToDelete].model;
+                const filePath = files[fileIdToDelete].path;
+                delete files[fileIdToDelete];
+
+                if (modelToDispose) {
+                    modelToDispose.dispose();
+                }
+
+                // Remove from folderStructure (simple removal for now, not cleaning empty folders)
+                const pathParts = filePath.split('/');
+                let currentLevel = folderStructure;
+                for (let i = 0; i < pathParts.length - 1; i++) {
+                    const part = pathParts[i];
+                    if (currentLevel[part] && currentLevel[part].__subfolders) {
+                        currentLevel = currentLevel[part].__subfolders;
+                    } else {
+                        currentLevel = null; // Path broken
+                        break;
+                    }
+                }
+                if (currentLevel && currentLevel.__files) {
+                    const index = currentLevel.__files.indexOf(fileIdToDelete);
+                    if (index > -1) {
+                        currentLevel.__files.splice(index, 1);
+                    }
+                }
+
+
+                if (currentFileId === fileIdToDelete) {
+                    const remainingFileIds = Object.keys(files);
+                    if (remainingFileIds.length > 0) {
+                        openFile(remainingFileIds[0]);
+                    } else {
+                        if (editor) {
+                            editor.dispose();
+                            editor = null;
+                        }
+                        outputConsole.textContent = '';
+                        currentLanguageSpan.textContent = '';
+                        statusBarLanguage.textContent = '';
+                        statusBarLine.textContent = '1';
+                        statusBarCol.textContent = '1';
+                        currentFileId = null;
+                    }
+                }
+                renderFileTree();
+                renderFileTabs();
+            }
+
+            // --- Real File Operations (via browser dialogs) ---
+
+            // Function to open a file from the user's computer
+            async function openLocalFile() {
+                try {
+                    const [fileHandle] = await window.showOpenFilePicker();
+                    const file = await fileHandle.getFile();
+                    const content = await file.text();
+
+                    const newFileId = addFile(file.name, content); // Use file.name for path
+                    openFile(newFileId);
+                    outputConsole.textContent = `Файл "${file.name}" успешно открыт.`;
+                } catch (err) {
+                    if (err.name !== 'AbortError') { // User cancelled the dialog
+                        outputConsole.textContent = `Ошибка при открытии файла: ${err.message}`;
+                        console.error('Error opening file:', err);
+                    } else {
+                        outputConsole.textContent = `Открытие файла отменено.`;
+                    }
+                }
+            }
+
+            // Function to save the current file to the user's computer
+            async function saveCurrentFileAs() {
+                if (!currentFileId || !editor) {
+                    outputConsole.textContent = 'Нет открытого файла для сохранения.';
+                    return;
+                }
+
+                const currentFile = files[currentFileId];
+                const content = editor.getValue();
+
+                try {
+                    const fileHandle = await window.showSaveFilePicker({
+                        suggestedName: currentFile.name,
+                        types: [{
+                            description: `${currentFile.language.toUpperCase()} File`,
+                            accept: {
+                                [currentFile.language === 'plaintext' ? 'text/plain' : `text/${currentFile.language}`]: [`.${currentFile.name.split('.').pop()}`],
+                            },
+                        }],
+                    });
+
+                    const writableStream = await fileHandle.createWritable();
+                    await writableStream.write(content);
+                    await writableStream.close();
+
+                    outputConsole.textContent = `Файл "${currentFile.name}" успешно сохранен.`;
+                } catch (err) {
+                    if (err.name !== 'AbortError') { // User cancelled the dialog
+                        outputConsole.textContent = `Ошибка при сохранении файла: ${err.message}`;
+                        console.error('Error saving file:', err);
+                    } else {
+                         outputConsole.textContent = `Сохранение файла отменено.`;
+                    }
+                }
+            }
+
+
+            // --- Simulated Folder Opening ---
+            function openFolder() {
+
+            }
+
+
+            // Инициализация стартовых файлов
+            const initialContents = {
+                'README.md': `# Добро пожаловать в ParrotIDE!
+
+Это ваша первая Web IDE, разработанная с помощью Monaco Editor и чистым JavaScript.
+
+### Как использовать:
+* **Новый файл:** Создайте пустой файл через меню "Файл".
+* **Открыть файл...:** Загрузите файл с вашего компьютера.
+* **Сохранить как...:** Сохраните текущий файл на ваш компьютер.
+* **Пишите код:** Редактор поддерживает подсветку синтаксиса и автодополнение для многих языков.
+* **Запускайте HTML/JavaScript/Python:** Нажмите "Запустить код" для выполнения.
+* **Имитация для других языков:** Для C++, C#, WebAssembly, Assembly, P# и других языков вывод будет имитироваться, так как для реального выполнения нужен серверный бэкенд.
+
+Приятного кодирования!`,
             };
 
-            // Асинхронная функция для получения данных при загрузке
-            (async function() {
-                try {
-                    userid = await userID(getCookie('name'));
-                    console.log("Fetched UserID:", userid);
-
-                    // Загружаем все типы данных
-                    allUserData.search = await readCell('L' + userid) || "";
-                    console.log("Fetched Search Data (L):", allUserData.search);
-
-                    allUserData.datapedia = await readCell('K' + userid) || "";
-                    console.log("Fetched Datapedia Data (K):", allUserData.datapedia);
-
-                    allUserData.gameApp = await readCell('J' + userid) || "";
-                    console.log("Fetched Game/App Data (J):", allUserData.gameApp);
-
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                }
-            })();
-
-            // Универсальная функция для добавления проекта
-            async function confirmChanges(projectType) {
-                let modalId, fieldsSelector, targetColumn, currentDataKey, newEntryParts = [];
-
-                switch (projectType) {
-                    case 'search':
-                        modalId = 'modal';
-                        fieldsSelector = '#modal-fields input';
-                        targetColumn = 'L' + userid;
-                        currentDataKey = 'search';
-                        break;
-                    case 'datapedia':
-                        modalId = 'modal1';
-                        fieldsSelector = '#modal1-fields input';
-                        targetColumn = 'K' + userid;
-                        currentDataKey = 'datapedia';
-                        break;
-                    case 'gameApp':
-                        modalId = 'modal2';
-                        fieldsSelector = '#modal2-fields input';
-                        targetColumn = 'J' + userid;
-                        currentDataKey = 'gameApp';
-                        break;
-                    default:
-                        console.error("Unknown project type:", projectType);
-                        return;
-                }
-
-                const modal = document.getElementById(modalId);
-                const fields = document.querySelectorAll(fieldsSelector);
-                
-                // Проверяем, что все поля заполнены
-                let allFieldsFilled = true;
-                fields.forEach(field => {
-                    if (field.value.trim() === '') {
-                        allFieldsFilled = false;
-                    }
-                    newEntryParts.push(field.value.trim());
-                });
-
-                if (!allFieldsFilled) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                let newEntryString;
-
-                if (projectType === 'gameApp') {
-                    // Для Game/App: id, name, price, image, owned(false), installed(false), installURL
-                    const newGameAppId = Date.now(); // Генерируем уникальный числовой ID
-                    const name = newEntryParts[0];
-                    const price = newEntryParts[1];
-                    const image = newEntryParts[2];
-                    const installURL = newEntryParts[3];
-                    const owned = 'false';    // Автоматически false
-                    const installed = 'false'; // Автоматически false
-                    // Формируем строку с ID в начале
-                    newEntryString = `${newGameAppId}~${name}~${price}~${image}~${owned}~${installed}~${installURL}`;
-                } else {
-                    // Для Search и Datapedia: без ID, как и раньше
-                    newEntryString = newEntryParts.join('~'); 
-                }
-                
-                let currentData = allUserData[currentDataKey] || "";
-
-                if (currentData && currentData.trim() !== "") {
-                    currentData += "|"; 
-                }
-                let updatedData = currentData + newEntryString;
-
-                try {
-                    await writeCell(targetColumn, updatedData);
-                    console.log(`Changes confirmed (${projectType}):`, updatedData);
-                    allUserData[currentDataKey] = updatedData; // Обновляем глобальную переменную
-                    modal.style.display = 'none';
-                    alert('Project added successfully!');
-                    fields.forEach(field => field.value = ''); // Очистка полей
-                } catch (error) {
-                    console.error(`Error saving ${projectType} project:`, error);
-                    alert(`Failed to save ${projectType} project. Please try again.`);
-                }
+            for (const fileName in initialContents) {
+                addFile(fileName, initialContents[fileName]);
             }
-            
-            // Адаптируем showProjects для отображения всех типов и фильтрации
-            async function showProjects(filterType = 'all') {
-                const projectsListDiv = document.getElementById('projects-list');
-                projectsListDiv.innerHTML = ''; // Очищаем список перед заполнением
-
-                // Снимаем активность со всех кнопок фильтра и добавляем активный класс к выбранной
-                document.querySelectorAll('.project-filter button').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.getElementById(`filter-${filterType}`).classList.add('active');
-
-                console.log(`Starting showProjects() with filter: ${filterType}`);
-                console.log("Current allUserData for display:", allUserData);
-
-                let allParsedProjects = [];
-
-                // Парсим Search проекты (L-колонка: Name~Url~data)
-                if (allUserData.search) {
-                    allUserData.search.split('|').filter(s => s.trim() !== '').forEach((projectString) => {
-                        const parts = projectString.split('~');
-                        if (parts.length >= 3) { // Ожидаем 3 части: Name, Url, data
-                            allParsedProjects.push({
-                                // Для Search используем originalString как идентификатор для удаления/редактирования
-                                id: projectString, 
-                                type: 'search',
-                                name: parts[0].trim(),
-                                url: parts[1].trim(),
-                                data: parts[2].trim(),
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        }
-                    });
-                }
-
-                // Парсим Datapedia проекты (K-колонка: Name~img~code)
-                if (allUserData.datapedia) {
-                    allUserData.datapedia.split('|').filter(s => s.trim() !== '').forEach((projectString) => {
-                        const parts = projectString.split('~');
-                        if (parts.length >= 3) { // Ожидаем 3 части: Name, img, code
-                            allParsedProjects.push({
-                                // Для Datapedia используем originalString как идентификатор
-                                id: projectString,
-                                type: 'datapedia',
-                                name: parts[0].trim(),
-                                img: parts[1].trim(),
-                                code: parts[2].trim(),
-                                originalString: projectString
-                            });
-                        }
-                    });
-                }
-
-                // Парсим Game/App проекты (J-колонка: id~name~price~image~owned~installed~installURL)
-                if (allUserData.gameApp) {
-                    allUserData.gameApp.split('|').filter(s => s.trim() !== '').forEach((projectString) => {
-                        const parts = projectString.split('~');
-                        // Проверяем на новый формат с 7 частями (id, name, price, image, owned, installed, installURL)
-                        if (parts.length === 7) { 
-                            allParsedProjects.push({
-                                id: parseInt(parts[0]), // ID
-                                type: 'gameApp',
-                                name: parts[1].trim(),
-                                price: parseFloat(parts[2]),
-                                image: parts[3].trim(), 
-                                owned: parts[4] === "true", 
-                                installed: parts[5] === "true", 
-                                installURL: parts[6].trim(), 
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        } else if (parts.length >= 4) { // Обработка старых форматов (без ID, owned, installed, installURL)
-                            // Если старый формат, где был Name~price~image~Url
-                            // Создаем временный ID, но для редактирования/удаления будет использоваться full string
-                            allParsedProjects.push({
-                                id: projectString, // Временный ID для старых записей, т.к. ID отсутствует
-                                type: 'gameApp',
-                                name: parts[0].trim(),
-                                price: parseFloat(parts[1]),
-                                image: parts[2].trim(),
-                                installURL: parts[3].trim(), 
-                                owned: false, // По умолчанию для старых
-                                installed: false, // По умолчанию для старых
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        }
-                    });
-                }
-
-                console.log("All parsed projects:", allParsedProjects);
-
-                let filteredProjects = allParsedProjects;
-                if (filterType !== 'all') {
-                    filteredProjects = allParsedProjects.filter(p => p.type === filterType);
-                }
-
-                if (filteredProjects.length === 0) {
-                    projectsListDiv.innerHTML = `<p>No ${filterType !== 'all' ? filterType : ''} projects found.</p>`;
-                } else {
-                    filteredProjects.forEach(project => {
-                        const projectDiv = document.createElement('div');
-                        projectDiv.classList.add('project-item');
-
-                        let detailsHtml = '';
-                        let deleteIdentifier; // Идентификатор для удаления
-                        let editIdentifier;   // Идентификатор для редактирования
-
-                        if (project.type === 'gameApp' && typeof project.id === 'number') {
-                            // Для НОВЫХ Game/App используем числовой ID
-                            deleteIdentifier = project.id;
-                            editIdentifier = project.id;
-                        } else {
-                            // Для Search, Datapedia и СТАРЫХ Game/App используем originalString
-                            deleteIdentifier = project.originalString;
-                            editIdentifier = project.originalString;
-                        }
-
-                        switch (project.type) {
-                            case 'search':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Search)</span></h4>
-                                    <p>URL: <a href="${project.url}" target="_blank">${project.url}</a></p>
-                                    <p>Data: ${project.data}</p>
-                                `;
-                                break;
-                            case 'datapedia':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Datapedia Article)</span></h4>
-                                    <p>Image: <a href="${project.img}" target="_blank">${project.img}</a></p>
-                                    <p>Code: ${project.code}</p>
-                                `;
-                                break;
-                            case 'gameApp':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Game/App)</span></h4>
-                                    <p>ID: ${project.id}</p>
-                                    <p>Price: ${project.price}</p>
-                                    <p>Image: <a href="${project.image}" target="_blank">${project.image}</a></p>
-                                    <p>Install URL: <a href="${project.installURL}" target="_blank">${project.installURL}</a></p>
-                                    <p>Status: Owned: ${project.owned ? 'Yes' : 'No'}, Installed: ${project.installed ? 'Yes' : 'No'}</p>
-                                `;
-                                break;
-                        }
-
-                        // Важно: передаем идентификатор в виде строки, экранируя кавычки
-                        projectDiv.innerHTML = `
-                            ${detailsHtml}
-                            <div class="actions">
-                                <button onclick="editProject('${String(editIdentifier).replace(/'/g, "\\'")}', '${project.type}')">Edit</button>
-                                <button class="delete-btn" onclick="deleteProject('${String(deleteIdentifier).replace(/'/g, "\\'")}', '${project.type}')">Delete</button>
-                            </div>
-                        `;
-                        projectsListDiv.appendChild(projectDiv);
-                    });
-                }
-                document.getElementById('modal3').style.display = 'flex';
-            }
+            // Открываем первый файл из списка при старте
+            openFile(Object.keys(files)[0]);
 
 
-            // Универсальная функция для удаления проекта
-            // projectIdentifier может быть ID (для Game/App, тип number) или полной строкой (для Search/Datapedia/старых Game/App, тип string)
-            async function deleteProject(projectIdentifier, projectType) {
-                if (!confirm(`Are you sure you want to delete this ${projectType} project?`)) {
-                    return;
-                }
-
-                console.log(`Attempting to delete ${projectType} project with identifier:`, projectIdentifier);
-                
-                let currentDataKey, targetColumn;
-                switch (projectType) {
-                    case 'search':
-                        currentDataKey = 'search';
-                        targetColumn = 'L' + userid;
-                        break;
-                    case 'datapedia':
-                        currentDataKey = 'datapedia';
-                        targetColumn = 'K' + userid;
-                        break;
-                    case 'gameApp':
-                        currentDataKey = 'gameApp';
-                        targetColumn = 'J' + userid;
-                        break;
-                    default:
-                        console.error("Unknown project type for deletion:", projectType);
-                        return;
-                }
-
-                let projectData = allUserData[currentDataKey] || "";
-                if (!projectData || projectData.trim() === "") {
-                    console.error("No project data of this type to delete from.");
-                    alert("No project data of this type to delete from.");
-                    return;
-                }
-
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                const updatedProjects = [];
-
-                let found = false;
-                projects.forEach(projectString => {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        // Если это новый формат с ID в начале
-                        if (parts.length === 7 && parseInt(parts[0]) === parseInt(projectIdentifier)) {
-                            found = true;
-                            console.log(`Deleting Game/App project by ID: ${projectIdentifier}`);
-                        } 
-                        // Если это старый формат, где идентификатор - это вся строка (например, без ID)
-                        else if (parts.length < 7 && projectString === projectIdentifier) {
-                             found = true;
-                             console.log(`Deleting old Game/App project by full string: ${projectIdentifier}`);
-                        }
-                        else {
-                            updatedProjects.push(projectString);
-                        }
-                    } else {
-                        // Для Search/Datapedia всегда сравниваем полные строки
-                        if (projectString === projectIdentifier) { 
-                            found = true;
-                            console.log(`Deleting ${projectType} project: ${projectString}`);
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    }
-                });
-
-                if (found) {
-                    const newProjectData = updatedProjects.join('|');
-                    try {
-                        await writeCell(targetColumn, newProjectData);
-                        allUserData[currentDataKey] = newProjectData; // Обновляем глобальную переменную
-                        alert(`${projectType} project deleted successfully!`);
-                        showProjects(projectType); // Обновляем список проектов после удаления
-                    } catch (error) {
-                        console.error(`Error deleting ${projectType} project:`, error);
-                        alert(`Failed to delete ${projectType} project. Please try again.`);
-                    }
-                } else {
-                    alert(`Project not found for deletion.`);
-                    console.warn(`Project with identifier "${projectIdentifier}" (Type: ${projectType}) not found for deletion.`);
-                }
-            }
-
-            // Универсальная функция для открытия модального окна редактирования
-            // projectIdentifier может быть ID (для Game/App, тип number) или полной строкой (для Search/Datapedia/старых Game/App, тип string)
-            async function editProject(projectIdentifier, projectType) {
-                console.log(`Attempting to edit ${projectType} project with identifier:`, projectIdentifier);
-
-                let currentDataKey, modalId;
-                switch (projectType) {
-                    case 'search':
-                        currentDataKey = 'search';
-                        modalId = 'editSearchModal';
-                        break;
-                    case 'datapedia':
-                        currentDataKey = 'datapedia';
-                        modalId = 'editDatapediaModal';
-                        break;
-                    case 'gameApp':
-                        currentDataKey = 'gameApp';
-                        modalId = 'editGameAppModal';
-                        break;
-                    default:
-                        console.error("Unknown project type for editing:", projectType);
-                        return;
-                }
-
-                let projectData = allUserData[currentDataKey] || "";
-                if (!projectData || projectData.trim() === "") {
-                    alert("No project data of this type to edit.");
-                    return;
-                }
-
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                let projectToEditParts = null;
-                let originalProjectStringForSave = ''; // Для Game/App это будет вся строка, для Search/Datapedia тоже
-
-                for (const projectString of projects) {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        // Если это новый формат с ID в начале
-                        if (parts.length === 7 && parseInt(parts[0]) === parseInt(projectIdentifier)) {
-                            projectToEditParts = parts;
-                            originalProjectStringForSave = projectString; // Сохраняем всю строку для Game/App
-                            break;
-                        } 
-                        // Если это старый формат, где идентификатор - это вся строка
-                        else if (parts.length < 7 && projectString === projectIdentifier) {
-                             projectToEditParts = parts;
-                             originalProjectStringForSave = projectString; // Сохраняем всю строку для старых Game/App
-                             break;
-                        }
-                    } else {
-                        // Для Search/Datapedia всегда сравниваем по полной строке
-                        if (projectString === projectIdentifier) {
-                            projectToEditParts = projectString.split('~');
-                            originalProjectStringForSave = projectString; // Сохраняем всю строку
-                            break;
-                        }
-                    }
-                }
-
-                if (projectToEditParts) {
-                    if (projectType === 'gameApp') {
-                        // Для Game/App: сохраняем оригинальную полную строку и ID
-                        document.getElementById('editGameAppProjectId').value = projectToEditParts[0]; // ID
-                        document.getElementById('editGameAppName').value = projectToEditParts[1] || '';
-                        document.getElementById('editGameAppPrice').value = projectToEditParts[2] || '';
-                        document.getElementById('editGameAppImage').value = projectToEditParts[3] || '';
-                        document.getElementById('editGameAppInstallURL').value = projectToEditParts[6] || '';
-                    } else {
-                        // Для Search и Datapedia: сохраняем оригинальную полную строку
-                        document.getElementById(`${modalId.replace('Modal', '')}OriginalString`).value = originalProjectStringForSave;
-                        switch (projectType) {
-                            case 'search':
-                                document.getElementById('editSearchName').value = projectToEditParts[0] || '';
-                                document.getElementById('editSearchUrl').value = projectToEditParts[1] || '';
-                                document.getElementById('editSearchData').value = projectToEditParts[2] || '';
-                                break;
-                            case 'datapedia':
-                                document.getElementById('editDatapediaName').value = projectToEditParts[0] || '';
-                                document.getElementById('editDatapediaImg').value = projectToEditParts[1] || '';
-                                document.getElementById('editDatapediaCode').value = projectToEditParts[2] || '';
-                                break;
-                        }
-                    }
-                    document.getElementById(modalId).style.display = 'flex';
-                } else {
-                    alert(`Project not found for editing.`);
-                    console.warn(`Project with identifier "${projectIdentifier}" (Type: ${projectType}) not found for editing.`);
-                }
-            }
-
-
-            // Универсальная функция для сохранения изменений проекта
-            async function saveProjectChanges(projectType) {
-                let identifierValue, newValues = [], currentDataKey, targetColumn, modalId;
-
-                switch (projectType) {
-                    case 'search':
-                        identifierValue = document.getElementById('editSearchOriginalString').value.trim(); // Это originalString
-                        newValues = [
-                            document.getElementById('editSearchName').value.trim(),
-                            document.getElementById('editSearchUrl').value.trim(),
-                            document.getElementById('editSearchData').value.trim()
-                        ];
-                        currentDataKey = 'search';
-                        targetColumn = 'L' + userid;
-                        modalId = 'editSearchModal';
-                        break;
-                    case 'datapedia':
-                        identifierValue = document.getElementById('editDatapediaOriginalString').value.trim(); // Это originalString
-                        newValues = [
-                            document.getElementById('editDatapediaName').value.trim(),
-                            document.getElementById('editDatapediaImg').value.trim(),
-                            document.getElementById('editDatapediaCode').value.trim()
-                        ];
-                        currentDataKey = 'datapedia';
-                        targetColumn = 'K' + userid;
-                        modalId = 'editDatapediaModal';
-                        break;
-                    case 'gameApp':
-                        identifierValue = document.getElementById('editGameAppProjectId').value.trim(); // Это ID проекта
-                        newValues = [
-                            document.getElementById('editGameAppName').value.trim(),
-                            document.getElementById('editGameAppPrice').value.trim(),
-                            document.getElementById('editGameAppImage').value.trim(),
-                            document.getElementById('editGameAppInstallURL').value.trim()
-                        ];
-                        currentDataKey = 'gameApp';
-                        targetColumn = 'J' + userid;
-                        modalId = 'editGameAppModal';
-                        break;
-                    default:
-                        console.error("Unknown project type for saving changes:", projectType);
-                        return;
-                }
-
-                // Проверка, что все поля заполнены
-                if (newValues.some(val => val === '')) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                console.log(`Attempting to save changes for ${projectType} project (Identifier):`, identifierValue);
-                
-                let projectData = allUserData[currentDataKey] || "";
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                const updatedProjects = [];
-
-                let found = false;
-                for (const projectString of projects) {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        // Ищем по ID, если это новый формат
-                        if (parts.length === 7 && parseInt(parts[0]) === parseInt(identifierValue)) {
-                            // Сохраняем старые owned и installed значения
-                            const owned = parts[4] || 'false'; 
-                            const installed = parts[5] || 'false';
-                            // Формируем новую строку с сохранением ID и булевых значений
-                            const newGameAppString = `${identifierValue}~${newValues[0]}~${newValues[1]}~${newValues[2]}~${owned}~${installed}~${newValues[3]}`; 
-                            updatedProjects.push(newGameAppString);
-                            found = true;
-                        } 
-                        // Если это старый формат, где идентификатор - это вся строка
-                        else if (parts.length < 7 && projectString === identifierValue) {
-                            // Для старых форматов, где ID не было, обновляем всю строку.
-                            // Предполагаем, что старые части Name~price~image~Url
-                            // И добавляем дефолтные owned/installed, если их не было
-                            const oldParts = projectString.split('~');
-                            const updatedOldString = `${newValues[0]}~${newValues[1]}~${newValues[2]}~${newValues[3]}~${oldParts[4] || 'false'}~${oldParts[5] || 'false'}`;
-                            updatedProjects.push(updatedOldString);
-                            found = true;
-                        }
-                        else {
-                            updatedProjects.push(projectString);
-                        }
-                    } else {
-                        // Для Search и Datapedia сравниваем по полной строке
-                        if (projectString === identifierValue) {
-                            const newString = newValues.join('~');
-                            updatedProjects.push(newString);
-                            found = true;
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    }
-                }
-
-                if (found) {
-                    const newProjectData = updatedProjects.join('|');
-                    try {
-                        await writeCell(targetColumn, newProjectData);
-                        allUserData[currentDataKey] = newProjectData; // Обновляем глобальную переменную
-                        alert(`${projectType} project updated successfully!`);
-                        document.getElementById(modalId).style.display = 'none';
-                        showProjects(projectType); // Обновляем список проектов
-                    } catch (error) {
-                        console.error(`Error saving ${projectType} project changes:`, error);
-                        alert(`Failed to save ${projectType} project changes. Please try again.`);
-                    }
-                } else {
-                    alert(`Error: Project not found during save.`);
-                    console.error(`Error: Project with identifier "${identifierValue}" (Type: ${projectType}) not found during save.`);
-                }
-            }
-
-            // Функции для управления боковым меню и пользовательским виджетом (оставляем как есть)
-            function toggleMenu() {
-                const menu = document.getElementById('menuContainer');
-                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-            }
-
-            function openApp(url) {
-                if (url.startsWith('http')) {
-                    window.open(url, '_blank');
-                } else {
-                    window.location.href = url;
-                }
-            }
-
-            function toggleUserMenu() {
-                const userMenu = document.getElementById('userMenu');
-                userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
-            }
-
-            // Дополнительно: Добавим обработчик для закрытия меню по клику вне его
-            document.addEventListener('click', function(event) {
-                const userMenu = document.getElementById('userMenu');
-                const userWidget = document.querySelector('.user-widget');
-                const toggleButton = document.querySelector('.toggleButton');
-                const menuContainer = document.getElementById('menuContainer');
-
-                // Закрытие userMenu
-                if (userMenu && userWidget && !userWidget.contains(event.target) && !userMenu.contains(event.target)) {
-                    userMenu.style.display = 'none';
-                }
-
-                // Закрытие menuContainer
-                if (menuContainer && toggleButton && !toggleButton.contains(event.target) && !menuContainer.contains(event.target)) {
-                    menuContainer.style.display = 'none';
+            // Обработчики событий
+            // Клик по файлам в сайдбаре
+            fileTree.addEventListener('click', (event) => {
+                const fileId = event.target.dataset.fileId || event.target.closest('.file-item')?.dataset.fileId;
+                if (fileId) {
+                    openFile(fileId);
                 }
             });
 
-        </script>
-    </div>
+            // Клик по вкладкам файлов
+            fileTabsContainer.addEventListener('click', (event) => {
+                const target = event.target;
+                const fileId = target.dataset.fileId || target.closest('.file-tab')?.dataset.fileId;
+
+                if (target.classList.contains('close-tab-btn')) {
+                    deleteFile(fileId);
+                    event.stopPropagation();
+                } else if (fileId) {
+                    openFile(fileId);
+                }
+            });
+
+            // Кнопка "Запустить код"
+            runButton.addEventListener('click', () => {
+                if (!currentFileId || !editor) {
+                    outputConsole.textContent = 'Нет открытого файла для запуска.';
+                    return;
+                }
+
+                const code = editor.getValue();
+                const language = files[currentFileId].language;
+                outputConsole.textContent = `Запускаю код на ${language.toUpperCase()}...\n\n`;
+
+                if (language === 'javascript') {
+                    try {
+                        const originalLog = console.log;
+                        let outputBuffer = '';
+                        console.log = (...args) => {
+                            outputBuffer += args.join(' ') + '\n';
+                        };
+                        eval(code);
+                        console.log = originalLog; // Restore original console.log
+                        outputConsole.textContent += outputBuffer;
+                    } catch (e) {
+                        outputConsole.textContent += `Ошибка выполнения JavaScript: ${e.message}\n`;
+                    }
+                } else if (language === 'html') {
+                    outputConsole.textContent += `--- Открываю HTML в новом окне/вкладке ---\n`;
+                    const newWindow = window.open();
+                    newWindow.document.write(code);
+                    newWindow.document.close();
+                } else if (language === 'css') {
+                    outputConsole.textContent += `--- CSS — это язык стилей, не может быть выполнен напрямую. Он применяется к HTML. ---\n`;
+                } else if (language === 'python') {
+                     outputConsole.textContent += `--- Имитация выполнения Python ---\n`;
+                     // Simple Python execution imitation
+                     if (code.includes('print(') || code.includes('console.log(')) {
+                         const match = code.match(/print\s*\((.*?)\)|console\.log\s*\((.*?)\)/);
+                         if (match) {
+                             const content = match[1] || match[2];
+                             outputConsole.textContent += `(Симулированный вывод из print/console.log): ${content.replace(/["']/g, '')}\n`;
+                         }
+                     }
+                     outputConsole.textContent += `Для реального выполнения Python кода требуется серверный компонент или WebAssembly-интерпретатор.\n`;
+                     outputConsole.textContent += `Вывод: "Python код успешно 'выполнен'!"\n`;
+                } else if (language === 'csharp' || language === 'c' || language === 'cpp') {
+                    outputConsole.textContent += `--- Имитация компиляции и выполнения ${language.toUpperCase()} ---\n`;
+                    outputConsole.textContent += `Компиляция... (это симуляция)\n`;
+                    outputConsole.textContent += `Cоздание исполняемого файла... (симуляция)\n`;
+                    outputConsole.textContent += `Запуск... (симуляция)\n`;
+                    outputConsole.textContent += `\nПривет из ${language.toUpperCase()}! (Симулированный вывод)\n`;
+                    outputConsole.textContent += `Для реальной компиляции и выполнения ${language.toUpperCase()} необходим серверный компонент (бэкенд) с установленным компилятором.\n`;
+                } else if (language === 'plaintext' && files[currentFileId].name.endsWith('.wasm')) {
+                    outputConsole.textContent += `--- Имитация выполнения WebAssembly (.wasm) ---\n`;
+                    outputConsole.textContent += `WebAssembly - это низкоуровневый бинарный формат. Для его запуска обычно требуется JavaScript-хост, который загружает и выполняет WASM-модуль.\n`;
+                    outputConsole.textContent += `(Симулированный вывод: WebAssembly модуль готов к работе!)\n`;
+                } else if (language === 'plaintext' && files[currentFileId].name.endsWith('.asm')) {
+                    outputConsole.textContent += `--- Имитация выполнения Assembly (.asm) ---\n`;
+                    outputConsole.textContent += `Код на Ассемблере очень низкоуровневый и специфичен для архитектуры процессора. Для его запуска нужна ассемблер-программа и прямой доступ к системе.\n`;
+                    outputConsole.textContent += `(Симулированный вывод: Ассемблерный код 'скомпилирован' и 'запущен'.)\n`;
+                } else if (language === 'plaintext' && files[currentFileId].name.endsWith('.p#')) {
+                     outputConsole.textContent += `--- Имитация выполнения P# (ParrotSharp) ---\n`;
+                     outputConsole.textContent += `Ваш уникальный язык P# 'компилируется' и 'запускается'!\n`;
+                     outputConsole.textContent += `(Симулированный вывод: "Мир пернатых приветствует вас на P#!")\n`;
+                     outputConsole.textContent += `На самом деле для этого нужен собственный компилятор P# и среда выполнения.\n`;
+                }
+                else {
+                    outputConsole.textContent += `--- Имитация выполнения для ${language.toUpperCase()} ---\n`;
+                    outputConsole.textContent += `Для реальной компиляции/интерпретации "${language.toUpperCase()}" требуется серверный компонент (бэкенд).\n`;
+                    outputConsole.textContent += `Вывод: "Это симулированный результат для ${language.toUpperCase()}!"\n`;
+                }
+            });
+
+            // Переключение вкладок панели (Вывод, Проблемы, Терминал)
+            panelTabs.addEventListener('click', (event) => {
+                document.querySelectorAll('.panel-tab').forEach(tab => tab.classList.remove('active'));
+                event.target.classList.add('active');
+                const contentToShow = event.target.dataset.panelContent;
+
+                outputConsole.style.display = 'block';
+                outputConsole.textContent = '';
+
+                if (contentToShow === 'output') {
+                    outputConsole.textContent = "Здесь будет вывод вашего кода после запуска.";
+                } else if (contentToShow === 'problems') {
+                    outputConsole.textContent = "Проблем не обнаружено (это имитация).";
+                } else if (contentToShow === 'terminal') {
+                    outputConsole.textContent = "Это имитация терминала.\nНастоящий терминал требует серверного компонента и WebSockets.";
+                }
+            });
+
+            // --- File Menu Dropdown Logic ---
+            fileMenuItem.addEventListener('click', (event) => {
+                // Toggle dropdown visibility
+                const isVisible = fileDropdown.style.display === 'block';
+                fileDropdown.style.display = isVisible ? 'none' : 'block';
+                event.stopPropagation(); // Prevent document click from immediately closing
+            });
+
+            // Handle clicks on dropdown items
+            newFileOption.addEventListener('click', () => {
+                const fileName = prompt('Введите имя нового файла (например, new.js):');
+                if (fileName) {
+                    const newFileId = addFile(fileName, '');
+                    openFile(newFileId);
+                }
+                fileDropdown.style.display = 'none';
+            });
+
+            openFileOption.addEventListener('click', () => {
+                openLocalFile();
+                fileDropdown.style.display = 'none';
+            });
+
+            openFolderOption.addEventListener('click', () => {
+                openFolder();
+                fileDropdown.style.display = 'none';
+            });
+
+            saveAsOption.addEventListener('click', () => {
+                saveCurrentFileAs();
+                fileDropdown.style.display = 'none';
+            });
+
+            // Close dropdown if clicked outside
+            document.addEventListener('click', (e) => {
+                if (!fileMenuItem.contains(e.target) && !fileDropdown.contains(e.target)) {
+                    fileDropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
