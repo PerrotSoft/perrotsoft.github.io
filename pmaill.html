@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pmaill</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <script src="js/sitefun.js" type="module"></script>
+    <script src="js/user.js" type="module"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style1.css">
+    <script src="js/user.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #43af3d;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            margin-top: 0;
+        }
+        .sidebar button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #00b50c;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar button:hover {
+            background-color: #008c3a;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .email-list, .friend-list {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .email-item, .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .email-item:last-child, .friend-item:last-child {
+            border-bottom: none;
+        }
+        .email-item span, .friend-item span {
+            font-weight: bold;
+        }
+        .email-item button, .friend-item button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .email-item .open-btn, .friend-item .message-btn {
+            background-color: #00d72f;
+            color: white;
+        }
+        .email-item .delete-btn, .friend-item .remove-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .email-item button:hover, .friend-item button:hover {
+            background-color: #09b500;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        .modal.active {
+            display: block;
+        }
+        .modal-header {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        .modal-footer {
+            text-align: right;
+        }
+        .modal-footer button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #ccc;
+            cursor: pointer;
+        }
+        .modal-footer button:hover {
+            background-color: #bbb;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .overlay.active {
+            display: block;
+        }
+        .add-friend-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .add-friend-btn:hover {
+            background-color: #218838;
+        }
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 10px;
+                box-shadow: none;
+                text-align: center;
+            }
+            .sidebar button {
+                width: auto;
+                margin: 5px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .content {
+                padding: 10px;
+            }
+            .email-list, .friend-list {
+                padding: 10px;
+                font-size: 14px;
+            }
+            .email-item, .friend-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .email-item span, .friend-item span {
+                margin-bottom: 5px;
+            }
+            .email-item button, .friend-item button {
+                margin-left: 0;
+                margin-top: 5px;
+                width: 100%;
+            }
+            .modal {
+                width: 90%;
+                padding: 15px;
+            }
+            .modal-header {
+                font-size: 16px;
+            }
+            .modal-body {
+                font-size: 14px;
+            }
+            .modal-footer button {
+                font-size: 14px;
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+          <div class="appItem" onclick="openApp('pmaill')">
+            <img src="img/PM.png" alt="png">
+            <span>Pmaill</span>
+        </div>
+            <div class="appItem" onclick="openApp('accunt')">
+                <img src="img/as.png" alt="png">
+                <span>Account settings.</span>
+            </div>
+          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
+            <img src="img/PMS.png" alt="png">
+            <span>Parrot Soft Market</span>
+        </div>
+        </div>
+        
+    </div>
+    </div>
+    <div class="sidebar">
+        <h2>Pmaill</h2>
+        <button onclick="showInbox()">Inbox</button>
+        <button onclick="showSent()">Sent</button>
+        <button onclick="openComposeModal()">Compose</button>
+        <button onclick="showFriends()">Friends</button>
+        <button onclick="refreshData()">Update</button>
+    </div>
+    <div class="content">
+        <div id="emailSection">
+            <h2>Inbox</h2>
+            <div id="emailList" class="email-list">
+                <!-- Emails will be loaded here -->
+            </div>
+        </div>
+        <div id="friendSection" style="display: none;">
+            <h2>Friends</h2>
+            <div id="friendList" class="friend-list">
+                <!-- Friends will be loaded here -->
+            </div>
+            <button class="add-friend-btn" onclick="addFriend()">Add Friend</button>
+        </div>
+    </div>
+
+    <div class="modal" id="readModal">
+        <div class="modal-header" id="readModalHeader"></div>
+        <div class="modal-body" id="readModalBody"></div>
+        <div class="modal-footer">
+            <button onclick="closeModal('readModal')" style="background-color: #ccc;">Close</button>
+            <button onclick="deleteMessage()" style="background-color: #ff4d4d; color: white;">Delete</button>
+        </div>
+    </div>
+    <div class="modal" id="composeModal">
+        <div class="modal-header">Compose Message</div>
+        <div class="modal-body">
+            <label for="composeRecipient" style="font-weight: bold;">Recipient:</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <select id="composeRecipient" style="flex: 1; padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
+                    <option value="">Select Friend</option>
+                </select>
+                <input type="text" id="composeCustomRecipient" placeholder="Or enter name" style="flex: 1; padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
+            </div>
+            <input type="text" id="composeSubject" placeholder="Subject" style="width: 100%; margin-bottom: 10px; padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
+            <textarea id="composeBody" placeholder="Message Body" style="width: 100%; height: 100px; padding: 5px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal('composeModal')" style="padding: 5px 10px; border-radius: 5px; border: none; background-color: #ccc; cursor: pointer;">Cancel</button>
+            <button onclick="sendMessage()" style="padding: 5px 10px; border-radius: 5px; border: none; background-color: #00d744; color: white; cursor: pointer;">Send</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+       let inboxMessages = [];
+        let sentMessages = [];
+        let friends = [];
+        let currentMessageIndex = null;
+
+        let userid = 0;
+        // Функция для обновления данных на странице
+        async function refreshData() {
+            try {
+                // Загрузка отправленных сообщений из ячейки G
+                sentMessages = await loadMessagesFromCell('G' + userid);
+                console.log("Sent Messages updated:", sentMessages);
+
+                // Загрузка входящих сообщений из ячейки H
+                inboxMessages = await loadMessagesFromCell('H' + userid);
+                console.log("Inbox Messages updated:", inboxMessages);
+
+                // Загрузка списка друзей из ячейки J
+                friends = await loadFriendsFromCell('I' + userid);
+                console.log("Friends updated:", friends);
+
+                // Обновление интерфейса
+                const currentSection = document.querySelector('.content > div:not([style*="display: none"])');
+                if (currentSection && currentSection.id === 'emailSection') {
+                    const headerText = currentSection.querySelector('h2').textContent;
+                    if (headerText === 'Inbox') {
+                        displayMessages(inboxMessages, 'Inbox');
+                    } else if (headerText === 'Sent') {
+                        displayMessages(sentMessages, 'Sent');
+                    }
+                } else if (currentSection && currentSection.id === 'friendSection') {
+                    displayFriends();
+                }
+            } catch (error) {
+                console.error("Error refreshing data:", error);
+            }
+        }
+        (async function () {
+            try {
+                userid = await userID(getCookie('name'));
+                if (!userid || userid === 0) {
+                    console.error("User does not exist.");
+                    blockInterface(); // Блокируем интерфейс
+                    return;
+                }
+                console.log("User ID:", userid);
+
+                // Загрузка отправленных сообщений из ячейки G
+                sentMessages = await loadMessagesFromCell('G' + userid);
+                console.log("Sent Messages:", sentMessages);
+
+                // Загрузка входящих сообщений из ячейки H
+                inboxMessages = await loadMessagesFromCell('H' + userid);
+                console.log("Inbox Messages:", inboxMessages);
+
+                // Загрузка списка друзей из ячейки J
+                friends = await loadFriendsFromCell('I' + userid);
+                console.log("Friends:", friends);
+
+                // Инициализация интерфейса
+                showInbox();
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        })();
+        
+        // Открытие модального окна для отправки сообщения
+        function openComposeModal(friend = "") {
+            const recipientSelect = document.getElementById('composeRecipient');
+            recipientSelect.innerHTML = `<option value="">Select Friend</option>` + 
+                friends.map(friend => `<option value="${friend}">${friend}</option>`).join('');
+            if (friend) recipientSelect.value = friend; // Если передан друг, выбираем его
+            document.getElementById('composeCustomRecipient').value = ""; // Очистить поле для ввода имени
+            openModal('composeModal'); // Открыть модальное окно
+        }
+
+        // Открытие модального окна
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        // Закрытие модального окна
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        // Функция для загрузки сообщений из указанной ячейки
+        async function loadMessagesFromCell(cell) {
+            try {
+                const data = await readCell(cell); // Чтение данных из базы
+                return data ? JSON.parse(data) : [];
+            } catch (error) {
+                console.error(`Error loading messages from cell ${cell}:`, error);
+                return [];
+            }
+        }
+
+        // Функция для загрузки списка друзей из ячейки
+        async function loadFriendsFromCell(cell) {
+            try {
+                const data = await readCell(cell); // Чтение данных из базы
+                return data ? JSON.parse(data) : [];
+            } catch (error) {
+                console.error(`Error loading friends from cell ${cell}:`, error);
+                return [];
+            }
+        }
+
+        // Функция для сохранения отправленных сообщений в ячейку G
+        async function saveSentMessages() {
+            try {
+                await writeCell('G' + userid, JSON.stringify(sentMessages)); // Запись данных в базу
+                console.log("Sent messages saved.");
+            } catch (error) {
+                console.error("Error saving sent messages:", error);
+            }
+        }
+
+        // Функция для сохранения входящих сообщений в ячейку H
+        async function saveInboxMessages() {
+            try {
+                await writeCell('H' + userid, JSON.stringify(inboxMessages)); // Запись данных в базу
+                console.log("Inbox messages saved.");
+            } catch (error) {
+                console.error("Error saving inbox messages:", error);
+            }
+        }
+
+        // Функция для сохранения списка друзей в ячейку J
+        async function saveFriends() {
+            try {
+                await writeCell('I' + userid, JSON.stringify(friends)); // Запись данных в базу
+                console.log("Friends saved.");
+            } catch (error) {
+                console.error("Error saving friends:", error);
+            }
+        }
+        // Отправка сообщения
+        function sendMessage() {
+            const recipientFromList = document.getElementById('composeRecipient').value;
+            const customRecipient = document.getElementById('composeCustomRecipient').value;
+            const recipient = recipientFromList || customRecipient;
+            const subject = document.getElementById('composeSubject').value;
+            const body = document.getElementById('composeBody').value;
+
+            if (!recipient || !subject || !body) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            // Проверка существования получателя
+            userID(recipient).then(recipientId => {
+                if (!recipientId || recipientId === 0) {
+                    alert("Recipient does not exist.");
+                    return;
+                }
+
+                // Создание сообщения
+                const message = { sender: userid, recipient, subject, body };
+
+                // Добавление сообщения в отправленные
+                sentMessages.push(message);
+                saveSentMessages(); // Сохранение отправленных сообщений
+
+                // Добавление сообщения во входящие получателя
+                loadMessagesFromCell('H' + recipientId).then(recipientInbox => {
+                    recipientInbox.push(message);
+                    writeCell('H' + recipientId, JSON.stringify(recipientInbox)); // Сохранение входящих сообщений получателя
+                }).catch(error => {
+                    console.error("Error updating recipient's inbox:", error);
+                });
+
+                alert("Message sent!");
+                closeModal('composeModal');
+                showSent();
+            }).catch(error => {
+                console.error("Error checking recipient:", error);
+                alert("An error occurred while checking the recipient.");
+            });
+        }
+        // Добавление друга
+        function addFriend() {
+            const friendName = prompt("Enter friend's name:");
+            if (friendName) {
+                friends.push(friendName);
+                saveFriends(); // Сохранение списка друзей
+                alert(`${friendName} added to friends!`);
+                displayFriends();
+            }
+        }
+
+        // Удаление друга
+        function removeFriend(index) {
+            const removedFriend = friends.splice(index, 1);
+            saveFriends(); // Сохранение списка друзей
+            alert(`${removedFriend} removed from friends!`);
+            displayFriends();
+        }
+
+        // Отображение входящих сообщений
+        function showInbox() {
+            document.getElementById('emailSection').style.display = 'block';
+            document.getElementById('friendSection').style.display = 'none';
+            document.getElementById('emailSection').querySelector('h2').textContent = 'Inbox';
+            displayMessages(inboxMessages, 'Inbox');
+        }
+
+        // Отображение отправленных сообщений
+        function showSent() {
+            document.getElementById('emailSection').style.display = 'block';
+            document.getElementById('friendSection').style.display = 'none';
+            document.getElementById('emailSection').querySelector('h2').textContent = 'Sent';
+            displayMessages(sentMessages, 'Sent');
+        }
+
+        // Отображение списка друзей
+        function showFriends() {
+            document.getElementById('emailSection').style.display = 'none';
+            document.getElementById('friendSection').style.display = 'block';
+            displayFriends();
+        }
+
+        // Отображение сообщений
+        function displayMessages(messages, type) {
+            const emailList = document.getElementById('emailList');
+            emailList.innerHTML = messages.length
+                ? messages.map((msg, index) => `
+                    <div class="email-item">
+                        <span><strong>${type === 'Inbox' ? 'From' : 'To'}:</strong> ${msg.recipient || msg.sender} | <strong>Subject:</strong> ${msg.subject}</span>
+                        <div>
+                            <button class="open-btn" onclick="openReadModal(${index}, '${type}')">Open</button>
+                            <button class="delete-btn" onclick="deleteMessage(${index}, '${type}')">Delete</button>
+                        </div>
+                    </div>
+                `).join('')
+                : '<div>No messages found</div>';
+        }
+
+        // Отображение списка друзей
+        function displayFriends() {
+            const friendList = document.getElementById('friendList');
+            friendList.innerHTML = friends.length
+                ? friends.map((friend, index) => `
+                    <div class="friend-item">
+                        <span>${friend}</span>
+                        <div>
+                            <button class="message-btn" onclick="openComposeModal('${friend}')">Message</button>
+                            <button class="remove-btn" onclick="removeFriend(${index})">Remove</button>
+                        </div>
+                    </div>
+                `).join('')
+                : '<div>No friends found</div>';
+        }
+
+        // Открытие модального окна для чтения сообщения
+        function openReadModal(index, type) {
+            currentMessageIndex = index;
+            const message = type === 'Inbox' ? inboxMessages[index] : sentMessages[index];
+            document.getElementById('readModalHeader').textContent = message.subject;
+            document.getElementById('readModalBody').textContent = message.body;
+            openModal('readModal');
+        }
+        function blockInterface() {
+            document.body.innerHTML = `
+                <div style="text-align: center; margin-top: 20%;">
+                    <h2>User does not exist</h2>
+                    <button onclick="window.location.href='riegist.html'" style="padding: 10px 20px; font-size: 16px; background-color: #0078D7; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Register or Login
+                    </button>
+                </div>
+            `;
+        }
+        // Удаление сообщения
+        function deleteMessage(index, type) {
+            const messages = type === 'Inbox' ? inboxMessages : sentMessages;
+            messages.splice(index, 1);
+            if (type === 'Inbox') {
+                saveInboxMessages(); // Сохранение входящих сообщений
+            } else {
+                saveSentMessages(); // Сохранение отправленных сообщений
+            }
+            alert("Message deleted!");
+            closeModal('readModal');
+            displayMessages(messages, type);
+        }
+    </script>
+</body>
+</html>

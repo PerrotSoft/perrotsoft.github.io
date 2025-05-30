@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>regist and login</title>
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <style>
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    height: auto;
+    padding: 0;
+    overflow-y: auto;
+    display: flex;
+  }
+
+  .container {
+    width: 90%;
+    max-width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 10px auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .header {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .form input {
+    font-size: 15px;
+    padding: 8px;
+    margin: 8px 0;
+  }
+
+  .form button {
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .tab-button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    margin: 10px 0;
+  }
+
+  .tab-button {
+    font-size: 15px;
+    padding: 8px 0;
+    margin: 0 2px;
+  }
+
+  .alert-box {
+    font-size: 13px;
+    padding: 8px 12px;
+    top: 10px;
+  }
+
+  a {
+    font-size: 15px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+}
+        body {
+            font-family: Segoe UI, Tahoma, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow-y: scroll;
+        }
+        
+        .container {
+            width: 400px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+        
+        .tab-button {
+            display: flex;
+            padding: 10px;
+            background-color: #eeeeee;
+            color: #1a1a1a;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+            margin: 10px 10px 0 10px;
+        }
+        
+        .tab-button.active {
+            background-color: #07d400;
+            color: #ffffff;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #00d440;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .form button:hover {
+            background-color: #009e2a;
+        }
+        
+        .alert-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            display: none;
+            font-size: 14px;
+        }
+        
+        .alert-box.error {
+            background-color: #dc3545;
+        }
+        
+        .alert-box.success {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    <div class="header">Registration and Login</div>
+    <a href="accunt" style="text-decoration: none; color: #007bff;">Back to Home</a>
+        <!-- Registration -->
+        <div class="form active" id="register-form">
+        <input type="text" id="register-name" placeholder="Name" required>
+        <input type="email" id="register-email" placeholder="Email" required>
+        <input type="password" id="register-password" placeholder="Password" required>
+        <button onclick="register()">Register</button>
+    </div>
+    
+        <!-- Login -->
+        <div class="form" id="login-form">
+        <input type="text" id="login-name" placeholder="Name" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+        <div class="tab-button-container">
+        <div class="tab-button active" id="tab-register">Registration</div>
+        <div class="tab-button" id="tab-login">Login</div>
+        </div>
+    </div>
+   
+    <div class="alert-box" id="alert-box"></div>
+    <script str="user.js"></script>
+    <script>
+    let url = "https://script.google.com/macros/s/AKfycbzlFq55y45oMeOs0WrGSuFaBOaBA5EZNTAo_3FRmx-WWVh6Hd9AKFQi9HAYYLJfp5OAIQ/exec?action=";
+    // Switch between registration and login
+    document.getElementById('tab-register').addEventListener('click', function() {
+    document.getElementById('register-form').classList.add('active');
+    document.getElementById('login-form').classList.remove('active');
+    document.getElementById('tab-register').classList.add('active');
+    document.getElementById('tab-login').classList.remove('active');
+    });
+   
+    document.getElementById('tab-login').addEventListener('click', function() {
+    document.getElementById('login-form').classList.add('active');
+    document.getElementById('register-form').classList.remove('active');
+    document.getElementById('tab-login').classList.add('active');
+    document.getElementById('tab-register').classList.remove('active');
+    });
+   
+    // Function for registration
+    function register() {
+    const name = document.getElementById('register-name').value;
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+   
+    if (!name || !email || !password) {
+   showAlert("Please fill in all fields.", "error");
+   return;
+   }
+   
+   const url1 = url+`regist&name=${name}&gmail=${email}&pasworld=${password}`;
+   fetch(url1)
+   .then(response => response.json())
+   .then(data => {
+   if (data.status =="registration successful") {
+   document.cookie = `name=${name};`;
+   document.cookie = `email=${email};`;
+   document.cookie = `pcoin=0;`;
+   } else {
+   showAlert("A user with this login already exists.", "error");
+   }
+   })
+   .catch(error => {
+   showAlert("Registration error. Try again later.", "error");
+   });
+   showAlert("Registration successful.", "success");
+   }
+   
+   // Login function
+   function login() {
+   const name = document.getElementById('login-name').value;
+   const password = document.getElementById('login-password').value;
+   
+   if (!name || !password) {
+   showAlert("Please fill in all fields.", "error");
+   return;
+   }
+   
+   const url1 = url+`login&name=${name}&pasworld=${password}`;
+   
+   fetch(url1)
+   .then(response => response.json())
+   .then(data => {
+   if (data.status === "login successful") {
+    let email = ""; // Declares an empty string
+    let id = 0; // Declares an empty string
+fetch(url + `searchUser&cellAddress=${name}`)
+    .then(response => response.json())
+    .then(data => {
+        id = data.value; // Assigns the value to id
+        return fetch(url + `readCell&cellAddress=$B` + data.value);
+    })
+    .then(response => response.json())
+    .then(data => {
+        email = data.value;
+        let pcoin = getdatabsase(id, "D"); // Fetches the value of cell C
+        pcoin.then(value => {
+            document.cookie = `p-coin=${value};`;
+        });
+        let icon = getdatabsase(id, "E"); // Fetches the value of cell C
+        icon.then(value => {
+            document.cookie = `icon=${value};`;
+        });
+        // Now set the cookies inside the correct scope
+        document.cookie = `name=${name};`;
+        document.cookie = `email=${email};`;
+        showAlert("Login successful.", "success");
+    })
+    .catch(error => console.error("Error fetching data:", error));
+
+    showAlert(document.cookie, "success");
+   
+   } else {
+   showAlert("Incorrect username or password.", "error");
+   }
+   })
+   .catch(error => {
+   showAlert("Login error. Try again later.", "error");
+   });
+   }
+   function getCookie(name) {
+   const value = `; ${document.cookie}`;    
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    async function getdatabsase(id, name) {
+    try {
+        let response = await fetch(url + `readCell&cellAddress=$${name}${id}`);
+        let data = await response.json();
+        return data.value;
+    } catch (error) {
+        console.error("Ошибка получения данных:", error);
+        return null;
+    }
+}
+   // Function for displaying alert
+   function showAlert(message, type) {
+   const alertBox = document.getElementById('alert-box');
+   alertBox.textContent = message;
+   alertBox.className = 'alert-box ' + (type === 'success' ? 'success' : 'error');
+   alertBox.style.display = 'block';
+   
+    setTimeout(() => {
+    alertBox.style.display = 'none';
+    }, 3000);
+    }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ParrotSoft</title>
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <style>
+        html {
+      overflow-y: scroll;
+    }
+        /* Основные стили для Install_PerrotOS.html */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    overflow-y: scroll;
+}
+main {
+    padding: 20px 0;
+}
+.versions {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 24px 18px;
+}
+.versions h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #1a1a1a;
+    text-align: center;
+}
+.category {
+    font-weight: bold;
+    background: #e6ffe6;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 18px 0 8px 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.category:hover {
+    background: #caffca;
+}
+.version {
+    list-style: none;
+    margin-bottom: 16px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    padding: 0 0 8px 0;
+}
+.version-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+.version-header span {
+    font-weight: 500;
+}
+.version-header .toggle {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #07d400;
+    margin-left: 10px;
+}
+.version-content {
+    display: none;
+    padding: 10px 18px 10px 18px;
+    font-size: 1em;
+    color: #222;
+}
+.version-content a {
+    display: inline-block;
+    margin: 8px 0;
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 1em;
+}
+.version-content .download {
+    background: #07d400;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-left: 8px;
+    margin-top: 6px;
+    transition: background 0.2s;
+}
+.version-content .download:hover {
+    background: #009e2a;
+}
+.toggleButton {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: #1A73E8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+    z-index: 1001;
+}
+.user-widget {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+}
+.user-icn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+.user-widget-info {
+    font-size: 15px;
+}
+.menuContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px 0;
+    flex-wrap: wrap;
+}
+.appItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 0;
+    cursor: pointer;
+    gap: 8px;
+}
+.appItem img,
+.appItem .appIcon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+.user-menu {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 10px;
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    z-index: 1002;
+}
+.user-menu button {
+    display: block;
+    width: 100%;
+    background: #07d400;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 0;
+    margin: 6px 0;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.user-menu button:hover {
+    background: #009e2a;
+}
+
+/* mcss: мобильная версия для Install_PerrotOS.html */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    height: auto;
+  }
+  .toggleButton {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    z-index: 1001;
+  }
+  .user-widget {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .user-icn {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+  }
+  .user-widget-info {
+    font-size: 14px;
+  }
+  .menuContainer {
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 4px;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  .appItem {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 0;
+  }
+  .appItem img,
+  .appItem .appIcon {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+  }
+  main {
+    padding: 10px 0;
+  }
+  .versions {
+    max-width: 99vw;
+    padding: 10px 2vw;
+    border-radius: 8px;
+  }
+  .versions h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+  .category {
+    font-size: 1em;
+    padding: 10px 10px;
+    margin: 12px 0 6px 0;
+    border-radius: 6px;
+  }
+  .version-header {
+    font-size: 1em;
+    padding: 8px 10px;
+  }
+  .version-content {
+    font-size: 0.95em;
+    padding: 8px 10px 8px 10px;
+  }
+  .version-content .download {
+    font-size: 0.95em;
+    padding: 7px 12px;
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+  }
+  
+}
+    </style>
+    <script>
+        function toggleCategory(category) {
+            const versions = category.nextElementSibling.querySelectorAll('.version');
+            versions.forEach(version => version.style.display = version.style.display === 'block' ? 'none' : 'block');
+        }
+        function toggleVersionContent(button) {
+            const content = button.parentElement.nextElementSibling;
+            const isVisible = content.style.display === 'block';
+            content.style.display = isVisible ? 'none' : 'block';
+            button.textContent = isVisible ? '▶' : '▼';
+        }
+        function downloadEngine(url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = '';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        function translatePage() {
+            window.open('https://translate.google.com/translate?sl=auto&tl=ru&u=' + encodeURIComponent(window.location.href), '_blank');
+        }
+    </script>
+        <script src="js/sitefun.js" type="module"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="css/style1.css">
+</head>
+<body>
+    <div>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+          <div class="appItem" onclick="openApp('pmaill')">
+            <img src="img/PM.png" alt="png">
+            <span>Pmaill</span>
+        </div>
+            <div class="appItem" onclick="openApp('accunt')">
+                <img src="img/as.png" alt="png">
+                <span>Account settings.</span>
+            </div>
+          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
+            <img src="img/PMS.png" alt="png">
+            <span>Parrot Soft Market</span>
+        </div>
+        </div>
+        <div style="height: 55px;margin-top: 55px;"></div>
+        <main>
+            <section class="versions">
+                <h3>ParrotOS Available Versions</h3>
+                
+                <div class="category" onclick="toggleCategory(this)">ParrotOS Cosmos Versions</div>
+                <div>
+                    <ul>
+                        <li class="version">
+                            <div class="version-header" onclick="toggleVersionContent(this.querySelector('.toggle'))">
+                                <span>ParrotOS 0.0.0.0.1.0</span>
+                                <button class="toggle">▶</button>
+                            </div>
+                            <div class="version-content">
+                                <p>this version about that works only well on a virtual machine VMware because there is a file system cosmos files system.</p>
+                                <a href="https://github.com/PerrotSoft/ParrotOS-Cosmos">⬇️ Download Source Code</a>
+                                <button class="download" onclick="downloadEngine('https://codeload.github.com/PerrotSoft/ParrotOS-Cosmos/zip/refs/heads/OS')">⬇️ Download</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+    
+                <div class="category" onclick="toggleCategory(this)">ParrotOS Windows Versions</div>
+                <div>
+                    <ul>
+                        <li class="version">
+                            <div class="version-header" onclick="toggleVersionContent(this.querySelector('.toggle'))">
+                                <span>ParrotOS 0.0.0.1.0</span>
+                                <button class="toggle">▶</button>
+                            </div>
+                            <div class="version-content">
+                                <p>This version of the system runs on the Windows NT kernel.</p>
+                                <a href="https://github.com/PerrotSoft/ParrotOS-Windows/tree/main">⬇️ Download Source Code</a>
+                                <button class="download" onclick="downloadEngine('https://codeload.github.com/PerrotSoft/ParrotOS-Windows/zip/refs/heads/OS')">⬇️ Download</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    </div>
+    <div style="height: 100px;margin-top: 100px;"></div>
+</body>
+</html>

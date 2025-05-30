@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParrotSoft Play</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <script src="js/sitefun.js" type="module"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style1.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            overflow: hidden; /* Запрет на прокрутку тела */
+            overflow-y: auto;
+        }
+        header {
+            background: #222;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+        nav button {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        nav button.active {
+            background: #008cff;
+        }
+        .balance {
+            font-weight: bold;
+        }
+        .container {
+            padding: 20px;
+        }
+        .store-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .product {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .product img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .product h3 {
+            margin: 10px 0 5px;
+        }
+        .product button {
+            background: #008cff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        .product button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .owned-button {
+            background: #2ecc71;
+        }
+        .in-cart-button {
+            background: #f39c12;
+            cursor: not-allowed;
+        }
+        .link-balance {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .link-balance a {
+            text-decoration: none;
+            color: #008cff;
+        }
+        /* mcss: мобильная версия для PerrotSoft-Play.html */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                margin: 0;
+                flex-direction: column;
+                height: auto;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+            }
+            header h1 {
+                font-size: 1.5em;
+                margin-bottom: 10px;
+            }
+            nav {
+                width: 100%;
+                gap: 5px;
+                margin-bottom: 10px;
+            }
+            nav button {
+                width: 32%;
+                font-size: 14px;
+                padding: 8px 0;
+            }
+            .container {
+                padding: 8px;
+            }
+            .store-container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .product {
+                padding: 10px;
+                font-size: 15px;
+            }
+            .product img {
+                height: 90px;
+            }
+            .user-widget-info {
+                font-size: 14px;
+            }
+            .menuContainer {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .appItem {
+                flex-direction: row;
+                align-items: center;
+                padding: 8px 0;
+            }
+            .appItem img,
+            .appItem .appIcon {
+                width: 32px;
+                height: 32px;
+                margin-right: 10px;
+            }
+            #searchInput {
+                width: 100%;
+                font-size: 15px;
+                margin: 10px 0;
+                padding: 6px;
+            }
+            .link-balance {
+                font-size: 14px;
+                padding: 10px 0;
+            }
+        }
+    </style>
+    <script src="js/sitefun.js"></script>
+    <script src="js/user.js"></script>
+</head>
+<body>
+    <div>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+          <div class="appItem" onclick="openApp('pmaill')">
+            <img src="img/PM.png" alt="png">
+            <span>Pmaill</span>
+        </div>
+            <div class="appItem" onclick="openApp('accunt')">
+                <img src="img/as.png" alt="png">
+                <span>Account settings.</span>
+            </div>
+          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
+            <img src="img/PMS.png" alt="png">
+            <span>Parrot Soft Market</span>
+        </div>
+        </div>
+
+        <header>
+            <div>
+                <div style="height: 40px;margin-top: 40px;"></div>
+                <h1>ParrotSoft Play</h1>
+                <nav>
+                    <button onclick="switchTab('store')" id="tab-store" class="active">Store</button>
+                    <button onclick="switchTab('cart')" id="tab-cart">Cart</button>
+                    <button onclick="switchTab('library')" id="tab-library">Library</button>
+                </nav>
+            </div>
+            <input type="text" id="searchInput" placeholder="Поиск..." oninput="renderStore(); renderCart(); renderLibrary();">
+
+        </header>
+
+        <div class="container">
+            <div id="store" class="tab-content"></div>
+            <div id="cart" class="tab-content" style="display:none;"></div>
+            <div id="library" class="tab-content" style="display:none;"></div>
+            <div class="link-balance">
+                <p>Not enough funds? <a href="Pcoin.html">Replenish via Baikonur</a></p>
+            </div>
+        </div>
+        <script>
+            //import { userID, getCookie, readCell, setCookie } from './js/user.js';
+            const products = [
+                { id: 1, name: "P# Programming language", price: 0, image: "img/PSarp.png", owned: false, installed: false,installURL:"https://p-sharp-sys.github.io/P-Sharp_Setap.exe"}
+            ];
+
+            let userid = 0;
+            let productsbay = "";
+            (async function() {
+                try {
+                    userid = await userID(getCookie('name'));
+                    productsbay = await readCell('F' + userid);
+                    console.log("User ID:", userid);
+                    console.log("Products bought:", productsbay);
+                    if (productsbay) {
+                        productsbay = productsbay.split('|').slice(1).map(Number);
+                        products.forEach(product => {
+                            if (productsbay.includes(product.id)) {
+                                product.owned = true;
+                            }
+                        });
+                        renderStore(); renderCart(); renderLibrary();
+                    } else {
+                        console.log("No products bought yet.");
+                    }
+                    let listing = await readColumn('J');
+
+                    // Очищаем от пустых строк
+                    const filtered = listing.filter(item => item && item.trim() !== "");
+
+                    // Разбираем каждую строку и добавляем в массив products
+                    filtered.forEach(element => {
+                        const parts1 = element.split('|');
+
+                        parts1.forEach(element => {
+                        const parts = element.split('~');
+
+                        // Защита: если данных недостаточно — пропускаем
+                        if (parts.length < 7) return;
+
+                        const product = {
+                            id: parseInt(parts[0]),
+                            name: parts[1],
+                            price: parseFloat(parts[2]),
+                            image: parts[3],
+                            owned: parts[4] === "true",
+                            installed: parts[5] === "true",
+                            installURL: parts[6]
+                        };
+
+                        products.push(product);
+                    });
+                    });
+                    renderStore(); renderCart(); renderLibrary();
+                    console.log("Все продукты из базы:", products);
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            })();
+                        let cart = [];
+            function getStatus(product) {
+                if (product.installed) return 'Play';
+                if (product.owned && !product.installed) return 'Install';
+                if (cart.includes(product)) return 'In cart';
+                return 'Add to cart';
+            }    
+            function renderStore() {
+                const container = document.getElementById('store');
+                const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+                const filteredProducts = products.filter(product =>
+                    product.name.toLowerCase().includes(searchQuery)
+                );
+
+                if (filteredProducts.length === 0) {
+                    container.innerHTML = '<p>Nothing found.</p>';
+                    return;
+                }
+
+                container.innerHTML = '<div class="store-container">' + filteredProducts.map(product => {
+                    const status = getStatus(product);
+                    const disabled = product.owned || cart.includes(product);
+                    const buttonClass = product.owned ? 'owned-button' : '';
+                    return `
+                        <div class="product">
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.price} P-Coin</p>
+                            <button onclick="${disabled ? '' : `addToCart(${product.id})`}" class="${buttonClass}" ${disabled ? 'disabled' : ''}>${status}</button>
+                        </div>
+                    `;
+                }).join('') + '</div>';
+            }        
+            function renderCart() {
+                const container = document.getElementById('cart');
+                const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+                const filteredCart = cart.filter(product =>
+                    product.name.toLowerCase().includes(searchQuery)
+                );
+
+                if (filteredCart.length === 0) {
+                    container.innerHTML = '<p>Cart is empty or nothing found.</p>';
+                    return;
+                }
+
+                let total = filteredCart.reduce((sum, p) => sum + p.price, 0);
+
+                container.innerHTML = '<div class="store-container">' + filteredCart.map(product => `
+                    <div class="product">
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>${product.price} P-Coin</p>
+                    </div>
+                `).join('') + `</div><br><button onclick="buyAll()">Pay all</button><p>Amount: ${total} P-Coin</p>`;
+            }    
+            function renderLibrary() {
+                const container = document.getElementById('library');
+                const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+                const owned = products.filter(p => p.owned);
+                const filteredOwned = owned.filter(product =>
+                    product.name.toLowerCase().includes(searchQuery)
+                );
+
+                if (filteredOwned.length === 0) {
+                    container.innerHTML = '<p>Nothing has been installed or found yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = '<div class="store-container">' + filteredOwned.map(product => `
+                    <div class="product">
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>${product.installed ? 'Installed' : 'Not installed'}</p>
+                        <div>
+                            <button onclick="installProduct(${product.id})" class="install-button" ${product.installed ? 'disabled' : ''}>Install</button>
+                        </div>
+                    </div>
+                `).join('') + '</div>';
+            }
+            function switchTab(tabName) {
+                document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+                document.getElementById(tabName).style.display = 'block';
+                document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+                document.getElementById('tab-' + tabName).classList.add('active');
+        
+                if (tabName === 'store') renderStore();
+                if (tabName === 'cart') renderCart();
+                if (tabName === 'library') renderLibrary();
+            }       
+            function addToCart(id) {
+                const product = products.find(p => p.id === id);
+                if (!cart.includes(product) && !product.owned) {
+                    cart.push(product);
+                    renderStore();
+                }
+            }    
+            function buyAll() {
+                let total = cart.reduce((sum, p) => sum + p.price, 0);
+                if (getCookie('p-coin') >= total) {
+                    cart.forEach(p => p.owned = true);
+                    setCookie('p-coin', getCookie('p-coin')- total); // Обновляем cookie с балансом
+                    const pcoin = "Pcoin " + getCookie('p-coin');
+                    document.querySelector('div[class="pcoin"]').innerText = pcoin || "Pcoin 0";
+                    alert('Purchase successful!');
+                    console.log('Purchased products:', cart);
+                    cart.forEach(p =>productsbay= productsbay+'|'+p.id);
+                    console.log('Purchased products:',productsbay);
+                    writeCell('F' + userid, productsbay);
+                    cart = []; // Очищаем корзину
+                    renderCart();
+                    addmoney(getCookie('name'),total*-1);
+                } else {
+                    alert('Insufficient funds. Please top up your balance.');
+                    getmoney(getCookie('name'))
+                }
+            }
+        
+            function installProduct(id) {
+                const product = products.find(p => p.id === id);
+                product.installed = true;
+                openApp(product.installURL);
+                renderLibrary();
+            }         
+            renderStore();
+        </script>
+    </div>
+    </div>
+</body>
+</html>

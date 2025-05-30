@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style1.css">
+    <script src="js/sitefun.js" type="module"></script>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background: #f1f3f4;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+        }
+    
+        .account-panel {
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+          width: 90%;
+          max-width: 600px;
+          padding: 40px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+    
+        .avatar {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          background: #ccc;
+          margin: 0 auto 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+          font-weight: bold;
+          color: white;
+        }
+    
+        .username {
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 6px;
+        }
+    
+        .email {
+          font-size: 16px;
+          color: gray;
+          margin-bottom: 20px;
+        }
+    
+        hr {
+          border: none;
+          height: 1px;
+          background-color: #e0e0e0;
+          margin: 24px 0;
+        }
+    
+        .button {
+          display: block;
+          width: 100%;
+          padding: 14px;
+          background: #1a73e8;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 18px;
+          margin-bottom: 16px;
+        }
+    
+        .button:hover {
+          background: #0c5dc0;
+        }
+    
+        .note {
+          font-size: 14px;
+          color: #666;
+          margin-top: -10px;
+          margin-bottom: 16px;
+        }
+    
+        .modal {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          justify-content: center;
+          align-items: center;
+          z-index: 999;
+        }
+    
+        .modal-content {
+          background: white;
+          padding: 30px;
+          border-radius: 12px;
+          width: 90%;
+          max-width: 400px;
+          box-sizing: border-box;
+          text-align: left;
+        }
+    
+        .modal input {
+          width: 100%;
+          padding: 10px;
+          margin: 10px 0;
+          font-size: 16px;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+        }
+    
+        .modal-buttons {
+          text-align: right;
+        }
+    
+        .modal-buttons button {
+          margin-left: 10px;
+        }
+        /* mcss: мобильная версия для accunt.html */
+        @media (max-width: 768px) {
+          body {
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            height: auto;
+            padding: 0;
+          }
+          .account-panel {
+            width: 98vw;
+            max-width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 10px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          }
+          .avatar, .user-icn1 {
+            width: 70px !important;
+            height: 70px !important;
+            font-size: 24px !important;
+            margin-bottom: 10px !important;
+          }
+          .username, .name1 {
+            font-size: 18px !important;
+          }
+          .email, .email1 {
+            font-size: 14px !important;
+          }
+          .button {
+            font-size: 16px;
+            padding: 10px;
+            margin-bottom: 10px;
+          }
+          .modal-content {
+            width: 98vw;
+            max-width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+          }
+          .modal input {
+            font-size: 15px;
+            padding: 8px;
+            margin: 8px 0;
+          }
+          .modal-buttons button {
+            font-size: 15px;
+            padding: 7px 14px;
+            margin-left: 6px;
+          }
+          .note {
+            font-size: 12px;
+            margin-bottom: 10px;
+          }
+          .menuContainer {
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 4px;
+          }
+          .appItem {
+            flex-direction: row;
+            align-items: center;
+            padding: 7px 0;
+          }
+          .appItem img,
+          .appItem .appIcon {
+            width: 28px;
+            height: 28px;
+            margin-right: 8px;
+          }
+        }
+      </style>
+</head>
+<body>
+    <div>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+          <div class="appItem" onclick="openApp('pmaill')">
+            <img src="img/PM.png" alt="png">
+            <span>Pmaill</span>
+        </div>
+            <div class="appItem" onclick="openApp('accunt')">
+                <img src="img/as.png" alt="png">
+                <span>Account settings.</span>
+            </div>
+          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
+            <img src="img/PMS.png" alt="png">
+            <span>Parrot Soft Market</span>
+        </div>
+        </div>
+        <body>
+            <div class="account-panel">
+              <img class="user-icn1" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="png">
+              <div class="name1">User Name</div>
+              <div class="email1"></div>
+              <hr>
+            <p style="color: #1a73e8;">Setings Acaunt</p><a href="Pcoin.html">Bay P-coin</a><a href="Dvelopent.html">Develop menu</a></hr>
+              <hr>
+              <button class="button" onclick="openModal('Password')">Change password</button>
+                <button class="button" onclick="openModal('Login')">Change login</button>
+                <button class="button" onclick="openModal('Icon')">Change Accaunt icon</button>
+                <button class="button" style="background-color: red;" onclick="openModal('DelAcu')">Delete Accaunt</button>
+                <div class="note">A confirmation message will be sent to change your login and email.</div>
+            </div>
+          
+            <div id="modal" class="modal">
+              <div class="modal-content">
+                <h3 id="modal-title">Изменить</h3>
+                <div id="modal-fields"></div>
+                <div class="modal-buttons">
+                  <button onclick="closeModal()">Отмена</button>
+                  <button onclick="confirmChange()">Подтвердить</button>
+                </div>
+              </div>
+            </div>
+            <script src="js/user.js"></script>
+            <script>
+              let text; 
+              let uid
+              (async function() {
+                uid = await userID(getCookie('name'));
+                console.log(uid);
+              })();
+              let currentField = '';
+              const name = getCookie('name');
+                const email = getCookie('email');
+                const pcoin = "Pcoin " + getCookie('p-coin');
+                const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+
+                document.querySelector('div[class="name1"]').innerText = name || "No Name";
+                document.querySelector('div[class="email1"]').innerText = email || "No Email";
+                document.querySelector('div[class="pcoin"]').innerText = pcoin || "Pcoin 0";
+                document.querySelector('img[class="user-icn1"]').src = icon;
+              function openModal(field) {
+                currentField = field;
+                document.getElementById('modal-title').textContent = 'Изменить ' + field.toLowerCase();
+                const fieldsDiv = document.getElementById('modal-fields');
+                fieldsDiv.innerHTML = '';
+          
+                if (field === 'Password') {
+                  fieldsDiv.innerHTML += '<label>New Password</label><input type="password" oninput="text = document.querySelector(\'.ggg\').value;" class="ggg" placeholder="New Password">';
+                } else if (field === 'Login') {
+                  fieldsDiv.innerHTML += '<label>New Login</label><input type="text" oninput="text = document.querySelector(\'.ggg\').value;" class="ggg" placeholder="New Login">';
+                } else if (field === 'Icon') {
+                  fieldsDiv.innerHTML += `
+    <img class="user-icn2" style="align-items: center;" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="png" style="width: 64px; height: 64px; display: block; margin-bottom: 8px;">
+    <label>New icon URL</label>
+    <input type="text" class="ggg" placeholder="New icon URL"
+      oninput="const text = this.value || 'https://cdn-icons-png.flaticon.com/128/17807/17807725.png'; document.querySelector('img.user-icn2').src = text;">`;
+                }else if (field === 'DelAcu') {
+                  fieldsDiv.innerHTML += '<label>Password</label><input type="password"  oninput="const text = this.value || \'https://cdn-icons-png.flaticon.com/128/17807/17807725.png\'; document.querySelector(\'img.user-icn1\').src = text;">';
+                }
+          
+                document.getElementById('modal').style.display = 'flex';
+              }
+          
+              function closeModal() {
+                document.getElementById('modal').style.display = 'none';
+              }
+          
+              async function confirmChange() {
+  const fieldsDiv = document.getElementById('modal-fields');
+
+  if (currentField === 'Password') {
+    const text = document.querySelector('.ggg').value;
+    const hash = await hashMessage(text);
+
+    console.log(`${hash}|${uid}|${text}`);
+    if (uid != null && !isNaN(uid) && uid >= 0 && hash != null) {
+      writeCell('C' + uid, hash);
+      alert(currentField + ' successfully changed');
+    }
+    else{
+      console.error(uid+'|'+text+'|'+hash+' UID or hash value. Please check the input.');
+    }
+  }else if (currentField === 'Login') {
+    const text = document.querySelector('.ggg').value;
+
+    console.log(`${uid}|${text}`);
+    if (uid != null && !isNaN(uid) && uid >= 0) {
+      if(0!=await userID(getCookie('name'))){setCookie('name',text);writeCell('A' + uid, text); alert(currentField + ' successfully changed');}
+      else{alert('Login is not the same as the current one.');}
+    }
+    else{
+      console.error(uid+'|'+text+'|'+' UID or hash value. Please check the input.');
+    }
+  }else if (currentField === 'Icon') {
+    const text = document.querySelector('.ggg').value;
+
+    console.log(`${uid}|${text}`);
+    if (uid != null && !isNaN(uid) && uid >= 0) {
+      setCookie('icon',text);writeCell('E' + uid, text);
+      alert(currentField + ' Write successfully changed');
+    }
+    else{
+      console.error(uid+'|'+text+'|'+' UID or hash value. Please check the input.');
+    }
+  }else if (currentField === 'DelAcu') {
+    const text = document.querySelector('.ggg').value;
+    const hash = await hashMessage(text);
+
+    console.log(`${hash}|${uid}|${text}`);
+    if (uid != null && !isNaN(uid) && uid >= 0 && hash != null) {
+      if(readCell('C' + uid)==hash){
+        writeCell('A'+uid,'');
+        alert("the account has been deleted");
+      }
+    }
+    else{
+      console.error(uid+'|'+text+'|'+hash+' UID or hash value. Please check the input.');
+    }
+  }
+  closeModal();
+}
+
+            </script>
+    </div>
+    </div>
+</body>
+</html>

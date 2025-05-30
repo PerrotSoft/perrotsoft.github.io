@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <script src="js/sitefun.js" type="module"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style1.css">
+    <style>
+      /* Основные стили */
+      body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #F2F2F2;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+
+      header {
+          position: fixed;
+          background-color: #1A73E8;
+          padding: 20px;
+          color: white;
+          text-align: center;
+          font-size: 35px;
+          width: 100%;
+          height: 5%;
+      }
+
+      nav {
+          background-color: #ffffff;
+          width: 200px;
+          padding: 10px;
+          box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+          position: fixed;
+          height: 100%;
+          overflow-y: scroll;
+          top: 0;
+          left: 0;
+      }
+
+      nav a {
+          text-decoration: none;
+          display: block;
+          margin: 10px 0;
+          color: #1A73E8;
+          font-size: 18px;
+      }
+
+      nav a:hover {
+          text-decoration: underline;
+      }
+
+      .main-content {
+          margin-left: 270px;
+          padding: 20px;
+          flex-grow: 1;
+          overflow-y: scroll;
+      }
+
+      h2 {
+          color: #333;
+      }
+
+      footer {
+          background-color: #00ff62;
+          padding: 10px;
+          position: fixed;
+          text-align: center;
+          color: #000000;
+          font-size: 14px;
+          width: 100%;
+          bottom: 0;
+      }
+
+      /* Стили для изображения страницы */
+      .page-image {
+          max-width: 100%;
+          height: auto;
+          margin: 20px 0;
+          display: block;
+      }
+      #535435 {
+        display: none;
+        left: 20px;
+        top: 20px;
+    }
+    #bib1{
+    left: 15px ;top: 15px;
+  }
+    /* mcss: боковая навигация для datapedia.html с кнопкой скрытия/открытия */
+@media (max-width: 768px) {
+  nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 70vw;
+    max-width: 260px;
+    min-width: 140px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+    padding: 12px 8px 8px 8px;
+  }
+  nav.active {
+    transform: translateX(0);
+  }
+  .toggleMenuBtn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1100;
+    background: #1A73E8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+  }
+  .main-content {
+    margin-left: 0 !important;
+    padding: 12px 2vw;
+    width: 100vw;
+    min-height: 60vh;
+    box-sizing: border-box;
+    overflow-y: visible;
+  }
+  #pageList a {
+    font-size: 16px;
+    padding: 7px 0;
+    margin: 2px 0;
+  }#535435 {
+    display: block;
+  }
+  #bib1{
+    left: 65px ;top: 15px;
+  }
+}
+  </style>
+</head>
+<body>
+        <!-- Добавьте кнопку в body, сразу после <body> -->
+    <button class="toggleMenuBtn" id="535435" onclick="toggleNavMenu()">></button>
+    <div>
+        <button class="toggleButton" id="bib1" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+          <div class="appItem" onclick="openApp('pmaill')">
+            <img src="img/PM.png" alt="png">
+            <span>Pmaill</span>
+        </div>
+            <div class="appItem" onclick="openApp('accunt')">
+                <img src="img/as.png" alt="png">
+                <span>Account settings.</span>
+            </div>
+          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
+            <img src="img/PMS.png" alt="png">
+            <span>Parrot Soft Market</span>
+        </div>
+        </div>
+
+        <nav>
+        <div style="height: 25px;margin-top: 25px;"></div>
+          <input type="text"style="width: 90%;" placeholder="Поиск..." id="searchInput" oninput="filterPages(event)">
+          <div id="pageList">
+                
+          </div>
+      </nav>
+  
+      <!-- Основной контент -->
+      <div class="main-content" id="mainContent">
+      </div>
+        <div style="height: 40px;margin-top: 40px;"></div>
+      <!-- Скрипт -->
+       <script src="js/user.js"></script>
+      <script>
+          const data = {
+              "title": "DataPedia",
+              "pages": {
+                  "P-Sharp coding": {
+                      "title": "P-Sharp",
+                      "image": "img/ico1.png",
+                      "content": "<h2>Информация о P-Sharp</h2><p>Язык P Sharp основан в 2025 году...</p>"
+                  },
+                  "ParrotSoft": {
+                      "title": "ParrotSoft",
+                      "image": "img/ico1.png",
+                      "content": "<p>ParrotSoft - это компания, основанная в начале 2024 года...</p>"
+                  }
+              }
+          };
+          // Загрузка и расширение списка сайтов
+(async function() {
+    try {
+        const listing = await readColumn('K') || [];
+
+        listing.forEach(row => {
+            const parts = row.split('|');
+            parts.forEach(part => {
+                const f = part.split('~');
+                if (f.length >= 2) {
+                    const key = f[0];
+                    const newPage = {
+                        title: f[0],
+                        image: f[1],
+                        content: f[2] || '<p>Нет информации</p>'
+                    };
+                    
+                    // Добавление в объект pages по ключу
+                    data.pages[key] = newPage;
+                }
+            });
+        });
+
+        console.log("Known sites loaded:", data.pages);
+
+        updatePageList();
+
+        // Автоматическое отображение страницы "ParrotSoft"
+        if (data.pages['ParrotSoft']) {
+            showPage(data.pages['ParrotSoft']);
+        }
+
+    } catch (error) {
+        console.error("Ошибка при загрузке сайтов:", error);
+    }
+})();
+
+          const pages = data.pages;
+          const pageList = document.getElementById('pageList');
+          const mainContent = document.getElementById('mainContent');
+          const searchInput = document.getElementById('searchInput');
+  
+          // Фильтрация страниц
+          function filterPages(e) {
+              const query = e.target.value.toLowerCase();
+              const filteredPages = Object.keys(pages).filter(pageName =>
+                  pages[pageName].title.toLowerCase().includes(query)
+              );
+  
+              // Обновляем список страниц
+              pageList.innerHTML = '';
+              filteredPages.forEach(pageName => {
+                  const pageLink = document.createElement('a');
+                  pageLink.href = '#';
+                  pageLink.textContent = pages[pageName].title;
+                  pageLink.addEventListener('click', () => showPage(pages[pageName]));
+                  pageList.appendChild(pageLink);
+              });
+          }
+  
+          // Отображение страницы
+          function showPage(page) {
+              let imageHtml = "";
+              if (page.image) {
+                  imageHtml = `<img src="${page.image}" alt="${page.title}" class="page-image">`;
+              }
+              mainContent.innerHTML = `
+                <div style="height: 30px;margin-top: 30px;"></div>
+                  <h2>${page.title}</h2>
+                  ${imageHtml}
+                  <div>${page.content}</div>
+              `;
+          }
+  
+          // Обновление списка страниц
+          function updatePageList() {
+              pageList.innerHTML = '';
+              Object.keys(pages).forEach(pageName => {
+                  const pageLink = document.createElement('a');
+                  pageLink.href = '#';
+                  pageLink.textContent = pages[pageName].title;
+                  pageLink.addEventListener('click', () => showPage(pages[pageName]));
+                  pageList.appendChild(pageLink);
+              });
+          }
+          // Добавьте этот скрипт в конец <body> или в <script>
+            function toggleNavMenu() {
+            const nav = document.querySelector('nav');
+            nav.classList.toggle('active');
+            }
+          // Инициализация
+          
+      </script>
+    </div>
+    </div>
+</body>
+</html>

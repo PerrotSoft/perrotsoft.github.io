@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style1.css">
+    <script src="js/sitefun.js" type="module"></script>
+    <style>
+        /* mcss: мобильная версия для index.html */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    height: auto;
+  }
+  .user-widget {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .user-icn {
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+  }
+  .user-widget-info {
+    font-size: 15px;
+  }
+  .menuContainer {
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 4px;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  .appItem {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 0;
+  }
+  .appItem img,
+  .appItem .appIcon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+  }
+  .search-container {
+    position: static !important;
+    width: 100vw;
+    padding: 10px 0;
+    text-align: center;
+  }
+  .search-container h1 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  .search-container input[type="text"] {
+    width: 80vw;
+    font-size: 15px;
+    padding: 7px;
+    margin-bottom: 8px;
+  }
+  .search-container button {
+    font-size: 15px;
+    padding: 7px 14px;
+  }
+}
+    </style>
+</head>
+<body>
+<div>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+          <div class="appItem" onclick="openApp('pmaill')">
+            <img src="img/PM.png" alt="png">
+            <span>Pmaill</span>
+        </div>
+            <div class="appItem" onclick="openApp('accunt')">
+                <img src="img/as.png" alt="png">
+                <span>Account settings.</span>
+            </div>
+          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
+            <img src="img/PMS.png" alt="png">
+            <span>Parrot Soft Market</span>
+        </div>
+        </div>
+        <div style="height: 40px;margin-top: 40px;"></div>
+        <div class="search-container"style="color: #000;position: fixed;top: 35px;">
+            <h1>ParrotSearch</h1>
+            <form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" required>
+                <button type="submit">Search</button>
+            </form>
+    </div>
+    </div>
+</body>
+</html>
