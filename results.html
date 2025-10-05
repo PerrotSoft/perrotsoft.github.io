@@ -4,485 +4,356 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search - ParrotSearch</title>
-    <link rel="stylesheet" href="css/style1.css"> <!-- Link to the CSS file -->
+    
+    <link rel="stylesheet" href="css/style1.css"> 
     <link rel="icon" href="img/ico.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
-        /* Общие стили для страницы */
-body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f8f9fa;
-    margin: 0;
-    height: 100vh; /* Полная высота вьюпорта */
-    position: relative; /* Относительное позиционирование для контента */
-    overflow: hidden; /* Запрет на прокрутку тела */
-    overflow-y: scroll;
-}
+        /* --- ГЛАВНЫЕ СТИЛИ --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f3f4; /* Светло-серый фон */
+            margin: 0;
+            /* Отступ для фиксированного хедера (120px) */
+            padding-top: 120px; 
+            min-height: 100vh;
+        }
 
-/* Стили для строки поиска */
-.search-bar {
-    margin-bottom: 30px;
-}
+        /* --- ФИКСИРОВАННЫЙ ХЕДЕР --- */
+        header.fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            /* Две строки: строка навигации и строка поиска */
+            display: flex;
+            flex-direction: column;
+        }
 
-input {
-    width: 500px;
-    padding: 12px;
-    font-size: 18px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
+        /* 1-й ряд: Кнопка меню, Виджет пользователя */
+        .header-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Все элементы справа */
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto 5px auto;
+            min-height: 40px;
+        }
 
-/* Стили для результатов */
-.result {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: white;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-}
+        /* 2-й ряд: Логотип и Поиск */
+        .header-search-row {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding-bottom: 5px;
+        }
 
-.result img {
-    width: 32px;
-    height: 32px;
-    margin-right: 15px;
-}
+        /* --- ЛОГО / ЗАГОЛОВОК --- */
+        .search-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #007bff;
+            margin-right: 30px;
+            text-decoration: none; /* Чтобы ссылка выглядела как лого */
+        }
+        
+        /* --- СТРОКА ПОИСКА --- */
+        .search-form-container {
+            flex-grow: 1;
+            max-width: 600px;
+        }
 
-.result h3 {
-    margin: 0;
-}
+        .search-bar form {
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: none;
+            transition: box-shadow 0.3s;
+        }
 
-.result a {
-    text-decoration: none;
-    color: #1a0dab;
-}
+        .search-bar form:focus-within {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.result p {
-    color: #4d5156;
-}
+        .search-bar input[type="text"] {
+            flex-grow: 1;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            box-shadow: none;
+        }
 
-/* Стили для виджета пользователя */
-.user-widget {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
+        .search-bar button {
+            background-color: #f8f9fa; 
+            color: #4285f4;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-radius: 0 24px 24px 0;
+            box-shadow: none;
+        }
+        .search-bar button:hover {
+            background-color: #e8eaed;
+        }
 
-.user-widget img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
+        /* --- КОНТЕЙНЕР РЕЗУЛЬТАТОВ --- */
+        #main-content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
 
-.user-widget-info {
-    font-size: 14px;
-}
+        #results-header {
+            font-size: 16px;
+            font-weight: normal;
+            color: #5f6368;
+            margin-bottom: 20px;
+        }
+        .result a {
+            font-size: 20px;
+            color: #1a0dab;
+            text-decoration: none;
+            display: inline-block;
+        }
 
-/* Стили для меню пользователя */
-.user-menu {
-    display: none;
-    position: fixed;
-    top: 80px;
-    right: 10px;
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: 200px;
-}
+        
+        .result .link-url {
+            color: #006621;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .result p {
+            color: #4d5156;
+            line-height: 1.4;
+            margin-top: 5px;
+        }
 
-.user-menu button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: #0078D7;
-    color: white;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 5px;
-    margin-top: 5px;
-}
-
-.user-menu button:hover {
-    background: #005a9e;
-}
-
-/* Стили для контейнера меню */
-.menuContainer {
-    position: absolute;
-    top: 65px;
-    left: 20px;
-    width: 250px;
-    max-height: 300px;
-    overflow-y: auto;
-    background-color: #ffffff;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    display: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-}
-
-.menuContainer.open {
-    display: block;
-}
-
-/* Стили для элементов меню */
-.appItem {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    border-bottom: 1px solid #eee;
-}
-
-.appItem:last-child {
-    border-bottom: none;
-}
-
-.appItem:hover {
-    background-color: #e0f7fa;
-    color: #007BFF;
-}
-
-.appIcon {
-    margin-right: 10px;
-    font-size: 20px;
-}
-
-/* Стили для кнопки */
-button {
-    display: inline-block;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background-color: #28a745;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-.toggleButton {
-    position: fixed; /* Фиксированное положение */
-    top: 20px; /* Верхнее положение */
-    left: 20px; /* Левое положение */
-    padding: 10px 13px; /* Отступ кнопки */
-    cursor: pointer; /* Указатель при наведении */
-    background-color: #ffffff; /* Цвет фона кнопки */
-    color: rgb(0, 0, 0); /* Цвет текста */
-    border: none; /* Без границы */
-    border-radius: 100px; /* Закругленные углы */
-    transition: background-color 0.3s; /* Плавный переход цвета фона */
-    z-index: 2000; /* Выше других элементов */
-    font-size: 16px; /* Размер текста кнопки */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень кнопки */
-}
-
-.toggleButton:hover {
-    background-color: #0056b3; /* Цвет при наведении */
-}
-button:hover {
-    background-color: #218838;
-    transform: scale(1.05); /* Увеличение кнопки при наведении */
-}
-
-button:active {
-    background-color: #1e7e34;
-    transform: scale(0.95); /* Уменьшение кнопки при нажатии */
-}
-nav button {
-    background: #444;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-nav button.active {
-    background: #008cff;
-}
-button {
-    display: inline-block;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background-color: #28a745;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-button:hover {
-    background-color: #218838;
-    transform: scale(1.05); /* Увеличение кнопки при наведении */
-}
-
-button:active {
-    background-color: #1e7e34;
-    transform: scale(0.95); /* Уменьшение кнопки при нажатии */
-}
-  body {
-    flex-direction: column;
-    padding: 0;
-    margin: 0;
-    height: auto;
-  }
-  .user-widget {
-    flex-direction: row;
-    align-items: center;
-    padding: 10px 0;
-  }
-  .user-icn {
-    width: 48px;
-    height: 48px;
-    margin-right: 10px;
-  }
-  .user-widget-info {
-    font-size: 15px;
-  }
-  .menuContainer {
-    flex-direction: column;
-    gap: 6px;
-    padding: 0 4px;
-    width: 100vw;
-    box-sizing: border-box;
-  }
-  .appItem {
-    flex-direction: row;
-    align-items: center;
-    padding: 8px 0;
-  }
-  .appItem img,
-  .appItem .appIcon {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
-  }
-  .search-bar {
-    position: static !important;
-    width: 100vw;
-    padding: 10px 0;
-    text-align: center;
-    background: #fff;
-    z-index: 10;
-  }
-  .search-bar input[type="text"] {
-    width: 80vw;
-    font-size: 15px;
-    padding: 7px;
-    margin-bottom: 8px;
-  }
-  .search-bar button {
-    font-size: 15px;
-    padding: 7px 14px;
-  }
-  h2 {
-    position: static !important;
-    font-size: 1.2em;
-    margin: 12px 0 8px 0;
-    left: unset !important;
-    top: unset !important;
-    text-align: center;
-  }
-  #results {
-    position: static !important;
-    margin: 0 auto;
-    width: 96vw;
-    color: #000;
-    padding-bottom: 20px;
-  }
-  .result {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-  }
-  .result img {
-    width: 32px;
-    height: 32px;
-    margin-right: 8px;
-  }
-  .result h3 {
-    font-size: 16px;
-    margin: 0 0 4px 0;
-  }
-  .result p {
-    font-size: 13px;
-    margin: 0;
-  }
+        /* --- Стилизация иконок/фавиконов --- */
+        .result .favicon-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .result img {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+        /* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 110px; /* Отступ на мобильных */
+            }
+            header.fixed-header {
+                padding: 10px;
+            }
+            .header-top-row {
+                justify-content: space-between; /* Элементы по краям */
+            }
+            .search-title {
+                font-size: 20px;
+                margin-right: 15px;
+            }
+            .search-form-container {
+                /* На мобильных поиск занимает всю ширину */
+                max-width: none; 
+            }
+        }
     </style>
+    
     <script src="js/sitefun.js" type="module"></script>
     <script src="js/user.js"></script>
 </head>
 <body>
-    <div>
-        <button class="toggleButton" onclick="toggleMenu()">☰</button>
-        <div class="user-widget" onclick="toggleUserMenu()">
-            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
-            <div class="user-widget-info">
+    
+    <header class="fixed-header">
+        
+        <div class="header-top-row">
+            <button class="toggleButton" onclick="toggleMenu()">☰</button>
+
+            <div class="user-widget" onclick="toggleUserMenu()">
+    <img class="user-icn" id="userIcon" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Профиль">
+    <div class="user-widget-info">
                 <div class="name">User Name</div>
                 <div class="email"></div>
                 <div class="pcoin">Pcoin 0</div>
             </div>
-            </div>
-            <div class="user-menu" id="userMenu" style="display: none;">
-                <button onclick="window.location.href='accunt'">Setings</button>
-                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
-                <button onclick="window.location.href='riegist'">register or login</button>
-            </div>
-        <div class="menuContainer" id="menuContainer">
-            <div class="appItem"><form action="results.html" method="get">
-                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
-                <button type="submit"style="height: 40px;width: 80px;">Search</button>
-            </form></div>
-            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
-                <i class="fab fa-google-play appIcon"></i>
-                <span>Play</span>
-            </div>
-            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
-                <img src="img/Home.png" alt="png">
-                <span>Home</span>
-            </div>
-            <div class="appItem" onclick="openApp('Install_PerrotOS')">
-                <img src="img/ico1.png" alt="png">
-                <span>install OS</span>
-            </div>
-            <div class="appItem" onclick="openApp('datapedia')">
-              <img src="img/datapedia icon1.png" alt="png">
-              <span>dataPedia</span>
-          </div>
-          <div class="appItem" onclick="openApp('pmaill')">
-            <img src="img/PM.png" alt="png">
-            <span>Pmaill</span>
+</div>
+            
         </div>
-            <div class="appItem" onclick="openApp('accunt')">
-                <img src="img/as.png" alt="png">
-                <span>Account settings.</span>
+
+        <div class="header-search-row">
+            <a href="index.html" class="search-title">ParrotSearch</a>
+            
+            <div class="search-form-container">
+                <div class="search-bar">
+                    <form action="results.html" method="get">
+                        <input type="text" name="query" placeholder="Enter your query" id="searchInput" required>
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
             </div>
-          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
-            <img src="img/PMS.png" alt="png">
-            <span>Parrot Soft Market</span>
         </div>
+        
+        <div class="user-menu" id="userMenu" style="display: none;">
+            <button onclick="window.location.href='accunt'">Setings</button>
+            <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+            <button onclick="window.location.href='riegist'">register or login</button>
         </div>
-        <div style="height: 50px;margin-top: 50px;"></div>
-        <div class="search-bar"style="color: #000;position: fixed;top: 65px;">
+    </header>
+
+    <div class="menuContainer" id="menuContainer">
+        <div class="appItem">
             <form action="results.html" method="get">
-                <input type="text" name="query" placeholder="Enter your query" required>
+                <input type="text" name="query" placeholder="Enter query in menu" required>
                 <button type="submit">Search</button>
             </form>
         </div>
-    
-        <h2 style="color: #000;position: fixed;top: 13px;left: 70px;">Search Results for: "<span id="searchQuery"></span>"</h2>
-    
-        <div id="results"style="color: #000;position: fixed;top: 159px;">
-            <!-- Search results will appear here -->
+        
+        <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+            <i class="fab fa-google-play appIcon"></i>
+            <span>Play</span>
         </div>
-    
-        <script>
-    const knownSites = [
-    { title: "PerrotSoft", url: "https://perrotsoft.github.io", description: "Homepage of PerrotSoft." },
-    { title: "YouTube", url: "https://youtube.com", description: "Video platform." },
-    { title: "Instagram", url: "https://instagram.com", description: "Social network." },
-    { title: "Facebook", url: "https://facebook.com", description: "Social network." },
-    { title: "Github", url: "https://github.com/", description: "Platform for developers." },
-    { title: "ChatGPT", url: "https://chatgpt.com", description: "AI chatbot." },
-    { title: "Amazon", url: "https://amazon.com", description: "Online store." },
-    { title: "Reddit", url: "https://reddit.com", description: "Discussion forum." },
-    { title: "TikTok", url: "https://tiktok.com", description: "Short videos." },
-    { title: "Google", url: "https://www.google.com", description: "Search engine." },
-    { title: "Wikipedia", url: "https://www.wikipedia.org", description: "Free encyclopedia." },
-];
+        <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+            <img src="img/Home.png" alt="Home Icon">
+            <span>Home</span>
+        </div>
+        <div class="appItem" onclick="openApp('Install_PerrotOS')">
+            <img src="img/ico1.png" alt="Install OS Icon">
+            <span>install OS</span>
+        </div>
+        <div class="appItem" onclick="openApp('datapedia')">
+          <img src="img/datapedia icon1.png" alt="dataPedia Icon">
+          <span>dataPedia</span>
+      </div>
+        <div class="appItem" onclick="openApp('https://wavychatapp.github.io/')">
+            <img src="https://wavychatapp.github.io/WavyChatApp.ico" width="30px" height="30px" alt="WavyChatApp Icon">
+            <span>WavyChatApp</span>
+        </div>
+        <div class="appItem" onclick="openApp('accunt')">
+            <img src="img/as.png" alt="Account settings Icon">
+            <span>Account settings.</span>
+        </div>
+    </div>
 
-const urlParams = new URLSearchParams(window.location.search);
-const query = urlParams.get('query')?.trim() || '';
-document.getElementById('searchQuery').innerText = query;
-
-// Уникальные сайты по URL
-const knownUrls = new Set(knownSites.map(site => site.url));
-
-// Загрузка и расширение списка сайтов
-(async function loadSites() {
-    try {
-        const listing = await readColumn('L') || [];
-
-        listing.forEach(row => {
-            const parts = row.split('|');
-            parts.forEach(part => {
-                const [title, url, description] = part.split('~');
-                if (title && url && description && !knownUrls.has(url)) {
-                    knownSites.push({ title, url, description });
-                    knownUrls.add(url);
-                }
-            });
-        });
-
-        console.log("Known sites loaded:", knownSites);
-
-        if (query) performSearch();
-    } catch (error) {
-        console.error("Ошибка при загрузке сайтов:", error);
-    }
-})();
-
-// Функция поиска
-function performSearch() {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
-
-    const lowerQuery = query.toLowerCase();
-
-    const filteredResults = knownSites.filter(site =>
-        site.title.toLowerCase().includes(lowerQuery) ||
-        site.description.toLowerCase().includes(lowerQuery)
-    );
-
-    if (filteredResults.length === 0) {
-        resultsDiv.innerHTML = '<p>No results found.</p>';
-        return;
-    }
-
-    filteredResults.forEach(site => {
-        const resultDiv = document.createElement('div');
-        resultDiv.classList.add('result');
-
-        const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(site.url).hostname}`;
-
-        resultDiv.innerHTML = `
-            <img src="${faviconUrl}" alt="Favicon" width="32" height="32" onerror="this.src='https://via.placeholder.com/32'">
-            <div>
-                <h3><a href="${site.url}" target="_blank">${site.title}</a></h3>
-                <p>${site.description}</p>
+    <div id="main-content">
+        <div id="results-header">Search Results for: "<span id="searchQuery"></span>"</div>
+        <div id="results">
             </div>
-        `;
-        resultsDiv.appendChild(resultDiv);
-    });
-}
-
-</script>
-
     </div>
-    </div>
+    
+    <script>
+        const knownSites = [
+            { title: "PerrotSoft", url: "https://perrotsoft.github.io", description: "Homepage of PerrotSoft." },
+            { title: "YouTube", url: "https://youtube.com", description: "Video platform." },
+            { title: "Instagram", url: "https://instagram.com", description: "Social network." },
+            { title: "Facebook", url: "https://facebook.com", description: "Social network." },
+            { title: "Github", url: "https://github.com/", description: "Platform for developers." },
+            { title: "ChatGPT", url: "https://chatgpt.com", description: "AI chatbot." },
+            { title: "Amazon", url: "https://amazon.com", description: "Online store." },
+            { title: "Reddit", url: "https://reddit.com", description: "Discussion forum." },
+            { title: "TikTok", url: "https://tiktok.com", description: "Short videos." },
+            { title: "Google", url: "https://www.google.com", description: "Search engine." },
+            { title: "Wikipedia", url: "https://www.wikipedia.org", description: "Free encyclopedia." },
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query')?.trim() || '';
+        
+        document.getElementById('searchQuery').innerText = query;
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.value = query;
+        }
+
+        const knownUrls = new Set(knownSites.map(site => site.url));
+
+        // Загрузка и расширение списка сайтов
+        (async function loadSites() {
+            try {
+                // Предполагается, что readColumn('L') доступна
+                // if (typeof readColumn === 'undefined') return; 
+                // const listing = await readColumn('L') || []; 
+                
+                // Временно комментируем, пока readColumn не определена
+                const listing = []; 
+
+                listing.forEach(row => {
+                    const parts = row.split('|');
+                    parts.forEach(part => {
+                        const [title, url, description] = part.split('~');
+                        if (title && url && description && !knownUrls.has(url)) {
+                            knownSites.push({ title, url, description });
+                            knownUrls.add(url);
+                        }
+                    });
+                });
+
+                if (query) performSearch();
+            } catch (error) {
+                console.error("Ошибка при загрузке сайтов:", error);
+            }
+        })();
+
+        // Функция поиска
+        function performSearch() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            const lowerQuery = query.toLowerCase();
+
+            const filteredResults = knownSites.filter(site =>
+                site.title.toLowerCase().includes(lowerQuery) ||
+                site.description.toLowerCase().includes(lowerQuery)
+            );
+
+            if (filteredResults.length === 0) {
+                resultsDiv.innerHTML = '<p>No results found for your query.</p>';
+                return;
+            }
+
+            filteredResults.forEach(site => {
+                const resultDiv = document.createElement('div');
+                resultDiv.classList.add('result');
+
+                const domain = new URL(site.url).hostname.replace('www.', '');
+                // Google Favicon API
+                const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=16`; 
+
+                resultDiv.innerHTML = `
+                    <div class="favicon-info">
+                        <img src="${faviconUrl}" alt="Favicon" width="16" height="16" onerror="this.src='https://via.placeholder.com/16'">
+                        <span class="link-url">${domain}</span>
+                    </div>
+                    <h3><a href="${site.url}" target="_blank">${site.title}</a></h3>
+                    <p>${site.description}</p>
+                `;
+                resultsDiv.appendChild(resultDiv);
+            });
+        }
+        function toggleUserMenu() { 
+            const menu = document.getElementById('userMenu');
+            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none'; 
+        }
+        function openApp(app) { 
+            console.log(`Attempting to open app: ${app}`);
+            // Ваша логика открытия приложения
+        }
+        
+        
+    </script>
 </body>
 </html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ParrotSoft — Каталог приложений</title>
+      <link rel="icon" href="img/ico.ico" type="image/x-icon">
+        <script src="js/sitefun.js" type="module"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="css/style1.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url("img/fone.png");
+      background-repeat: no-repeat; /* Запрет повторения изображения */
+    background-size: cover; /* Растянуть изображение на весь экран */
+    background-position: center center; /* Центрировать изображение */
+    background-attachment: fixed; /* Закрепить фон при прокрутке (опционально) */
+    }
+
+    header {
+      background: linear-gradient(90deg, #1e1e1e, #2a2a2a);
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #00c853;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    .search-bar {
+      text-align: center;
+      margin: 20px;
+    }
+
+    .search-bar input {
+      width: 300px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .apps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .app-card {
+      background: #ffffffe3;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .app-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+    }
+
+    .app-card img {
+      width: 90px;
+      height: 90px;
+      border-radius: 20%;
+      margin-bottom: 15px;
+    }
+
+    .app-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0 5px;
+      color: #00e676;
+    }
+
+    .app-desc {
+      font-size: 14px;
+      margin-bottom: 15px;
+      min-height: 40px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .buttons button {
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .buttons button:hover {
+      background: #009624;
+    }
+
+    /* Popup */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(116, 116, 116, 0.586);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup-content {
+      background: #e5e5e5;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+    }
+
+    .popup-content h2 {
+      margin-top: 0;
+      color: #028344;
+    }
+    .popup-content button {
+      margin-top: 20px;
+      background: #f44336;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .popup-content button:hover {
+      background: #c62828;
+    }
+  </style>
+</head>
+<body>
+      <div>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+        <div class="appItem" onclick="openApp('https://wavychatapp.github.io/')">
+            <img src="https://wavychatapp.github.io/WavyChatApp.ico" width="30px" height="30px" alt="png">
+            <span>WavyChatApp</span>
+        </div>
+        <div class="appItem" onclick="openApp('accunt')">
+            <img src="img/as.png" alt="png">
+            <span>Account settings.</span>
+        </div>
+        </div>
+        <div style="height: 55px;margin-top: 55px;"></div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="🔍 Поиск приложений..." onkeyup="searchApps()">
+  </div>
+
+  <div class="apps-container" id="appsList">
+    <!-- Приложение 1 -->
+    <div class="app-card" data-name="site">
+      <img src="img/ico.png" alt="Home">
+      <div class="app-title">ParrotSoft site</div>
+      <div class="app-desc">Home page of all ParrotSoft services.</div>
+      <div class="buttons">
+        <button onclick="openApp('https://perrotsoft.github.io/')">Open</button>
+        <button onclick="showDetails('ParrotSoft Site','This is the ParrotSoft site, where all services and news are collected.')">Read more</button>
+      </div>
+    </div>
+
+    <!-- Приложение 2 -->
+    <div class="app-card" data-name="ParrotOS Installer">
+      <img src="img/ico.png" alt="ParrotOS Installer">
+      <div class="app-title">ParrotOS Installer</div>
+      <div class="app-desc">site for installing and downloading ParrotOS.</div>
+      <div class="buttons">
+        <button onclick="openApp('https://perrotsoft.github.io/ParrotOS_Instaler/')">Open</button>
+        <button onclick="showDetails('ParrotOS Installer','Allows you to install and download ParrotOS on your computer or device.')">Read more</button>
+      </div>
+    </div>
+
+    <!-- Приложение 3 -->
+    <div class="app-card" data-name="WavyChatApp">
+      <img src="https://wavychatapp.github.io/WavyChatApp.ico" alt="WavyChatApp">
+      <div class="app-title">WavyChatApp</div>
+      <div class="app-desc">Messenger WavyChatApp</div>
+      <div class="buttons">
+        <button onclick="openApp('https://wavychatapp.github.io/')">Open</button>
+        <button onclick="showDetails('WavyChatApp','The best messenger in the world is WavyChatApp.')">Read more</button>
+      </div>
+    </div>
+
+
+    <!-- Приложение 5 -->
+    <div class="app-card" data-name="DataPedia">
+      <img src="img/datapedia icon.png" alt="DataPedia">
+      <div class="app-title">DataPedia</div>
+      <div class="app-desc">Encyclopedia of data and knowledge.</div>
+      <div class="buttons">
+        <button onclick="openApp('datapedia')">Open</button>
+        <button onclick="showDetails('DataPedia','A knowledge base and encyclopedia for ParrotSoft projects and the community.')">Read more</button>
+      </div>
+    </div>
+    <div class="app-card" data-name="Pblend3D">
+      <img src="img/datapedia icon1.png" alt="Pblend3D">
+      <div class="app-title">Pblend3D</div>
+      <div class="app-desc">Pblend3D 3D Paint</div>
+      <div class="buttons">
+        <button onclick="openApp('https://perrotsoft.github.io/Pblend3D')">Open</button>
+        <button onclick="showDetails('Pblend3D','Pblend3D 3D Module Paint')">Read more</button>
+      </div>
+    </div>
+  <div class="app-card" data-name="WEBOS">
+      <img src="img/datapedia icon1.png" alt="WEBOS">
+      <div class="app-title">WEBOS</div>
+      <div class="app-desc">WEBOS</div>
+      <div class="buttons">
+        <button onclick="openApp('https://perrotsoft.github.io/WEBOS')">Open</button>
+        <button onclick="showDetails('WEBOS','WEBOS - WEB Brouser OS')">Read more</button>
+      </div>
+    </div>
+  <div class="app-card" data-name="PEngen-Web">
+      <img src="https://perrotsoft.github.io/PEngen-Web/ico-engen.png" alt="PEngen-Web">
+      <div class="app-title">PEngen-Web</div>
+      <div class="app-desc">PEngen-Web Game Engen</div>
+      <div class="buttons">
+        <button onclick="openApp('https://perrotsoft.github.io/PEngen-Web')">Open</button>
+        <button onclick="showDetails('PEngen-Web','PEngen-Web - WEB 2D Game Engen')">Read more</button>
+      </div>
+    </div>
+  <div class="app-card" data-name="PEngenAPI">
+      <img src="https://perrotsoft.github.io/PEngenAPI/ico-engen.ico" alt="PEngenAPI">
+      <div class="app-title">PEngenAPI</div>
+      <div class="app-desc">PEngenAPI Game Engen</div>
+      <div class="buttons">
+        <button onclick="openApp('https://perrotsoft.github.io/PEngenAPI')">Open</button>
+        <button onclick="showDetails('PEngenAPI','PEngenAPI - 2D Game Engen')">Read more</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Popup -->
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <h2 id="popupTitle"></h2>
+      <p id="popupText"></p>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+    </div>
+    </div>
+    <div style="height: 100px;margin-top: 100px;"></div>
+  <script>
+    function openApp(url) {
+      window.location.href = url;
+    }
+
+    function showDetails(title, text) {
+      document.getElementById('popupTitle').innerText = title;
+      document.getElementById('popupText').innerText = text;
+      document.getElementById('popup').style.display = 'flex';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+    }
+
+    function searchApps() {
+      let input = document.getElementById('searchInput').value.toLowerCase();
+      let apps = document.querySelectorAll('.app-card');
+      apps.forEach(app => {
+        let name = app.dataset.name.toLowerCase();
+        if (name.includes(input)) {
+          app.style.display = 'block';
+        } else {
+          app.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

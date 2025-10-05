@@ -26,7 +26,6 @@ input {
     background-color: white;
     border: 1px solid #dcdcdc;
     border-radius: 8px;
-    display: flex;
     align-items: center;
 }
 
@@ -55,8 +54,8 @@ input {
     top: 10px;
     right: 10px;
     background: white;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 6px;
+    border-radius: 100px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
@@ -65,8 +64,8 @@ input {
 }
 
 .user-widget img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -80,10 +79,10 @@ input {
     display: none;
     position: fixed;
     top: 80px;
-    right: 10px;
+    right: 35px;
     background: white;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     width: 200px;
 }
@@ -129,21 +128,31 @@ input {
 .appItem {
     display: flex;
     align-items: center;
-    padding: 12px 15px;
+    padding: 10px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
     border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
 }
 
 .appItem:last-child {
     border-bottom: none;
 }
-
-.appItem:hover {
-    background-color: #e0f7fa;
-    color: #007BFF;
+.appItem span {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
 }
-
+.appItem:hover {
+    background: #e8eaed;
+}
+.appItem img, .appIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+}
 .appIcon {
     margin-right: 10px;
     font-size: 20px;
@@ -175,7 +184,7 @@ button {
     border: none; /* Без границы */
     border-radius: 100px; /* Закругленные углы */
     transition: background-color 0.3s; /* Плавный переход цвета фона */
-    z-index: 2000; /* Выше других элементов */
+    z-index: 9999; /* Выше других элементов */
     font-size: 16px; /* Размер текста кнопки */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень кнопки */
 }
