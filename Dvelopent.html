@@ -3,480 +3,841 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account settings</title>
+    <title>Developer Menu</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style1.css">
-    <script src="js/sitefun.js" type="module"></script> 
-    <script src="js/user.js"></script> 
+    <script src="js/sitefun.js" type="module"></script>
+    <script src="js/user.js"></script>
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f1f3f4;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh; /* ИЗМЕНЕНИЕ: Используйте min-height вместо height */
-        /* Добавьте overflow-y: scroll; если хотите, чтобы полоса прокрутки всегда была видна,
-           даже когда контента мало. Иначе она появится, когда контент превысит min-height. */
-        overflow-y: auto; /* Добавлено для прокрутки основного body, если контент длиннее */
-    }
-
-    .account-panel {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        width: 90%;
-        max-width: 600px;
-        padding: 40px;
-        box-sizing: border-box;
-        text-align: center;
-    }
-
-    .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: #ccc;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 32px;
-        font-weight: bold;
-        color: white;
-    }
-
-    .username {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 6px;
-    }
-
-    .email {
-        font-size: 16px;
-        color: gray;
-        margin-bottom: 20px;
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background-color: #e0e0e0;
-        margin: 24px 0;
-    }
-
-    .button {
-        display: block;
-        width: 100%;
-        padding: 14px;
-        background: #1ae84e;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 18px;
-        margin-bottom: 16px;
-    }
-
-    .button:hover {
-        background: #0cc00c;
-    }
-
-    .note {
-        font-size: 14px;
-        color: #666;
-        margin-top: -10px;
-        margin-bottom: 16px;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
-    }
-
-    .modal-content {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 400px;
-        box-sizing: border-box;
-        text-align: left;
-        max-height: 90vh; /* ИЗМЕНЕНИЕ: Ограничиваем максимальную высоту модального окна */
-        overflow-y: auto; /* ИЗМЕНЕНИЕ: Добавляем прокрутку, если содержимое превышает max-height */
-    }
-
-    .modal input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-    }
-
-    .modal-buttons {
-        text-align: right;
-    }
-
-    .modal-buttons button {
-        margin-left: 10px;
-    }
-
-    /* NEW: Styles for project items in the modal */
-    .project-item {
-        border: 1px solid #eee;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-        position: relative; /* Для позиционирования кнопок */
-    }
-
-    .project-item h4 {
-        margin-top: 0;
-        margin-bottom: 5px;
-        color: #333;
-    }
-
-    .project-item p {
-        margin: 3px 0;
-        font-size: 14px;
-        color: #555;
-    }
-
-    .project-item .actions {
-        margin-top: 10px;
-        display: flex;
-        gap: 5px;
-        justify-content: flex-end; /* Выравнивание кнопок вправо */
-    }
-
-    .project-item button {
-        padding: 6px 12px;
-        font-size: 14px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        width: auto; 
-        display: inline-block; 
-    }
-
-    .project-item button:hover {
-        background-color: #0056b3;
-    }
-
-    .project-item button.delete-btn { /* Отдельный класс для кнопки удаления */
-        background-color: #dc3545;
-    }
-
-    .project-item button.delete-btn:hover {
-        background-color: #c82333;
-    }
-
-    .modal label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    /* NEW: Styles for project type filter */
-    .project-filter {
-        margin-bottom: 15px;
-        text-align: center;
-    }
-
-    .project-filter button {
-        padding: 8px 15px;
-        margin: 0 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f0f0f0;
-        cursor: pointer;
-    }
-
-    .project-filter button.active {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-
-
-    /* mcss: мобильная версия для accunt.html */
-    @media (max-width: 768px) {
+        /* Общие стили для нового макета, скопированные из accunt.html */
         body {
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: flex-start;
-            height: auto; /* Это уже хорошо для мобильной версии */
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1f1d1d; /* Будет переопределено JS */
+            margin: 0;
+            padding-top: 60px;
+            display: flex;
+            min-height: 100vh;
         }
-        .account-panel {
-            width: 98vw;
-            max-width: 100%;
-            padding: 16px;
-            border-radius: 8px;
-            margin: 10px auto;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+        /* ------------------------------------- */
+        /* Боковое меню (Sidebar) - accunt.html Style */
+        /* ------------------------------------- */
+        nav {
+            background-color: #2b2c2e; /* Будет переопределено JS */
+            width: 250px;
+            min-width: 200px;
+            padding: 10px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            height: 100%;
+            color: #ffffff;
+            overflow-y: auto;
+            top: 0;
+            left: 0;
+            z-index: 99;
+            box-sizing: border-box;
+            padding-top: 70px;
         }
-        .avatar, .user-icn1 {
-            width: 70px !important;
-            height: 70px !important;
-            font-size: 24px !important;
-            margin-bottom: 10px !important;
+        nav.active {
+            transform: translateX(0); /* Для мобильного меню */
+            box-shadow: 5px 0 10px rgba(0, 0, 0, 0.3);
         }
-        .username, .name1 {
-            font-size: 18px !important;
+
+        /* Заголовок кластера */
+        .cluster-title {
+            color: #A9B2BB; /* Будет переопределено JS */
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 15px 15px 5px 15px;
+            margin-top: 5px;
         }
-        .email, .email1 {
-            font-size: 14px !important;
+
+        /* Разделитель */
+        .cluster-separator {
+            border: none;
+            height: 1px;
+            background-color: #444C56; /* Будет переопределено JS */
+            margin: 5px 15px;
         }
-        .button {
-            font-size: 16px;
-            padding: 10px;
+
+        /* Стиль ссылок в боковом меню */
+        nav a {
+            text-decoration: none;
+            display: block;
+            margin: 0;
+            color: #C8D1D9; /* Будет переопределено JS */
+            font-size: 15px;
+            padding: 10px 15px;
+            border-left: 3px solid transparent;
+            transition: background-color 0.2s, border-left-color 0.2s, color 0.2s;
+        }
+
+        /* Основная область контента */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            flex-grow: 1;
+            width: calc(100% - 250px);
+            box-sizing: border-box;
+            color: inherit;
+        }
+        
+        .main-content h1 {
+            border-bottom: 1px solid #444C56; 
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #FFFFFF; 
+        }
+        .main-content h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: inherit;
+        }
+        .main-content p {
+            color: inherit;
+        }
+
+        /* Верхняя панель (Top Panel) - accunt.html */
+        .top-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #191919; /* Будет переопределено JS */
+            color: white; /* Будет переопределено JS */
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .toggleButton {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 24px;
+            cursor: pointer;
+            display: none; 
+        }
+        
+        .user-widget:hover {
+            background-color: #3C444B; 
+        }
+        .user-widget-info {
+            margin-left: 10px;
+            font-size: 14px;
+            text-align: right;
+            color: inherit;
+        }
+        .user-widget-info .name {
+            font-weight: 600;
+            color: #000000; 
+        }
+        .user-widget-info .pcoin {
+            font-weight: 600;
+            color: #000000; 
+        }
+        .user-widget-info .email {
+            font-weight: 600;
+            color: #000000; 
+        }
+        .user-icn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        #userMenu {
+            position: fixed;
+            right: 15px; 
+            top: 60px; 
+            z-index: 1000; 
+            background: #191919;
+            border: 1px solid #444C56;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
+            padding: 10px; 
+            border-radius: 8px; 
+            text-align: left;
+            min-width: 180px;
+        }
+        #userMenu button {
+            display: block; 
+            width: 100%; 
+            margin-bottom: 5px;
+            padding: 8px 15px;
+            border: none;
+            background: #2b2c2e;
+            color: #FFFFFF;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        #userMenu button:hover {
+            background: #444C56;
+        }
+
+        /* Developer Menu Content Styles (Adapted to accunt.html inputs/buttons) */
+        .settings-container label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: inherit; 
+        }
+        .settings-container input[type="text"] {
+             width: 100%;
+             max-width: 400px;
+             padding: 10px;
+             margin: 5px 0;
+             border: 1px solid #ccc; 
+             border-radius: 6px;
+             box-sizing: border-box;
+             background-color: inherit; 
+             color: inherit; 
+             transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .settings-container input[type="text"]:focus {
+            border-color: #0366D6; 
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.5);
+        }
+        /* Style for the main action buttons in content area */
+        .dev-action-buttons .button {
+            display: block;
+            width: 100%;
+            max-width: 400px; /* Ограничиваем ширину для лучшего вида */
             margin-bottom: 10px;
+            background-color: #1a73e8 !important; 
+            color: white !important;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            font-size: 16px;
+            text-align: center;
+        }
+        .dev-action-buttons .button:hover {
+            background-color: #0c5dc0 !important;
+        }
+        .dev-action-buttons .button:nth-child(4) { /* View/Manage My Projects */
+            background-color: #6c757d !important;
+        }
+        .dev-action-buttons .button:nth-child(4):hover {
+            background-color: #5a6268 !important;
+        }
+        /* App item in content area */
+        .appItem-content {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #444C56;
+            border-radius: 6px;
+            background-color: #2b2c2e;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            max-width: 400px;
+        }
+        .appItem-content:hover {
+            background-color: #3C444B;
+        }
+        .appItem-content img {
+            width: 32px;
+            height: 32px;
+            margin-right: 15px;
+        }
+        .appItem-content span {
+            font-weight: 600;
+        }
+
+
+        /* NEW MODAL STYLES (Adapted from Dvelopent.html, but styled for dark theme) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
         .modal-content {
-            width: 98vw;
-            max-width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            max-height: 90vh; /* ИЗМЕНЕНИЕ: Также для мобильной версии */
-            overflow-y: auto; /* ИЗМЕНЕНИЕ: Также для мобильной версии */
+            background: #2b2c2e; /* Nav-bg equivalent */
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: left;
+            max-height: 90vh;
+            overflow-y: auto;
+            color: #FFFFFF;
+            border: 1px solid #444C56;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         }
         .modal input {
-            font-size: 15px;
-            padding: 8px;
-            margin: 8px 0;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #444C56;
+            border-radius: 6px;
+            background: #1f1d1d; /* Body-bg equivalent */
+            color: #FFFFFF;
+            box-sizing: border-box;
+        }
+        .modal-buttons {
+            text-align: right;
+            margin-top: 20px;
         }
         .modal-buttons button {
-            font-size: 15px;
-            padding: 7px 14px;
-            margin-left: 6px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+            transition: background-color 0.2s;
         }
-        .note {
-            font-size: 12px;
+        .modal-buttons button:first-child { /* Cancel */
+            background-color: #444C56;
+            color: #FFFFFF;
+        }
+        .modal-buttons button:first-child:hover {
+            background-color: #5a6268;
+        }
+        .modal-buttons button:last-child { /* Confirm/Save */
+            background-color: #0366D6;
+            color: #FFFFFF;
+        }
+        .modal-buttons button:last-child:hover {
+            background-color: #005cbf;
+        }
+        
+        .project-item {
+            border: 1px solid #444C56;
+            padding: 15px;
             margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: #1f1d1d;
         }
-        .menuContainer {
-            flex-direction: column;
-            gap: 6px;
-            padding: 0 4px;
+        .project-filter button.active {
+            background-color: #0366D6;
+            color: white;
+            border-color: #0366D6;
         }
-        .appItem {
-            flex-direction: row;
-            align-items: center;
-            padding: 7px 0;
+        /* End of modal styles */
+
+
+        /* Медиа-запросы для мобильных устройств (accunt.html) */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 50px;
+                flex-direction: column;
+            }
+            .top-panel {
+                height: 50px;
+                justify-content: flex-start;
+                gap: 10px;
+                padding: 0 10px;
+            }
+            .toggleButton {
+                display: block; 
+            }
+            .user-widget {
+                margin-left: auto;
+            }
+            .user-widget-info {
+                display: none;
+            }
+            nav {
+                position: fixed;
+                width: 80vw;
+                height: 100vh;
+                padding-top: 50px;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                width: 100%;
+            }
+            .dev-action-buttons .button, .appItem-content {
+                max-width: 100%;
+            }
         }
-        .appItem img,
-        .appItem .appIcon {
-            width: 28px;
-            height: 28px;
-            margin-right: 8px;
-        }
-    }
-</style>
+    </style>
 </head>
 <body>
-    <div>
-        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+    
+    <div class="top-panel">
+        <button class="toggleButton" onclick="toggleNavMenu()">☰</button>
+        <div style="font-size: 20px; font-weight: bold;">Developer Menu</div>
+        
         <div class="user-widget" onclick="toggleUserMenu()">
-            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <img class="user-icn" id="topUserIcon" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Profile Icon">
             <div class="user-widget-info">
-                <div class="name">User Name</div>
-                <div class="email"></div>
-                <div class="pcoin">Pcoin 0</div>
+                <div class="name" id="topUserName">User Name</div>
+                <div class="email" id="topUserEmail"></div>
+                <div class="pcoin" id="topUserPcoin">Pcoin 0</div>
             </div>
         </div>
+        
         <div class="user-menu" id="userMenu" style="display: none;">
             <button onclick="window.location.href='accunt'">Setings</button>
             <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
             <button onclick="window.location.href='riegist'">register or login</button>
         </div>
-        <div class="menuContainer" id="menuContainer">
-            <div class="appItem">
-                <form action="results.html" method="get">
-                    <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
-                    <button type="submit" style="height: 40px;width: 80px;">Search</button>
-                </form>
-            </div>
-            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
-                <i class="fab fa-google-play appIcon"></i>
-                <span>Play</span>
-            </div>
-            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
-                <img src="img/Home.png" alt="png">
-                <span>Home</span>
-            </div>
-            <div class="appItem" onclick="openApp('Install_PerrotOS')">
-                <img src="img/ico1.png" alt="png">
-                <span>install OS</span>
-            </div>
-            <div class="appItem" onclick="openApp('datapedia')">
-                <img src="img/datapedia icon1.png" alt="png">
-                <span>dataPedia</span>
-            </div>
-            <div class="appItem" onclick="openApp('pmaill')">
-                <img src="img/PM.png" alt="png">
-                <span>Pmaill</span>
-            </div>
-            <div class="appItem" onclick="openApp('accunt')">
-                <img src="img/as.png" alt="png">
-                <span>Account settings.</span>
-            </div>
-            <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
-                <img src="img/PMS.png" alt="png">
-                <span>Parrot Soft Market</span>
-            </div>
-        </div>
-        <div class="account-panel">
-            <h2>Developent panel</h2>
-            <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
-            <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
-            <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
-            <button class="button" onclick="showProjects('all')">View/Manage My Projects</button>
-            <hr>
-            <div class="appItem" onclick="openApp('ParrotSoftIDE.html')">
-                <img src="img/ParrotIDE_mini.png" alt="png">
-                <span>ParrotSoftIDE</span>
-            </div>
-        </div>
+    </div>
+    
+    <nav id="settingsNav"></nav>
 
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">Add Search</h3>
-                <div id="modal-fields">
-                    <input type="text" name="searchName" placeholder="Search Name" required>
-                    <input type="text" name="searchUrl" placeholder="Search URL" required>
-                    <input type="text" name="searchdata" placeholder="Search data" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('search')">Confirm</button>
-                </div>
+    <div class="main-content" id="mainContent">
+        </div>
+    
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Add Search</h3>
+            <div id="modal-fields">
+                <input type="text" name="searchName" placeholder="Search Name" required>
+                <input type="text" name="searchUrl" placeholder="Search URL" required>
+                <input type="text" name="searchdata" placeholder="Search data" required>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="document.getElementById('modal').style.display='none'">Cancel</button>
+                <button onclick="confirmChanges('search')">Confirm</button>
             </div>
         </div>
+    </div>
 
-        <div id="modal1" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">creating an article</h3>
-                <div id="modal1-fields">
-                    <input type="text" name="Name" placeholder="Name" required>
-                    <input type="text" name="img" placeholder="img" required>
-                    <input type="text" name="code" placeholder="code" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal1').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('datapedia')">Confirm</button>
-                </div>
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">creating an article</h3>
+            <div id="modal1-fields">
+                <input type="text" name="Name" placeholder="Name" required>
+                <input type="text" name="img" placeholder="img" required>
+                <input type="text" name="code" placeholder="code" required>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="document.getElementById('modal1').style.display='none'">Cancel</button>
+                <button onclick="confirmChanges('datapedia')">Confirm</button>
             </div>
         </div>
+    </div>
 
-        <div id="modal2" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">Add Game/App</h3>
-                <div id="modal2-fields">
-                    <input type="text" name="Name" placeholder="Name" required>
-                    <input type="text" name="price" placeholder="price" required>
-                    <input type="text" name="image" placeholder="image URL" required>
-                    <input type="text" name="installURL" placeholder="Install URL" required> </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal2').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('gameApp')">Confirm</button>
-                </div>
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Add Game/App</h3>
+            <div id="modal2-fields">
+                <input type="text" name="Name" placeholder="Name" required>
+                <input type="text" name="price" placeholder="price" required>
+                <input type="text" name="image" placeholder="image URL" required>
+                <input type="text" name="installURL" placeholder="Install URL" required> </div>
+            <div class="modal-buttons">
+                <button onclick="document.getElementById('modal2').style.display='none'">Cancel</button>
+                <button onclick="confirmChanges('gameApp')">Confirm</button>
             </div>
         </div>
+    </div>
 
-        <div id="modal3" class="modal">
-            <div class="modal-content">
-                <h3>My Projects</h3>
-                <div class="project-filter">
-                    <button id="filter-all" class="active" onclick="showProjects('all')">All</button>
-                    <button id="filter-search" onclick="showProjects('search')">Search</button>
-                    <button id="filter-datapedia" onclick="showProjects('datapedia')">Datapedia</button>
-                    <button id="filter-gameApp" onclick="showProjects('gameApp')">Games/Apps</button>
-                </div>
-                <div id="projects-list">
-                    <p>No projects found. Add some projects using the buttons above!</p>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal3').style.display='none'">Close</button>
-                </div>
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <h3>My Projects</h3>
+            <div class="project-filter">
+                <button id="filter-all" class="active" onclick="showProjects('all')">All</button>
+                <button id="filter-search" onclick="showProjects('search')">Search</button>
+                <button id="filter-datapedia" onclick="showProjects('datapedia')">Datapedia</button>
+                <button id="filter-gameApp" onclick="showProjects('gameApp')">Games/Apps</button>
+            </div>
+            <div id="projects-list">
+                <p>No projects found. Add some projects using the buttons above!</p>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="document.getElementById('modal3').style.display='none'">Close</button>
             </div>
         </div>
+    </div>
 
-        <div id="editSearchModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Search Project</h3>
-                <div id="editSearchFields">
-                    <input type="hidden" id="editSearchOriginalString"> 
-                    <label for="editSearchName">Search Name:</label>
-                    <input type="text" id="editSearchName" placeholder="Search Name" required>
-                    <label for="editSearchUrl">Search URL:</label>
-                    <input type="text" id="editSearchUrl" placeholder="Search URL" required>
-                    <label for="editSearchData">Search Data:</label>
-                    <input type="text" id="editSearchData" placeholder="Search data" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editSearchModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('search')">Save Changes</button>
-                </div>
+    <div id="editSearchModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Search Project</h3>
+            <div id="editSearchFields">
+                <input type="hidden" id="editSearchOriginalString"> 
+                <label for="editSearchName">Search Name:</label>
+                <input type="text" id="editSearchName" placeholder="Search Name" required>
+                <label for="editSearchUrl">Search URL:</label>
+                <input type="text" id="editSearchUrl" placeholder="Search URL" required>
+                <label for="editSearchData">Search Data:</label>
+                <input type="text" id="editSearchData" placeholder="Search data" required>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="document.getElementById('editSearchModal').style.display='none'">Cancel</button>
+                <button onclick="saveProjectChanges('search')">Save Changes</button>
             </div>
         </div>
+    </div>
 
-        <div id="editDatapediaModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Datapedia Article</h3>
-                <div id="editDatapediaFields">
-                    <input type="hidden" id="editDatapediaOriginalString"> 
-                    <label for="editDatapediaName">Article Name:</label>
-                    <input type="text" id="editDatapediaName" placeholder="Name" required>
-                    <label for="editDatapediaImg">Image URL:</label>
-                    <input type="text" id="editDatapediaImg" placeholder="img" required>
-                    <label for="editDatapediaCode">Code:</label>
-                    <input type="text" id="editDatapediaCode" placeholder="code" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editDatapediaModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('datapedia')">Save Changes</button>
-                </div>
+    <div id="editDatapediaModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Datapedia Article</h3>
+            <div id="editDatapediaFields">
+                <input type="hidden" id="editDatapediaOriginalString"> 
+                <label for="editDatapediaName">Article Name:</label>
+                <input type="text" id="editDatapediaName" placeholder="Name" required>
+                <label for="editDatapediaImg">Image URL:</label>
+                <input type="text" id="editDatapediaImg" placeholder="img" required>
+                <label for="editDatapediaCode">Code:</label>
+                <input type="text" id="editDatapediaCode" placeholder="code" required>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="document.getElementById('editDatapediaModal').style.display='none'">Cancel</button>
+                <button onclick="saveProjectChanges('datapedia')">Save Changes</button>
             </div>
         </div>
+    </div>
 
-        <div id="editGameAppModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Game/App Project</h3>
-                <div id="editGameAppFields">
-                    <input type="hidden" id="editGameAppOriginalId"> <label for="editGameAppName">Name:</label>
-                    <input type="text" id="editGameAppName" placeholder="Name" required>
-                    <label for="editGameAppPrice">Price:</label>
-                    <input type="text" id="editGameAppPrice" placeholder="price" required>
-                    <label for="editGameAppImage">Image URL:</label>
-                    <input type="text" id="editGameAppImage" placeholder="image URL" required>
-                    <label for="editGameAppInstallURL">Install URL:</label>
-                    <input type="text" id="editGameAppInstallURL" placeholder="Install URL" required>
+    <div id="editGameAppModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Game/App Project</h3>
+            <div id="editGameAppFields">
+                <input type="hidden" id="editGameAppOriginalId"> <label for="editGameAppName">Name:</label>
+                <input type="text" id="editGameAppName" placeholder="Name" required>
+                <label for="editGameAppPrice">Price:</label>
+                <input type="text" id="editGameAppPrice" placeholder="price" required>
+                <label for="editGameAppImage">Image URL:</label>
+                <input type="text" id="editGameAppImage" placeholder="image URL" required>
+                <label for="editGameAppInstallURL">Install URL:</label>
+                <input type="text" id="editGameAppInstallURL" placeholder="Install URL" required>
+                </div>
+            <div class="modal-buttons">
+                <button onclick="document.getElementById('editGameAppModal').style.display='none'">Cancel</button>
+                <button onclick="saveProjectChanges('gameApp')">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Theme Styles (Скопировано из accunt.html) ---
+        const themeStyles = {
+            'dark': {
+                'body-bg': '#1f1d1d', 'text-color': '#FFFFFF',
+                'top-panel-bg': '#191919', 'top-panel-color': '#FFFFFF',
+                'nav-bg': '#2b2c2e', 'nav-text': '#FFFFFF',
+                'nav-hover': '#444C56', 'nav-active-bg': '#3C444B',
+                'cluster-title': '#FFFFFF', 'input-color': '#DDDDDD',
+                'main-content-h2': '#FFFFFF', 'link-accent': '#0366D6', 
+                'app-item-bg': '#2b2c2e', 'app-item-hover': '#3C444B'
+            },
+            'white': {
+                'body-bg': '#FFFFFF', 'text-color': '#333333',
+                'top-panel-bg': '#FFFFFF', 'top-panel-color': '#333333',
+                'nav-bg': '#FFFFFF', 'nav-text': '#333333',
+                'nav-hover': '#F0F0F0', 'nav-active-bg': '#E0E0E0',
+                'cluster-title': '#888888', 'input-color': '#333',
+                'main-content-h2': '#000', 'link-accent': '#007bff', 
+                'app-item-bg': '#FFFFFF', 'app-item-hover': '#E0E0E0'
+            },
+            'gray': {
+                'body-bg': '#CCCCCC', 'text-color': '#111111',
+                'top-panel-bg': '#3C444B', 'top-panel-color': '#EBEBEB',
+                'nav-bg': '#555C66', 'nav-text': '#EBEBEB',
+                'nav-hover': '#6E7985', 'nav-active-bg': '#505760',
+                'cluster-title': '#C0C8D0', 'input-color': '#333',
+                'main-content-h2': '#222', 'link-accent': '#00BFFF', 
+                'app-item-bg': '#D7D7D7', 'app-item-hover': '#C0C0C0'
+            }
+        };
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // --- Логика применения темы (Скопировано из accunt.html) ---
+        function applyTheme(themeName) {
+            const theme = themeStyles[themeName];
+            if (!theme) return;
+
+            document.body.style.backgroundColor = theme['body-bg'];
+            document.body.style.color = theme['text-color'];
+            
+            const topPanel = document.querySelector('.top-panel');
+            if (topPanel) {
+                topPanel.style.backgroundColor = theme['top-panel-bg'];
+                topPanel.style.color = theme['top-panel-color'];
+            }
+            
+            let styleSheet = document.getElementById('theme-style');
+            if (!styleSheet) {
+                styleSheet = document.createElement('style');
+                styleSheet.id = 'theme-style';
+                document.head.appendChild(styleSheet);
+            }
+            styleSheet.textContent = `
+                /* Dynamic Theme Overrides for ${themeName} */
+                .main-content h1, .main-content h2, .settings-container label { color: ${theme['input-color']} !important; }
+                .main-content h1 { border-bottom-color: ${theme['nav-hover']} !important; }
+                .main-content { background-color: ${theme['body-bg']} !important; }
+
+                /* Навигация */
+                #settingsNav { background-color: ${theme['nav-bg']} !important; }
+                nav a { color: ${theme['nav-text']} !important; border-left-color: transparent !important; }
+                nav a:hover { background-color: ${theme['nav-hover']} !important; color: ${theme['top-panel-color']} !important; }
+                nav a.active { background-color: ${theme['nav-active-bg']} !important; border-left-color: ${theme['link-accent']} !important; color: ${theme['top-panel-color']} !important; }
+                .cluster-separator { background-color: ${theme['nav-hover']} !important; }
+                .cluster-title { color: ${theme['cluster-title']} !important; }
+                
+                /* Поля ввода и кнопки в контенте */
+                .settings-container input[type="text"] {
+                    background-color: ${theme['body-bg']} !important;
+                    color: ${theme['text-color']} !important;
+                    border-color: ${theme['cluster-title']} !important;
+                }
+                .settings-container input[type="text"]:focus {
+                    border-color: ${theme['link-accent']} !important;
+                    box-shadow: 0 0 0 3px ${theme['link-accent']}4D !important;
+                }
+                .dev-action-buttons .button {
+                    background-color: ${theme['link-accent']} !important;
+                    color: #FFFFFF !important;
+                }
+                .dev-action-buttons .button:nth-child(4) { /* View/Manage My Projects */
+                    background-color: ${theme['nav-hover']} !important;
+                }
+
+                /* App item in content area */
+                .appItem-content {
+                    background-color: ${theme['app-item-bg']} !important; 
+                    border-color: ${theme['nav-hover']} !important; 
+                    color: ${theme['text-color']} !important;
+                }
+                .appItem-content:hover {
+                    background-color: ${theme['app-item-hover']} !important;
+                }
+                
+                /* Модальные окна */
+                .modal-content { background: ${theme['nav-bg']} !important; border-color: ${theme['nav-hover']} !important; color: ${theme['text-color']} !important; }
+                .modal input { background: ${theme['body-bg']} !important; color: ${theme['text-color']} !important; border-color: ${theme['nav-hover']} !important; }
+                .project-item { background-color: ${theme['body-bg']} !important; border-color: ${theme['nav-hover']} !important; }
+                .modal-buttons button:last-child { background-color: ${theme['link-accent']} !important; }
+                .project-filter button.active { background-color: ${theme['link-accent']} !important; border-color: ${theme['link-accent']} !important; }
+                
+                /* Меню пользователя */
+                #userMenu { background-color: ${theme['nav-bg']} !important; border-color: ${theme['nav-hover']} !important; }
+                #userMenu button { background-color: ${theme['body-bg']} !important; color: ${theme['text-color']} !important; border: 1px solid ${theme['nav-hover']} !important; }
+                #userMenu button:hover { background-color: ${theme['nav-hover']} !important; color: ${theme['top-panel-color']} !important; }
+                .top-panel div[style*="font-weight: bold;"] { color: ${theme['top-panel-color']} !important; }
+                .user-widget-info .name { color: ${theme['link-accent']} !important; }
+                .toggleButton { color: ${theme['top-panel-color']} !important; }
+            `;
+        }
+        
+        // --- Секции контента для Developer Menu (содержит оригинальные кнопки и ссылки) ---
+        const settingsSections = {
+            'Overview': {
+                title: 'Overview & Quick Actions',
+                html: `
+                    <div class="settings-container">
+                        <h2>Developer Tools and Shortcuts</h2>
+                        <p>Use the buttons below to quickly add new projects or manage existing ones.</p>
+                        
+                        <div class="dev-action-buttons">
+                            <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
+                            <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
+                            <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
+                            <button class="button" onclick="showProjects('all'); document.getElementById('modal3').style.display='flex'">View/Manage My Projects</button>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; border-bottom: 1px solid #444C56; padding-bottom: 10px;">Quick Launch</h3>
+                        
+                        <div class="appItem-content" onclick="openApp('ParrotSoftIDE.html')">
+                            <img src="img/ParrotIDE_mini.png" alt="ParrotIDE Icon">
+                            <span>ParrotSoftIDE</span>
+                        </div>
                     </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editGameAppModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('gameApp')">Save Changes</button>
-                </div>
-            </div>
-        </div>
+                `
+            },
+            'NewContent': {
+                title: 'Add New Content',
+                html: `
+                    <div class="settings-container">
+                        <h2>Add Content Wizards</h2>
+                        <p>Launch specific creation wizards using the links below:</p>
+                        <div style="margin-top: 20px;">
+                            <button class="button" onclick="document.getElementById('modal').style.display='flex'">Add Search Engine</button>
+                            <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Create Datapedia Article</button>
+                            <button class="button" onclick="document.getElementById('modal2').style.display='flex'">Publish Game or App</button>
+                        </div>
+                    </div>
+                `
+            },
+        };
 
+        // --- Структура навигационных кластеров (адаптировано из accunt.html) ---
+        const navClusters = [
+            {
+                title: 'ACCOUNT',
+                id: 'account',
+                items: [
+                    { id: 'Styling', title: 'Account Styling', type: 'link', url: 'accunt.html' },
+                    { id: 'Theme', title: 'Design Theme', type: 'link', url: 'accunt.html' }, 
+                    { id: 'Security', title: 'Password and Security', type: 'link', url: 'accunt.html' },
+                    { id: 'Deletion', title: 'Delete Account', type: 'link', url: 'accunt.html' }, 
+                ]
+            },
+            {
+                title: 'FINANCES',
+                id: 'financial',
+                items: [
+                    { id: 'PcoinWallet', title: 'P-coin Wallet', type: 'link', url: 'Pcoin.html' }, // Changed to type: 'section'
+                ]
+            },{
+                title: 'DEVELOPMENT MENU',
+                id: 'development',
+                items: [
+                    { id: 'Overview', title: 'Overview & Actions', type: 'section' },
+                    { id: 'NewContent', title: 'New Content Wizards', type: 'section' },
+                ]
+            },
+            {
+                title: 'MANAGEMENT',
+                id: 'management',
+                items: [
+                    { id: 'manageProjects', title: 'Manage Projects', type: 'section', action: "showProjects('all'); document.getElementById('modal3').style.display='flex'" },
+                    { id: 'ParrotSoftIDE', title: 'ParrotSoftIDE', type: 'link', url: 'ParrotSoftIDE.html' },
+                ]
+            }
+        ];
+
+        // --- Логика навигации и инициализации (Скопировано и адаптировано из accunt.html) ---
+        
+        function updateSettingsList() {
+            const nav = document.getElementById('settingsNav');
+            nav.innerHTML = '';
+            
+            navClusters.forEach((cluster, clusterIndex) => {
+                if (clusterIndex > 0) {
+                     const separator = document.createElement('hr');
+                     separator.className = 'cluster-separator';
+                     nav.appendChild(separator);
+                }
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'cluster-title';
+                titleDiv.textContent = cluster.title;
+                nav.appendChild(titleDiv);
+
+                cluster.items.forEach(item => {
+                    const link = document.createElement('a');
+                    link.textContent = item.title;
+                    
+                    if (item.type === 'section') {
+                        link.href = '#';
+                        link.setAttribute('data-section', item.id);
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            if(item.action) {
+                                eval(item.action); // Выполняем действие для Manage Projects
+                            } else {
+                                showSettingsSection(item.id);
+                            }
+                            if (window.innerWidth <= 768) {
+                                document.getElementById('settingsNav').classList.remove('active');
+                            }
+                        });
+                    } else if (item.type === 'link') {
+                        link.href = item.url;
+                    }
+
+                    nav.appendChild(link);
+                });
+            });
+            applyTheme(getCookie('theme') || 'dark');
+        }
+
+        function showSettingsSection(sectionId) {
+            const mainContent = document.getElementById('mainContent');
+            const navLinks = document.querySelectorAll('#settingsNav a[data-section]');
+
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+            });
+
+            mainContent.innerHTML = settingsSections[sectionId].html;
+            applyTheme(getCookie('theme') || 'dark');
+        }
+        
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            const nav = document.getElementById('settingsNav');
+            const isNavOpen = nav.classList.contains('active');
+            if (isNavOpen && window.innerWidth <= 768) {
+                nav.classList.remove('active');
+            }
+            userMenu.style.display = (userMenu.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function toggleNavMenu() {
+            const nav = document.getElementById('settingsNav');
+            const userMenu = document.getElementById('userMenu');
+            const isUserMenuOpen = userMenu.style.display === 'block';
+            if (isUserMenuOpen) {
+                userMenu.style.display = 'none';
+            }
+            nav.classList.toggle('active');
+        }
+
+        // --- Вспомогательные функции для обновления информации пользователя (из accunt.html) ---
+        function updateUserInfo() {
+            document.getElementById('topUserName').textContent = getCookie('name') || 'Guest';
+            document.getElementById('topUserEmail').textContent = getCookie('email') || 'Not logged in';
+            document.getElementById('topUserPcoin').textContent = "Pcoin " + (getCookie('p-coin') || '0');
+            document.getElementById('topUserIcon').src = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+        }
+        
+        // --- Дополнительные функции (пустышки), которые должны быть определены в user.js/sitefun.js ---
+        // Эти функции нужны для работы onclick, но их реализация остается в user.js/sitefun.js.
+        // Я объявляю их как заглушки, чтобы не нарушать общую структуру скрипта.
+        function openApp(url) { console.log("Opening app:", url); window.location.href = url; }
+        function confirmChanges(type) { alert(`Confirm changes for: ${type}. Logic is in user.js.`); }
+        function showProjects(filter) { 
+            console.log("Showing projects filtered by:", filter); 
+            // Это должно обновить #projects-list в #modal3
+            const list = document.getElementById('projects-list');
+            if(list) list.innerHTML = `<p>Showing projects for filter: <b>${filter}</b>. (Logic from user.js)</p>`;
+        }
+        function saveProjectChanges(type) { alert(`Saving changes for project: ${type}. Logic is in user.js.`); }
+        
+        // --- Инициализация ---
+        (function() {
+            updateUserInfo(); 
+            const savedTheme = getCookie('theme') || 'dark';
+            applyTheme(savedTheme);
+
+            updateSettingsList(); 
+            showSettingsSection('Overview'); // Показать Overview по умолчанию
+            
+            // Если экран маленький, можно также скрыть меню по умолчанию
+            if (window.innerWidth <= 768) {
+                 document.getElementById('settingsNav').classList.remove('active');
+            }
+        })();
+    </script>
+    
 
         <script>
             // Глобальные переменные
@@ -1045,6 +1406,5 @@
             });
 
         </script>
-    </div>
 </body>
 </html>

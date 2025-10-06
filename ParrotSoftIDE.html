@@ -1,1073 +1,2541 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="ru" data-headlessui-focus-visible=""><head><style type="text/css">:root, :host {
+  --fa-font-solid: normal 900 1em/1 "Font Awesome 6 Free";
+  --fa-font-regular: normal 400 1em/1 "Font Awesome 6 Free";
+  --fa-font-light: normal 300 1em/1 "Font Awesome 6 Pro";
+  --fa-font-thin: normal 100 1em/1 "Font Awesome 6 Pro";
+  --fa-font-duotone: normal 900 1em/1 "Font Awesome 6 Duotone";
+  --fa-font-duotone-regular: normal 400 1em/1 "Font Awesome 6 Duotone";
+  --fa-font-duotone-light: normal 300 1em/1 "Font Awesome 6 Duotone";
+  --fa-font-duotone-thin: normal 100 1em/1 "Font Awesome 6 Duotone";
+  --fa-font-brands: normal 400 1em/1 "Font Awesome 6 Brands";
+  --fa-font-sharp-solid: normal 900 1em/1 "Font Awesome 6 Sharp";
+  --fa-font-sharp-regular: normal 400 1em/1 "Font Awesome 6 Sharp";
+  --fa-font-sharp-light: normal 300 1em/1 "Font Awesome 6 Sharp";
+  --fa-font-sharp-thin: normal 100 1em/1 "Font Awesome 6 Sharp";
+  --fa-font-sharp-duotone-solid: normal 900 1em/1 "Font Awesome 6 Sharp Duotone";
+  --fa-font-sharp-duotone-regular: normal 400 1em/1 "Font Awesome 6 Sharp Duotone";
+  --fa-font-sharp-duotone-light: normal 300 1em/1 "Font Awesome 6 Sharp Duotone";
+  --fa-font-sharp-duotone-thin: normal 100 1em/1 "Font Awesome 6 Sharp Duotone";
+}
+
+svg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa {
+  overflow: visible;
+  box-sizing: content-box;
+}
+
+.svg-inline--fa {
+  display: var(--fa-display, inline-block);
+  height: 1em;
+  overflow: visible;
+  vertical-align: -0.125em;
+}
+.svg-inline--fa.fa-2xs {
+  vertical-align: 0.1em;
+}
+.svg-inline--fa.fa-xs {
+  vertical-align: 0em;
+}
+.svg-inline--fa.fa-sm {
+  vertical-align: -0.0714285705em;
+}
+.svg-inline--fa.fa-lg {
+  vertical-align: -0.2em;
+}
+.svg-inline--fa.fa-xl {
+  vertical-align: -0.25em;
+}
+.svg-inline--fa.fa-2xl {
+  vertical-align: -0.3125em;
+}
+.svg-inline--fa.fa-pull-left {
+  margin-right: var(--fa-pull-margin, 0.3em);
+  width: auto;
+}
+.svg-inline--fa.fa-pull-right {
+  margin-left: var(--fa-pull-margin, 0.3em);
+  width: auto;
+}
+.svg-inline--fa.fa-li {
+  width: var(--fa-li-width, 2em);
+  top: 0.25em;
+}
+.svg-inline--fa.fa-fw {
+  width: var(--fa-fw-width, 1.25em);
+}
+
+.fa-layers svg.svg-inline--fa {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.fa-layers-counter, .fa-layers-text {
+  display: inline-block;
+  position: absolute;
+  text-align: center;
+}
+
+.fa-layers {
+  display: inline-block;
+  height: 1em;
+  position: relative;
+  text-align: center;
+  vertical-align: -0.125em;
+  width: 1em;
+}
+.fa-layers svg.svg-inline--fa {
+  transform-origin: center center;
+}
+
+.fa-layers-text {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+}
+
+.fa-layers-counter {
+  background-color: var(--fa-counter-background-color, #ff253a);
+  border-radius: var(--fa-counter-border-radius, 1em);
+  box-sizing: border-box;
+  color: var(--fa-inverse, #fff);
+  line-height: var(--fa-counter-line-height, 1);
+  max-width: var(--fa-counter-max-width, 5em);
+  min-width: var(--fa-counter-min-width, 1.5em);
+  overflow: hidden;
+  padding: var(--fa-counter-padding, 0.25em 0.5em);
+  right: var(--fa-right, 0);
+  text-overflow: ellipsis;
+  top: var(--fa-top, 0);
+  transform: scale(var(--fa-counter-scale, 0.25));
+  transform-origin: top right;
+}
+
+.fa-layers-bottom-right {
+  bottom: var(--fa-bottom, 0);
+  right: var(--fa-right, 0);
+  top: auto;
+  transform: scale(var(--fa-layers-scale, 0.25));
+  transform-origin: bottom right;
+}
+
+.fa-layers-bottom-left {
+  bottom: var(--fa-bottom, 0);
+  left: var(--fa-left, 0);
+  right: auto;
+  top: auto;
+  transform: scale(var(--fa-layers-scale, 0.25));
+  transform-origin: bottom left;
+}
+
+.fa-layers-top-right {
+  top: var(--fa-top, 0);
+  right: var(--fa-right, 0);
+  transform: scale(var(--fa-layers-scale, 0.25));
+  transform-origin: top right;
+}
+
+.fa-layers-top-left {
+  left: var(--fa-left, 0);
+  right: auto;
+  top: var(--fa-top, 0);
+  transform: scale(var(--fa-layers-scale, 0.25));
+  transform-origin: top left;
+}
+
+.fa-1x {
+  font-size: 1em;
+}
+
+.fa-2x {
+  font-size: 2em;
+}
+
+.fa-3x {
+  font-size: 3em;
+}
+
+.fa-4x {
+  font-size: 4em;
+}
+
+.fa-5x {
+  font-size: 5em;
+}
+
+.fa-6x {
+  font-size: 6em;
+}
+
+.fa-7x {
+  font-size: 7em;
+}
+
+.fa-8x {
+  font-size: 8em;
+}
+
+.fa-9x {
+  font-size: 9em;
+}
+
+.fa-10x {
+  font-size: 10em;
+}
+
+.fa-2xs {
+  font-size: 0.625em;
+  line-height: 0.1em;
+  vertical-align: 0.225em;
+}
+
+.fa-xs {
+  font-size: 0.75em;
+  line-height: 0.0833333337em;
+  vertical-align: 0.125em;
+}
+
+.fa-sm {
+  font-size: 0.875em;
+  line-height: 0.0714285718em;
+  vertical-align: 0.0535714295em;
+}
+
+.fa-lg {
+  font-size: 1.25em;
+  line-height: 0.05em;
+  vertical-align: -0.075em;
+}
+
+.fa-xl {
+  font-size: 1.5em;
+  line-height: 0.0416666682em;
+  vertical-align: -0.125em;
+}
+
+.fa-2xl {
+  font-size: 2em;
+  line-height: 0.03125em;
+  vertical-align: -0.1875em;
+}
+
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.fa-ul {
+  list-style-type: none;
+  margin-left: var(--fa-li-margin, 2.5em);
+  padding-left: 0;
+}
+.fa-ul > li {
+  position: relative;
+}
+
+.fa-li {
+  left: calc(-1 * var(--fa-li-width, 2em));
+  position: absolute;
+  text-align: center;
+  width: var(--fa-li-width, 2em);
+  line-height: inherit;
+}
+
+.fa-border {
+  border-color: var(--fa-border-color, #eee);
+  border-radius: var(--fa-border-radius, 0.1em);
+  border-style: var(--fa-border-style, solid);
+  border-width: var(--fa-border-width, 0.08em);
+  padding: var(--fa-border-padding, 0.2em 0.25em 0.15em);
+}
+
+.fa-pull-left {
+  float: left;
+  margin-right: var(--fa-pull-margin, 0.3em);
+}
+
+.fa-pull-right {
+  float: right;
+  margin-left: var(--fa-pull-margin, 0.3em);
+}
+
+.fa-beat {
+  animation-name: fa-beat;
+  animation-delay: var(--fa-animation-delay, 0s);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, ease-in-out);
+}
+
+.fa-bounce {
+  animation-name: fa-bounce;
+  animation-delay: var(--fa-animation-delay, 0s);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));
+}
+
+.fa-fade {
+  animation-name: fa-fade;
+  animation-delay: var(--fa-animation-delay, 0s);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+.fa-beat-fade {
+  animation-name: fa-beat-fade;
+  animation-delay: var(--fa-animation-delay, 0s);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+}
+
+.fa-flip {
+  animation-name: fa-flip;
+  animation-delay: var(--fa-animation-delay, 0s);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, ease-in-out);
+}
+
+.fa-shake {
+  animation-name: fa-shake;
+  animation-delay: var(--fa-animation-delay, 0s);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, linear);
+}
+
+.fa-spin {
+  animation-name: fa-spin;
+  animation-delay: var(--fa-animation-delay, 0s);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 2s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, linear);
+}
+
+.fa-spin-reverse {
+  --fa-animation-direction: reverse;
+}
+
+.fa-pulse,
+.fa-spin-pulse {
+  animation-name: fa-spin;
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, steps(8));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-beat,
+.fa-bounce,
+.fa-fade,
+.fa-beat-fade,
+.fa-flip,
+.fa-pulse,
+.fa-shake,
+.fa-spin,
+.fa-spin-pulse {
+    animation-delay: -1ms;
+    animation-duration: 1ms;
+    animation-iteration-count: 1;
+    transition-delay: 0s;
+    transition-duration: 0s;
+  }
+}
+@keyframes fa-beat {
+  0%, 90% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(var(--fa-beat-scale, 1.25));
+  }
+}
+@keyframes fa-bounce {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  10% {
+    transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);
+  }
+  30% {
+    transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));
+  }
+  50% {
+    transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);
+  }
+  57% {
+    transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));
+  }
+  64% {
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+@keyframes fa-fade {
+  50% {
+    opacity: var(--fa-fade-opacity, 0.4);
+  }
+}
+@keyframes fa-beat-fade {
+  0%, 100% {
+    opacity: var(--fa-beat-fade-opacity, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(var(--fa-beat-fade-scale, 1.125));
+  }
+}
+@keyframes fa-flip {
+  50% {
+    transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
+  }
+}
+@keyframes fa-shake {
+  0% {
+    transform: rotate(-15deg);
+  }
+  4% {
+    transform: rotate(15deg);
+  }
+  8%, 24% {
+    transform: rotate(-18deg);
+  }
+  12%, 28% {
+    transform: rotate(18deg);
+  }
+  16% {
+    transform: rotate(-22deg);
+  }
+  20% {
+    transform: rotate(22deg);
+  }
+  32% {
+    transform: rotate(-12deg);
+  }
+  36% {
+    transform: rotate(12deg);
+  }
+  40%, 100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.fa-rotate-90 {
+  transform: rotate(90deg);
+}
+
+.fa-rotate-180 {
+  transform: rotate(180deg);
+}
+
+.fa-rotate-270 {
+  transform: rotate(270deg);
+}
+
+.fa-flip-horizontal {
+  transform: scale(-1, 1);
+}
+
+.fa-flip-vertical {
+  transform: scale(1, -1);
+}
+
+.fa-flip-both,
+.fa-flip-horizontal.fa-flip-vertical {
+  transform: scale(-1, -1);
+}
+
+.fa-rotate-by {
+  transform: rotate(var(--fa-rotate-angle, 0));
+}
+
+.fa-stack {
+  display: inline-block;
+  vertical-align: middle;
+  height: 2em;
+  position: relative;
+  width: 2.5em;
+}
+
+.fa-stack-1x,
+.fa-stack-2x {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: var(--fa-stack-z-index, auto);
+}
+
+.svg-inline--fa.fa-stack-1x {
+  height: 1em;
+  width: 1.25em;
+}
+.svg-inline--fa.fa-stack-2x {
+  height: 2em;
+  width: 2.5em;
+}
+
+.fa-inverse {
+  color: var(--fa-inverse, #fff);
+}
+
+.sr-only,
+.fa-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:not(:focus),
+.fa-sr-only-focusable:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.svg-inline--fa .fa-primary {
+  fill: var(--fa-primary-color, currentColor);
+  opacity: var(--fa-primary-opacity, 1);
+}
+
+.svg-inline--fa .fa-secondary {
+  fill: var(--fa-secondary-color, currentColor);
+  opacity: var(--fa-secondary-opacity, 0.4);
+}
+
+.svg-inline--fa.fa-swap-opacity .fa-primary {
+  opacity: var(--fa-secondary-opacity, 0.4);
+}
+
+.svg-inline--fa.fa-swap-opacity .fa-secondary {
+  opacity: var(--fa-primary-opacity, 1);
+}
+
+.svg-inline--fa mask .fa-primary,
+.svg-inline--fa mask .fa-secondary {
+  fill: black;
+}</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account settings</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="img/ico.ico" type="image/x-icon">
-    <link rel="stylesheet" href="css/style1.css">
-    <script src="js/sitefun.js" type="module"></script> 
-    <script src="js/user.js"></script> 
+    <title>ParrotIDE</title>
     <style>
-        /* CSS стили остаются без изменений */
+        /* Общие стили */
         body {
-            font-family: Arial, sans-serif;
-            background: #f1f3f4;
             margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             height: 100vh;
+            overflow: hidden;
+            background-color: #1e1e1e;
+            color: #CCCCCC;
         }
 
-        .account-panel {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 600px;
-            padding: 40px;
+        /* Верхнее меню (для вида) */
+        #top-menu {
+            background-color: #3c3c3c;
+            padding: 4px 10px;
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            border-bottom: 1px solid #252526;
+            flex-shrink: 0;
+            position: relative; /* Для позиционирования выпадающего меню */
+        }
+        .menu-item {
+            cursor: pointer;
+            padding: 2px 0;
+            transition: background-color 0.1s;
+            position: relative; /* Для выпадающих подменю */
+        }
+        .menu-item:hover {
+            background-color: #4a4a4a;
+        }
+
+        /* Выпадающее меню */
+        .dropdown-menu {
+            position: absolute;
+            background-color: #252526;
+            border: 1px solid #007acc;
+            padding: 5px 0;
+            z-index: 100;
+            min-width: 150px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: none; /* Скрыто по умолчанию */
+            top: 100%; /* Позиционирование под родительским пунктом меню */
+            left: 0;
+        }
+        .dropdown-menu-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.1s;
+            white-space: nowrap;
+        }
+        .dropdown-menu-item:hover {
+            background-color: #007acc;
+        }
+
+        /* Основная рабочая область */
+        #main-area {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Панель активности (слева) */
+        #activity-bar {
+            width: 50px;
+            background-color: #333333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+            border-right: 1px solid #252526;
+            flex-shrink: 0;
+        }
+        .activity-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #CCCCCC;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s, color 0.2s;
+        }
+        .activity-icon:hover {
+            opacity: 1;
+            color: white;
+        }
+        .activity-icon.active {
+            color: #007acc;
+            opacity: 1;
+        }
+
+        /* Боковая панель */
+        #sidebar {
+            width: 250px;
+            background-color: #252526;
+            padding: 10px;
             box-sizing: border-box;
-            text-align: center;
+            overflow-y: auto;
+            border-right: 1px solid #3c3c3c;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
         }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #ccc;
-            margin: 0 auto 20px;
+        #sidebar-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .file-item, .folder-item {
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            transition: background-color 0.1s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
+            gap: 8px;
+        }
+        .file-item:hover, .folder-item:hover {
+            background-color: #3a3a3a;
+        }
+        .file-item.active {
+            background-color: #007acc;
             color: white;
         }
-
-        .username {
-            font-size: 24px;
+        .folder-item {
             font-weight: bold;
-            margin-bottom: 6px;
-        }
-
-        .email {
-            font-size: 16px;
-            color: gray;
-            margin-bottom: 20px;
-        }
-
-        hr {
-            border: none;
-            height: 1px;
-            background-color: #e0e0e0;
-            margin: 24px 0;
-        }
-
-        .button {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: #1ae84e;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-bottom: 16px;
-        }
-
-        .button:hover {
-            background: #0cc00c;
-        }
-
-        .note {
-            font-size: 14px;
-            color: #666;
-            margin-top: -10px;
-            margin-bottom: 16px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
+            color: #e0e0e0;
+            display: flex;
             align-items: center;
-            z-index: 999;
+            gap: 8px;
+        }
+        .folder-item .folder-toggle {
+            margin-right: 5px;
+            color: #888;
+        }
+        .folder-item.expanded .folder-toggle .fa-chevron-right {
+            transform: rotate(90deg);
+        }
+        .folder-contents {
+            margin-left: 15px; /* Отступ для вложенных файлов/папок */
+            border-left: 1px solid rgba(204, 204, 204, 0.2); /* Линия, имитирующая структуру */
+            padding-left: 5px;
         }
 
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-sizing: border-box;
-            text-align: left;
+        /* Область редактора и панели */
+        #editor-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .modal input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+        /* Верхняя панель редактора (вкладки и кнопки) */
+        #editor-top-bar {
+            background-color: #2d2d2d;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 40px;
+            border-bottom: 1px solid #3c3c3c;
+            flex-shrink: 0;
         }
-
-        .modal-buttons {
-            text-align: right;
-        }
-
-        .modal-buttons button {
-            margin-left: 10px;
-        }
-
-        /* NEW: Styles for project items in the modal */
-        .project-item {
-            border: 1px solid #eee;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            position: relative; /* Для позиционирования кнопок */
-        }
-
-        .project-item h4 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .project-item p {
-            margin: 3px 0;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .project-item .actions {
-            margin-top: 10px;
+        #file-tabs {
             display: flex;
             gap: 5px;
-            justify-content: flex-end; /* Выравнивание кнопок вправо */
+            overflow-x: auto;
+            padding-bottom: 5px;
         }
-
-        .project-item button {
-            padding: 6px 12px;
-            font-size: 14px;
-            background-color: #007bff;
+        .file-tab {
+            background-color: #1e1e1e;
+            padding: 5px 10px;
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid transparent;
+            border-bottom: none;
+            transition: background-color 0.1s;
+        }
+        .file-tab:hover {
+             background-color: #3a3a3a;
+        }
+        .file-tab.active {
+            background-color: #1e1e1e;
+            border-color: #007acc;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+        }
+        .file-tab .close-tab-btn {
+            background: none;
+            border: none;
+            color: #CCCCCC;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0 3px;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .file-tab .close-tab-btn:hover {
+            opacity: 1;
+            color: white;
+        }
+        #editor-controls button {
+            background-color: #007acc;
             color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: auto; 
-            display: inline-block; 
-        }
-
-        .project-item button:hover {
-            background-color: #0056b3;
-        }
-
-        .project-item button.delete-btn { /* Отдельный класс для кнопки удаления */
-            background-color: #dc3545;
-        }
-
-        .project-item button.delete-btn:hover {
-            background-color: #c82333;
-        }
-
-        .modal label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* NEW: Styles for project type filter */
-        .project-filter {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .project-filter button {
             padding: 8px 15px;
-            margin: 0 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
             cursor: pointer;
+            border-radius: 3px;
+            margin-left: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        #editor-controls button:hover {
+            background-color: #005f9c;
         }
 
-        .project-filter button.active {
-            background-color: #007bff;
+        /* Контейнер для редактора */
+        #editor-container {
+            flex-grow: 1;
+        }
+
+        /* Панель вывода */
+        #panel {
+            height: 180px;
+            background-color: #1e1e1e;
+            color: #CCCCCC;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            border-top: 1px solid #3c3c3c;
+            flex-shrink: 0;
+        }
+        #panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #3c3c3c;
+            margin-bottom: 10px;
+        }
+        .panel-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.2s;
+        }
+        .panel-tab.active {
+            border-bottom-color: #007acc;
+        }
+        #output-console {
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+        }
+
+        /* Статус-бар */
+        #status-bar {
+            background-color: #007acc;
             color: white;
-            border-color: #007bff;
+            padding: 5px 10px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
         }
-
-
-        /* mcss: мобильная версия для accunt.html */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-                align-items: stretch;
-                justify-content: flex-start;
-                height: auto;
-                padding: 0;
-            }
-            .account-panel {
-                width: 98vw;
-                max-width: 100%;
-                padding: 16px;
-                border-radius: 8px;
-                margin: 10px auto;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            }
-            .avatar, .user-icn1 {
-                width: 70px !important;
-                height: 70px !important;
-                font-size: 24px !important;
-                margin-bottom: 10px !important;
-            }
-            .username, .name1 {
-                font-size: 18px !important;
-            }
-            .email, .email1 {
-                font-size: 14px !important;
-            }
-            .button {
-                font-size: 16px;
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-            .modal-content {
-                width: 98vw;
-                max-width: 100%;
-                padding: 14px;
-                border-radius: 8px;
-            }
-            .modal input {
-                font-size: 15px;
-                padding: 8px;
-                margin: 8px 0;
-            }
-            .modal-buttons button {
-                font-size: 15px;
-                padding: 7px 14px;
-                margin-left: 6px;
-            }
-            .note {
-                font-size: 12px;
-                margin-bottom: 10px;
-            }
-            .menuContainer {
-                flex-direction: column;
-                gap: 6px;
-                padding: 0 4px;
-            }
-            .appItem {
-                flex-direction: row;
-                align-items: center;
-                padding: 7px 0;
-            }
-            .appItem img,
-            .appItem .appIcon {
-                width: 28px;
-                height: 28px;
-                margin-right: 8px;
-            }
+        .status-item {
+            margin-right: 15px;
         }
     </style>
-</head>
-<body>
-    <div>
-        <button class="toggleButton" onclick="toggleMenu()">☰</button>
-        <div class="user-widget" onclick="toggleUserMenu()">
-            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
-            <div class="user-widget-info">
-                <div class="name">User Name</div>
-                <div class="email"></div>
-                <div class="pcoin">Pcoin 0</div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script async="async" type="text/javascript" src="https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs/editor/editor.main.js"></script><link rel="stylesheet" type="text/css" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs/editor/editor.main.css"><script async="async" type="text/javascript" src="https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs/editor/editor.main.nls.js"></script><script async="async" type="text/javascript" src="https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs/basic-languages/markdown/markdown.js"></script><style type="text/css" media="screen" class="monaco-colors">.codicon-add:before { content: '\ea60'; }
+.codicon-plus:before { content: '\ea60'; }
+.codicon-gist-new:before { content: '\ea60'; }
+.codicon-repo-create:before { content: '\ea60'; }
+.codicon-lightbulb:before { content: '\ea61'; }
+.codicon-light-bulb:before { content: '\ea61'; }
+.codicon-repo:before { content: '\ea62'; }
+.codicon-repo-delete:before { content: '\ea62'; }
+.codicon-gist-fork:before { content: '\ea63'; }
+.codicon-repo-forked:before { content: '\ea63'; }
+.codicon-git-pull-request:before { content: '\ea64'; }
+.codicon-git-pull-request-abandoned:before { content: '\ea64'; }
+.codicon-record-keys:before { content: '\ea65'; }
+.codicon-keyboard:before { content: '\ea65'; }
+.codicon-tag:before { content: '\ea66'; }
+.codicon-git-pull-request-label:before { content: '\ea66'; }
+.codicon-tag-add:before { content: '\ea66'; }
+.codicon-tag-remove:before { content: '\ea66'; }
+.codicon-person:before { content: '\ea67'; }
+.codicon-person-follow:before { content: '\ea67'; }
+.codicon-person-outline:before { content: '\ea67'; }
+.codicon-person-filled:before { content: '\ea67'; }
+.codicon-git-branch:before { content: '\ea68'; }
+.codicon-git-branch-create:before { content: '\ea68'; }
+.codicon-git-branch-delete:before { content: '\ea68'; }
+.codicon-source-control:before { content: '\ea68'; }
+.codicon-mirror:before { content: '\ea69'; }
+.codicon-mirror-public:before { content: '\ea69'; }
+.codicon-star:before { content: '\ea6a'; }
+.codicon-star-add:before { content: '\ea6a'; }
+.codicon-star-delete:before { content: '\ea6a'; }
+.codicon-star-empty:before { content: '\ea6a'; }
+.codicon-comment:before { content: '\ea6b'; }
+.codicon-comment-add:before { content: '\ea6b'; }
+.codicon-alert:before { content: '\ea6c'; }
+.codicon-warning:before { content: '\ea6c'; }
+.codicon-search:before { content: '\ea6d'; }
+.codicon-search-save:before { content: '\ea6d'; }
+.codicon-log-out:before { content: '\ea6e'; }
+.codicon-sign-out:before { content: '\ea6e'; }
+.codicon-log-in:before { content: '\ea6f'; }
+.codicon-sign-in:before { content: '\ea6f'; }
+.codicon-eye:before { content: '\ea70'; }
+.codicon-eye-unwatch:before { content: '\ea70'; }
+.codicon-eye-watch:before { content: '\ea70'; }
+.codicon-circle-filled:before { content: '\ea71'; }
+.codicon-primitive-dot:before { content: '\ea71'; }
+.codicon-close-dirty:before { content: '\ea71'; }
+.codicon-debug-breakpoint:before { content: '\ea71'; }
+.codicon-debug-breakpoint-disabled:before { content: '\ea71'; }
+.codicon-debug-hint:before { content: '\ea71'; }
+.codicon-terminal-decoration-success:before { content: '\ea71'; }
+.codicon-primitive-square:before { content: '\ea72'; }
+.codicon-edit:before { content: '\ea73'; }
+.codicon-pencil:before { content: '\ea73'; }
+.codicon-info:before { content: '\ea74'; }
+.codicon-issue-opened:before { content: '\ea74'; }
+.codicon-gist-private:before { content: '\ea75'; }
+.codicon-git-fork-private:before { content: '\ea75'; }
+.codicon-lock:before { content: '\ea75'; }
+.codicon-mirror-private:before { content: '\ea75'; }
+.codicon-close:before { content: '\ea76'; }
+.codicon-remove-close:before { content: '\ea76'; }
+.codicon-x:before { content: '\ea76'; }
+.codicon-repo-sync:before { content: '\ea77'; }
+.codicon-sync:before { content: '\ea77'; }
+.codicon-clone:before { content: '\ea78'; }
+.codicon-desktop-download:before { content: '\ea78'; }
+.codicon-beaker:before { content: '\ea79'; }
+.codicon-microscope:before { content: '\ea79'; }
+.codicon-vm:before { content: '\ea7a'; }
+.codicon-device-desktop:before { content: '\ea7a'; }
+.codicon-file:before { content: '\ea7b'; }
+.codicon-file-text:before { content: '\ea7b'; }
+.codicon-more:before { content: '\ea7c'; }
+.codicon-ellipsis:before { content: '\ea7c'; }
+.codicon-kebab-horizontal:before { content: '\ea7c'; }
+.codicon-mail-reply:before { content: '\ea7d'; }
+.codicon-reply:before { content: '\ea7d'; }
+.codicon-organization:before { content: '\ea7e'; }
+.codicon-organization-filled:before { content: '\ea7e'; }
+.codicon-organization-outline:before { content: '\ea7e'; }
+.codicon-new-file:before { content: '\ea7f'; }
+.codicon-file-add:before { content: '\ea7f'; }
+.codicon-new-folder:before { content: '\ea80'; }
+.codicon-file-directory-create:before { content: '\ea80'; }
+.codicon-trash:before { content: '\ea81'; }
+.codicon-trashcan:before { content: '\ea81'; }
+.codicon-history:before { content: '\ea82'; }
+.codicon-clock:before { content: '\ea82'; }
+.codicon-folder:before { content: '\ea83'; }
+.codicon-file-directory:before { content: '\ea83'; }
+.codicon-symbol-folder:before { content: '\ea83'; }
+.codicon-logo-github:before { content: '\ea84'; }
+.codicon-mark-github:before { content: '\ea84'; }
+.codicon-github:before { content: '\ea84'; }
+.codicon-terminal:before { content: '\ea85'; }
+.codicon-console:before { content: '\ea85'; }
+.codicon-repl:before { content: '\ea85'; }
+.codicon-zap:before { content: '\ea86'; }
+.codicon-symbol-event:before { content: '\ea86'; }
+.codicon-error:before { content: '\ea87'; }
+.codicon-stop:before { content: '\ea87'; }
+.codicon-variable:before { content: '\ea88'; }
+.codicon-symbol-variable:before { content: '\ea88'; }
+.codicon-array:before { content: '\ea8a'; }
+.codicon-symbol-array:before { content: '\ea8a'; }
+.codicon-symbol-module:before { content: '\ea8b'; }
+.codicon-symbol-package:before { content: '\ea8b'; }
+.codicon-symbol-namespace:before { content: '\ea8b'; }
+.codicon-symbol-object:before { content: '\ea8b'; }
+.codicon-symbol-method:before { content: '\ea8c'; }
+.codicon-symbol-function:before { content: '\ea8c'; }
+.codicon-symbol-constructor:before { content: '\ea8c'; }
+.codicon-symbol-boolean:before { content: '\ea8f'; }
+.codicon-symbol-null:before { content: '\ea8f'; }
+.codicon-symbol-numeric:before { content: '\ea90'; }
+.codicon-symbol-number:before { content: '\ea90'; }
+.codicon-symbol-structure:before { content: '\ea91'; }
+.codicon-symbol-struct:before { content: '\ea91'; }
+.codicon-symbol-parameter:before { content: '\ea92'; }
+.codicon-symbol-type-parameter:before { content: '\ea92'; }
+.codicon-symbol-key:before { content: '\ea93'; }
+.codicon-symbol-text:before { content: '\ea93'; }
+.codicon-symbol-reference:before { content: '\ea94'; }
+.codicon-go-to-file:before { content: '\ea94'; }
+.codicon-symbol-enum:before { content: '\ea95'; }
+.codicon-symbol-value:before { content: '\ea95'; }
+.codicon-symbol-ruler:before { content: '\ea96'; }
+.codicon-symbol-unit:before { content: '\ea96'; }
+.codicon-activate-breakpoints:before { content: '\ea97'; }
+.codicon-archive:before { content: '\ea98'; }
+.codicon-arrow-both:before { content: '\ea99'; }
+.codicon-arrow-down:before { content: '\ea9a'; }
+.codicon-arrow-left:before { content: '\ea9b'; }
+.codicon-arrow-right:before { content: '\ea9c'; }
+.codicon-arrow-small-down:before { content: '\ea9d'; }
+.codicon-arrow-small-left:before { content: '\ea9e'; }
+.codicon-arrow-small-right:before { content: '\ea9f'; }
+.codicon-arrow-small-up:before { content: '\eaa0'; }
+.codicon-arrow-up:before { content: '\eaa1'; }
+.codicon-bell:before { content: '\eaa2'; }
+.codicon-bold:before { content: '\eaa3'; }
+.codicon-book:before { content: '\eaa4'; }
+.codicon-bookmark:before { content: '\eaa5'; }
+.codicon-debug-breakpoint-conditional-unverified:before { content: '\eaa6'; }
+.codicon-debug-breakpoint-conditional:before { content: '\eaa7'; }
+.codicon-debug-breakpoint-conditional-disabled:before { content: '\eaa7'; }
+.codicon-debug-breakpoint-data-unverified:before { content: '\eaa8'; }
+.codicon-debug-breakpoint-data:before { content: '\eaa9'; }
+.codicon-debug-breakpoint-data-disabled:before { content: '\eaa9'; }
+.codicon-debug-breakpoint-log-unverified:before { content: '\eaaa'; }
+.codicon-debug-breakpoint-log:before { content: '\eaab'; }
+.codicon-debug-breakpoint-log-disabled:before { content: '\eaab'; }
+.codicon-briefcase:before { content: '\eaac'; }
+.codicon-broadcast:before { content: '\eaad'; }
+.codicon-browser:before { content: '\eaae'; }
+.codicon-bug:before { content: '\eaaf'; }
+.codicon-calendar:before { content: '\eab0'; }
+.codicon-case-sensitive:before { content: '\eab1'; }
+.codicon-check:before { content: '\eab2'; }
+.codicon-checklist:before { content: '\eab3'; }
+.codicon-chevron-down:before { content: '\eab4'; }
+.codicon-chevron-left:before { content: '\eab5'; }
+.codicon-chevron-right:before { content: '\eab6'; }
+.codicon-chevron-up:before { content: '\eab7'; }
+.codicon-chrome-close:before { content: '\eab8'; }
+.codicon-chrome-maximize:before { content: '\eab9'; }
+.codicon-chrome-minimize:before { content: '\eaba'; }
+.codicon-chrome-restore:before { content: '\eabb'; }
+.codicon-circle-outline:before { content: '\eabc'; }
+.codicon-circle:before { content: '\eabc'; }
+.codicon-debug-breakpoint-unverified:before { content: '\eabc'; }
+.codicon-terminal-decoration-incomplete:before { content: '\eabc'; }
+.codicon-circle-slash:before { content: '\eabd'; }
+.codicon-circuit-board:before { content: '\eabe'; }
+.codicon-clear-all:before { content: '\eabf'; }
+.codicon-clippy:before { content: '\eac0'; }
+.codicon-close-all:before { content: '\eac1'; }
+.codicon-cloud-download:before { content: '\eac2'; }
+.codicon-cloud-upload:before { content: '\eac3'; }
+.codicon-code:before { content: '\eac4'; }
+.codicon-collapse-all:before { content: '\eac5'; }
+.codicon-color-mode:before { content: '\eac6'; }
+.codicon-comment-discussion:before { content: '\eac7'; }
+.codicon-credit-card:before { content: '\eac9'; }
+.codicon-dash:before { content: '\eacc'; }
+.codicon-dashboard:before { content: '\eacd'; }
+.codicon-database:before { content: '\eace'; }
+.codicon-debug-continue:before { content: '\eacf'; }
+.codicon-debug-disconnect:before { content: '\ead0'; }
+.codicon-debug-pause:before { content: '\ead1'; }
+.codicon-debug-restart:before { content: '\ead2'; }
+.codicon-debug-start:before { content: '\ead3'; }
+.codicon-debug-step-into:before { content: '\ead4'; }
+.codicon-debug-step-out:before { content: '\ead5'; }
+.codicon-debug-step-over:before { content: '\ead6'; }
+.codicon-debug-stop:before { content: '\ead7'; }
+.codicon-debug:before { content: '\ead8'; }
+.codicon-device-camera-video:before { content: '\ead9'; }
+.codicon-device-camera:before { content: '\eada'; }
+.codicon-device-mobile:before { content: '\eadb'; }
+.codicon-diff-added:before { content: '\eadc'; }
+.codicon-diff-ignored:before { content: '\eadd'; }
+.codicon-diff-modified:before { content: '\eade'; }
+.codicon-diff-removed:before { content: '\eadf'; }
+.codicon-diff-renamed:before { content: '\eae0'; }
+.codicon-diff:before { content: '\eae1'; }
+.codicon-diff-sidebyside:before { content: '\eae1'; }
+.codicon-discard:before { content: '\eae2'; }
+.codicon-editor-layout:before { content: '\eae3'; }
+.codicon-empty-window:before { content: '\eae4'; }
+.codicon-exclude:before { content: '\eae5'; }
+.codicon-extensions:before { content: '\eae6'; }
+.codicon-eye-closed:before { content: '\eae7'; }
+.codicon-file-binary:before { content: '\eae8'; }
+.codicon-file-code:before { content: '\eae9'; }
+.codicon-file-media:before { content: '\eaea'; }
+.codicon-file-pdf:before { content: '\eaeb'; }
+.codicon-file-submodule:before { content: '\eaec'; }
+.codicon-file-symlink-directory:before { content: '\eaed'; }
+.codicon-file-symlink-file:before { content: '\eaee'; }
+.codicon-file-zip:before { content: '\eaef'; }
+.codicon-files:before { content: '\eaf0'; }
+.codicon-filter:before { content: '\eaf1'; }
+.codicon-flame:before { content: '\eaf2'; }
+.codicon-fold-down:before { content: '\eaf3'; }
+.codicon-fold-up:before { content: '\eaf4'; }
+.codicon-fold:before { content: '\eaf5'; }
+.codicon-folder-active:before { content: '\eaf6'; }
+.codicon-folder-opened:before { content: '\eaf7'; }
+.codicon-gear:before { content: '\eaf8'; }
+.codicon-gift:before { content: '\eaf9'; }
+.codicon-gist-secret:before { content: '\eafa'; }
+.codicon-gist:before { content: '\eafb'; }
+.codicon-git-commit:before { content: '\eafc'; }
+.codicon-git-compare:before { content: '\eafd'; }
+.codicon-compare-changes:before { content: '\eafd'; }
+.codicon-git-merge:before { content: '\eafe'; }
+.codicon-github-action:before { content: '\eaff'; }
+.codicon-github-alt:before { content: '\eb00'; }
+.codicon-globe:before { content: '\eb01'; }
+.codicon-grabber:before { content: '\eb02'; }
+.codicon-graph:before { content: '\eb03'; }
+.codicon-gripper:before { content: '\eb04'; }
+.codicon-heart:before { content: '\eb05'; }
+.codicon-home:before { content: '\eb06'; }
+.codicon-horizontal-rule:before { content: '\eb07'; }
+.codicon-hubot:before { content: '\eb08'; }
+.codicon-inbox:before { content: '\eb09'; }
+.codicon-issue-reopened:before { content: '\eb0b'; }
+.codicon-issues:before { content: '\eb0c'; }
+.codicon-italic:before { content: '\eb0d'; }
+.codicon-jersey:before { content: '\eb0e'; }
+.codicon-json:before { content: '\eb0f'; }
+.codicon-kebab-vertical:before { content: '\eb10'; }
+.codicon-key:before { content: '\eb11'; }
+.codicon-law:before { content: '\eb12'; }
+.codicon-lightbulb-autofix:before { content: '\eb13'; }
+.codicon-link-external:before { content: '\eb14'; }
+.codicon-link:before { content: '\eb15'; }
+.codicon-list-ordered:before { content: '\eb16'; }
+.codicon-list-unordered:before { content: '\eb17'; }
+.codicon-live-share:before { content: '\eb18'; }
+.codicon-loading:before { content: '\eb19'; }
+.codicon-location:before { content: '\eb1a'; }
+.codicon-mail-read:before { content: '\eb1b'; }
+.codicon-mail:before { content: '\eb1c'; }
+.codicon-markdown:before { content: '\eb1d'; }
+.codicon-megaphone:before { content: '\eb1e'; }
+.codicon-mention:before { content: '\eb1f'; }
+.codicon-milestone:before { content: '\eb20'; }
+.codicon-git-pull-request-milestone:before { content: '\eb20'; }
+.codicon-mortar-board:before { content: '\eb21'; }
+.codicon-move:before { content: '\eb22'; }
+.codicon-multiple-windows:before { content: '\eb23'; }
+.codicon-mute:before { content: '\eb24'; }
+.codicon-no-newline:before { content: '\eb25'; }
+.codicon-note:before { content: '\eb26'; }
+.codicon-octoface:before { content: '\eb27'; }
+.codicon-open-preview:before { content: '\eb28'; }
+.codicon-package:before { content: '\eb29'; }
+.codicon-paintcan:before { content: '\eb2a'; }
+.codicon-pin:before { content: '\eb2b'; }
+.codicon-play:before { content: '\eb2c'; }
+.codicon-run:before { content: '\eb2c'; }
+.codicon-plug:before { content: '\eb2d'; }
+.codicon-preserve-case:before { content: '\eb2e'; }
+.codicon-preview:before { content: '\eb2f'; }
+.codicon-project:before { content: '\eb30'; }
+.codicon-pulse:before { content: '\eb31'; }
+.codicon-question:before { content: '\eb32'; }
+.codicon-quote:before { content: '\eb33'; }
+.codicon-radio-tower:before { content: '\eb34'; }
+.codicon-reactions:before { content: '\eb35'; }
+.codicon-references:before { content: '\eb36'; }
+.codicon-refresh:before { content: '\eb37'; }
+.codicon-regex:before { content: '\eb38'; }
+.codicon-remote-explorer:before { content: '\eb39'; }
+.codicon-remote:before { content: '\eb3a'; }
+.codicon-remove:before { content: '\eb3b'; }
+.codicon-replace-all:before { content: '\eb3c'; }
+.codicon-replace:before { content: '\eb3d'; }
+.codicon-repo-clone:before { content: '\eb3e'; }
+.codicon-repo-force-push:before { content: '\eb3f'; }
+.codicon-repo-pull:before { content: '\eb40'; }
+.codicon-repo-push:before { content: '\eb41'; }
+.codicon-report:before { content: '\eb42'; }
+.codicon-request-changes:before { content: '\eb43'; }
+.codicon-rocket:before { content: '\eb44'; }
+.codicon-root-folder-opened:before { content: '\eb45'; }
+.codicon-root-folder:before { content: '\eb46'; }
+.codicon-rss:before { content: '\eb47'; }
+.codicon-ruby:before { content: '\eb48'; }
+.codicon-save-all:before { content: '\eb49'; }
+.codicon-save-as:before { content: '\eb4a'; }
+.codicon-save:before { content: '\eb4b'; }
+.codicon-screen-full:before { content: '\eb4c'; }
+.codicon-screen-normal:before { content: '\eb4d'; }
+.codicon-search-stop:before { content: '\eb4e'; }
+.codicon-server:before { content: '\eb50'; }
+.codicon-settings-gear:before { content: '\eb51'; }
+.codicon-settings:before { content: '\eb52'; }
+.codicon-shield:before { content: '\eb53'; }
+.codicon-smiley:before { content: '\eb54'; }
+.codicon-sort-precedence:before { content: '\eb55'; }
+.codicon-split-horizontal:before { content: '\eb56'; }
+.codicon-split-vertical:before { content: '\eb57'; }
+.codicon-squirrel:before { content: '\eb58'; }
+.codicon-star-full:before { content: '\eb59'; }
+.codicon-star-half:before { content: '\eb5a'; }
+.codicon-symbol-class:before { content: '\eb5b'; }
+.codicon-symbol-color:before { content: '\eb5c'; }
+.codicon-symbol-constant:before { content: '\eb5d'; }
+.codicon-symbol-enum-member:before { content: '\eb5e'; }
+.codicon-symbol-field:before { content: '\eb5f'; }
+.codicon-symbol-file:before { content: '\eb60'; }
+.codicon-symbol-interface:before { content: '\eb61'; }
+.codicon-symbol-keyword:before { content: '\eb62'; }
+.codicon-symbol-misc:before { content: '\eb63'; }
+.codicon-symbol-operator:before { content: '\eb64'; }
+.codicon-symbol-property:before { content: '\eb65'; }
+.codicon-wrench:before { content: '\eb65'; }
+.codicon-wrench-subaction:before { content: '\eb65'; }
+.codicon-symbol-snippet:before { content: '\eb66'; }
+.codicon-tasklist:before { content: '\eb67'; }
+.codicon-telescope:before { content: '\eb68'; }
+.codicon-text-size:before { content: '\eb69'; }
+.codicon-three-bars:before { content: '\eb6a'; }
+.codicon-thumbsdown:before { content: '\eb6b'; }
+.codicon-thumbsup:before { content: '\eb6c'; }
+.codicon-tools:before { content: '\eb6d'; }
+.codicon-triangle-down:before { content: '\eb6e'; }
+.codicon-triangle-left:before { content: '\eb6f'; }
+.codicon-triangle-right:before { content: '\eb70'; }
+.codicon-triangle-up:before { content: '\eb71'; }
+.codicon-twitter:before { content: '\eb72'; }
+.codicon-unfold:before { content: '\eb73'; }
+.codicon-unlock:before { content: '\eb74'; }
+.codicon-unmute:before { content: '\eb75'; }
+.codicon-unverified:before { content: '\eb76'; }
+.codicon-verified:before { content: '\eb77'; }
+.codicon-versions:before { content: '\eb78'; }
+.codicon-vm-active:before { content: '\eb79'; }
+.codicon-vm-outline:before { content: '\eb7a'; }
+.codicon-vm-running:before { content: '\eb7b'; }
+.codicon-watch:before { content: '\eb7c'; }
+.codicon-whitespace:before { content: '\eb7d'; }
+.codicon-whole-word:before { content: '\eb7e'; }
+.codicon-window:before { content: '\eb7f'; }
+.codicon-word-wrap:before { content: '\eb80'; }
+.codicon-zoom-in:before { content: '\eb81'; }
+.codicon-zoom-out:before { content: '\eb82'; }
+.codicon-list-filter:before { content: '\eb83'; }
+.codicon-list-flat:before { content: '\eb84'; }
+.codicon-list-selection:before { content: '\eb85'; }
+.codicon-selection:before { content: '\eb85'; }
+.codicon-list-tree:before { content: '\eb86'; }
+.codicon-debug-breakpoint-function-unverified:before { content: '\eb87'; }
+.codicon-debug-breakpoint-function:before { content: '\eb88'; }
+.codicon-debug-breakpoint-function-disabled:before { content: '\eb88'; }
+.codicon-debug-stackframe-active:before { content: '\eb89'; }
+.codicon-circle-small-filled:before { content: '\eb8a'; }
+.codicon-debug-stackframe-dot:before { content: '\eb8a'; }
+.codicon-terminal-decoration-mark:before { content: '\eb8a'; }
+.codicon-debug-stackframe:before { content: '\eb8b'; }
+.codicon-debug-stackframe-focused:before { content: '\eb8b'; }
+.codicon-debug-breakpoint-unsupported:before { content: '\eb8c'; }
+.codicon-symbol-string:before { content: '\eb8d'; }
+.codicon-debug-reverse-continue:before { content: '\eb8e'; }
+.codicon-debug-step-back:before { content: '\eb8f'; }
+.codicon-debug-restart-frame:before { content: '\eb90'; }
+.codicon-debug-alt:before { content: '\eb91'; }
+.codicon-call-incoming:before { content: '\eb92'; }
+.codicon-call-outgoing:before { content: '\eb93'; }
+.codicon-menu:before { content: '\eb94'; }
+.codicon-expand-all:before { content: '\eb95'; }
+.codicon-feedback:before { content: '\eb96'; }
+.codicon-git-pull-request-reviewer:before { content: '\eb96'; }
+.codicon-group-by-ref-type:before { content: '\eb97'; }
+.codicon-ungroup-by-ref-type:before { content: '\eb98'; }
+.codicon-account:before { content: '\eb99'; }
+.codicon-git-pull-request-assignee:before { content: '\eb99'; }
+.codicon-bell-dot:before { content: '\eb9a'; }
+.codicon-debug-console:before { content: '\eb9b'; }
+.codicon-library:before { content: '\eb9c'; }
+.codicon-output:before { content: '\eb9d'; }
+.codicon-run-all:before { content: '\eb9e'; }
+.codicon-sync-ignored:before { content: '\eb9f'; }
+.codicon-pinned:before { content: '\eba0'; }
+.codicon-github-inverted:before { content: '\eba1'; }
+.codicon-server-process:before { content: '\eba2'; }
+.codicon-server-environment:before { content: '\eba3'; }
+.codicon-pass:before { content: '\eba4'; }
+.codicon-issue-closed:before { content: '\eba4'; }
+.codicon-stop-circle:before { content: '\eba5'; }
+.codicon-play-circle:before { content: '\eba6'; }
+.codicon-record:before { content: '\eba7'; }
+.codicon-debug-alt-small:before { content: '\eba8'; }
+.codicon-vm-connect:before { content: '\eba9'; }
+.codicon-cloud:before { content: '\ebaa'; }
+.codicon-merge:before { content: '\ebab'; }
+.codicon-export:before { content: '\ebac'; }
+.codicon-graph-left:before { content: '\ebad'; }
+.codicon-magnet:before { content: '\ebae'; }
+.codicon-notebook:before { content: '\ebaf'; }
+.codicon-redo:before { content: '\ebb0'; }
+.codicon-check-all:before { content: '\ebb1'; }
+.codicon-pinned-dirty:before { content: '\ebb2'; }
+.codicon-pass-filled:before { content: '\ebb3'; }
+.codicon-circle-large-filled:before { content: '\ebb4'; }
+.codicon-circle-large:before { content: '\ebb5'; }
+.codicon-circle-large-outline:before { content: '\ebb5'; }
+.codicon-combine:before { content: '\ebb6'; }
+.codicon-gather:before { content: '\ebb6'; }
+.codicon-table:before { content: '\ebb7'; }
+.codicon-variable-group:before { content: '\ebb8'; }
+.codicon-type-hierarchy:before { content: '\ebb9'; }
+.codicon-type-hierarchy-sub:before { content: '\ebba'; }
+.codicon-type-hierarchy-super:before { content: '\ebbb'; }
+.codicon-git-pull-request-create:before { content: '\ebbc'; }
+.codicon-run-above:before { content: '\ebbd'; }
+.codicon-run-below:before { content: '\ebbe'; }
+.codicon-notebook-template:before { content: '\ebbf'; }
+.codicon-debug-rerun:before { content: '\ebc0'; }
+.codicon-workspace-trusted:before { content: '\ebc1'; }
+.codicon-workspace-untrusted:before { content: '\ebc2'; }
+.codicon-workspace-unknown:before { content: '\ebc3'; }
+.codicon-terminal-cmd:before { content: '\ebc4'; }
+.codicon-terminal-debian:before { content: '\ebc5'; }
+.codicon-terminal-linux:before { content: '\ebc6'; }
+.codicon-terminal-powershell:before { content: '\ebc7'; }
+.codicon-terminal-tmux:before { content: '\ebc8'; }
+.codicon-terminal-ubuntu:before { content: '\ebc9'; }
+.codicon-terminal-bash:before { content: '\ebca'; }
+.codicon-arrow-swap:before { content: '\ebcb'; }
+.codicon-copy:before { content: '\ebcc'; }
+.codicon-person-add:before { content: '\ebcd'; }
+.codicon-filter-filled:before { content: '\ebce'; }
+.codicon-wand:before { content: '\ebcf'; }
+.codicon-debug-line-by-line:before { content: '\ebd0'; }
+.codicon-inspect:before { content: '\ebd1'; }
+.codicon-layers:before { content: '\ebd2'; }
+.codicon-layers-dot:before { content: '\ebd3'; }
+.codicon-layers-active:before { content: '\ebd4'; }
+.codicon-compass:before { content: '\ebd5'; }
+.codicon-compass-dot:before { content: '\ebd6'; }
+.codicon-compass-active:before { content: '\ebd7'; }
+.codicon-azure:before { content: '\ebd8'; }
+.codicon-issue-draft:before { content: '\ebd9'; }
+.codicon-git-pull-request-closed:before { content: '\ebda'; }
+.codicon-git-pull-request-draft:before { content: '\ebdb'; }
+.codicon-debug-all:before { content: '\ebdc'; }
+.codicon-debug-coverage:before { content: '\ebdd'; }
+.codicon-run-errors:before { content: '\ebde'; }
+.codicon-folder-library:before { content: '\ebdf'; }
+.codicon-debug-continue-small:before { content: '\ebe0'; }
+.codicon-beaker-stop:before { content: '\ebe1'; }
+.codicon-graph-line:before { content: '\ebe2'; }
+.codicon-graph-scatter:before { content: '\ebe3'; }
+.codicon-pie-chart:before { content: '\ebe4'; }
+.codicon-bracket:before { content: '\eb0f'; }
+.codicon-bracket-dot:before { content: '\ebe5'; }
+.codicon-bracket-error:before { content: '\ebe6'; }
+.codicon-lock-small:before { content: '\ebe7'; }
+.codicon-azure-devops:before { content: '\ebe8'; }
+.codicon-verified-filled:before { content: '\ebe9'; }
+.codicon-newline:before { content: '\ebea'; }
+.codicon-layout:before { content: '\ebeb'; }
+.codicon-layout-activitybar-left:before { content: '\ebec'; }
+.codicon-layout-activitybar-right:before { content: '\ebed'; }
+.codicon-layout-panel-left:before { content: '\ebee'; }
+.codicon-layout-panel-center:before { content: '\ebef'; }
+.codicon-layout-panel-justify:before { content: '\ebf0'; }
+.codicon-layout-panel-right:before { content: '\ebf1'; }
+.codicon-layout-panel:before { content: '\ebf2'; }
+.codicon-layout-sidebar-left:before { content: '\ebf3'; }
+.codicon-layout-sidebar-right:before { content: '\ebf4'; }
+.codicon-layout-statusbar:before { content: '\ebf5'; }
+.codicon-layout-menubar:before { content: '\ebf6'; }
+.codicon-layout-centered:before { content: '\ebf7'; }
+.codicon-target:before { content: '\ebf8'; }
+.codicon-indent:before { content: '\ebf9'; }
+.codicon-record-small:before { content: '\ebfa'; }
+.codicon-error-small:before { content: '\ebfb'; }
+.codicon-terminal-decoration-error:before { content: '\ebfb'; }
+.codicon-arrow-circle-down:before { content: '\ebfc'; }
+.codicon-arrow-circle-left:before { content: '\ebfd'; }
+.codicon-arrow-circle-right:before { content: '\ebfe'; }
+.codicon-arrow-circle-up:before { content: '\ebff'; }
+.codicon-layout-sidebar-right-off:before { content: '\ec00'; }
+.codicon-layout-panel-off:before { content: '\ec01'; }
+.codicon-layout-sidebar-left-off:before { content: '\ec02'; }
+.codicon-blank:before { content: '\ec03'; }
+.codicon-heart-filled:before { content: '\ec04'; }
+.codicon-map:before { content: '\ec05'; }
+.codicon-map-horizontal:before { content: '\ec05'; }
+.codicon-fold-horizontal:before { content: '\ec05'; }
+.codicon-map-filled:before { content: '\ec06'; }
+.codicon-map-horizontal-filled:before { content: '\ec06'; }
+.codicon-fold-horizontal-filled:before { content: '\ec06'; }
+.codicon-circle-small:before { content: '\ec07'; }
+.codicon-bell-slash:before { content: '\ec08'; }
+.codicon-bell-slash-dot:before { content: '\ec09'; }
+.codicon-comment-unresolved:before { content: '\ec0a'; }
+.codicon-git-pull-request-go-to-changes:before { content: '\ec0b'; }
+.codicon-git-pull-request-new-changes:before { content: '\ec0c'; }
+.codicon-search-fuzzy:before { content: '\ec0d'; }
+.codicon-comment-draft:before { content: '\ec0e'; }
+.codicon-send:before { content: '\ec0f'; }
+.codicon-sparkle:before { content: '\ec10'; }
+.codicon-insert:before { content: '\ec11'; }
+.codicon-mic:before { content: '\ec12'; }
+.codicon-thumbsdown-filled:before { content: '\ec13'; }
+.codicon-thumbsup-filled:before { content: '\ec14'; }
+.codicon-coffee:before { content: '\ec15'; }
+.codicon-snake:before { content: '\ec16'; }
+.codicon-game:before { content: '\ec17'; }
+.codicon-vr:before { content: '\ec18'; }
+.codicon-chip:before { content: '\ec19'; }
+.codicon-piano:before { content: '\ec1a'; }
+.codicon-music:before { content: '\ec1b'; }
+.codicon-mic-filled:before { content: '\ec1c'; }
+.codicon-repo-fetch:before { content: '\ec1d'; }
+.codicon-copilot:before { content: '\ec1e'; }
+.codicon-lightbulb-sparkle:before { content: '\ec1f'; }
+.codicon-robot:before { content: '\ec20'; }
+.codicon-sparkle-filled:before { content: '\ec21'; }
+.codicon-diff-single:before { content: '\ec22'; }
+.codicon-diff-multiple:before { content: '\ec23'; }
+.codicon-surround-with:before { content: '\ec24'; }
+.codicon-share:before { content: '\ec25'; }
+.codicon-git-stash:before { content: '\ec26'; }
+.codicon-git-stash-apply:before { content: '\ec27'; }
+.codicon-git-stash-pop:before { content: '\ec28'; }
+.codicon-vscode:before { content: '\ec29'; }
+.codicon-vscode-insiders:before { content: '\ec2a'; }
+.codicon-code-oss:before { content: '\ec2b'; }
+.codicon-run-coverage:before { content: '\ec2c'; }
+.codicon-run-all-coverage:before { content: '\ec2d'; }
+.codicon-coverage:before { content: '\ec2e'; }
+.codicon-github-project:before { content: '\ec2f'; }
+.codicon-map-vertical:before { content: '\ec30'; }
+.codicon-fold-vertical:before { content: '\ec30'; }
+.codicon-map-vertical-filled:before { content: '\ec31'; }
+.codicon-fold-vertical-filled:before { content: '\ec31'; }
+.codicon-dialog-error:before { content: '\ea87'; }
+.codicon-dialog-warning:before { content: '\ea6c'; }
+.codicon-dialog-info:before { content: '\ea74'; }
+.codicon-dialog-close:before { content: '\ea76'; }
+.codicon-tree-item-expanded:before { content: '\eab4'; }
+.codicon-tree-filter-on-type-on:before { content: '\eb83'; }
+.codicon-tree-filter-on-type-off:before { content: '\eb85'; }
+.codicon-tree-filter-clear:before { content: '\ea76'; }
+.codicon-tree-item-loading:before { content: '\eb19'; }
+.codicon-menu-selection:before { content: '\eab2'; }
+.codicon-menu-submenu:before { content: '\eab6'; }
+.codicon-menubar-more:before { content: '\ea7c'; }
+.codicon-scrollbar-button-left:before { content: '\eb6f'; }
+.codicon-scrollbar-button-right:before { content: '\eb70'; }
+.codicon-scrollbar-button-up:before { content: '\eb71'; }
+.codicon-scrollbar-button-down:before { content: '\eb6e'; }
+.codicon-toolbar-more:before { content: '\ea7c'; }
+.codicon-quick-input-back:before { content: '\ea9b'; }
+.codicon-drop-down-button:before { content: '\eab4'; }
+.codicon-symbol-customcolor:before { content: '\eb5c'; }
+.codicon-workspace-unspecified:before { content: '\ebc3'; }
+.codicon-git-fetch:before { content: '\ec1d'; }
+.codicon-lightbulb-sparkle-autofix:before { content: '\ec1f'; }
+.codicon-debug-breakpoint-pending:before { content: '\ebd9'; }
+.codicon-widget-close:before { content: '\ea76'; }
+.codicon-goto-previous-location:before { content: '\eaa1'; }
+.codicon-goto-next-location:before { content: '\ea9a'; }
+.codicon-diff-review-insert:before { content: '\ea60'; }
+.codicon-diff-review-remove:before { content: '\eb3b'; }
+.codicon-diff-review-close:before { content: '\ea76'; }
+.codicon-parameter-hints-next:before { content: '\eab4'; }
+.codicon-parameter-hints-previous:before { content: '\eab7'; }
+.codicon-suggest-more-info:before { content: '\eab6'; }
+.codicon-inline-suggestion-hints-next:before { content: '\eab6'; }
+.codicon-inline-suggestion-hints-previous:before { content: '\eab5'; }
+.codicon-diff-insert:before { content: '\ea60'; }
+.codicon-diff-remove:before { content: '\eb3b'; }
+.codicon-find-selection:before { content: '\eb85'; }
+.codicon-find-collapsed:before { content: '\eab6'; }
+.codicon-find-expanded:before { content: '\eab4'; }
+.codicon-find-replace:before { content: '\eb3d'; }
+.codicon-find-replace-all:before { content: '\eb3c'; }
+.codicon-find-previous-match:before { content: '\eaa1'; }
+.codicon-find-next-match:before { content: '\ea9a'; }
+.codicon-folding-expanded:before { content: '\eab4'; }
+.codicon-folding-collapsed:before { content: '\eab6'; }
+.codicon-folding-manual-collapsed:before { content: '\eab6'; }
+.codicon-folding-manual-expanded:before { content: '\eab4'; }
+.codicon-marker-navigation-next:before { content: '\ea9a'; }
+.codicon-marker-navigation-previous:before { content: '\eaa1'; }
+.codicon-extensions-warning-message:before { content: '\ea6c'; }
+.monaco-workbench .workbench-hover .hover-row:not(:first-child):not(:empty) { border-top: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-workbench .workbench-hover hr { border-top: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .inputarea.ime-input { background-color: #1e1e1e; }
+.monaco-editor .view-overlays .current-line-exact { border: 2px solid #282828; }
+.monaco-editor .margin-view-overlays .current-line-exact-margin { border: 2px solid #282828; }
+.monaco-editor .bracket-indent-guide.lvl-0 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-1 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-2 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-3 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-4 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-5 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-6 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-7 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-8 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-9 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-10 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-11 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-12 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-13 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-14 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-15 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-16 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-17 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-18 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-19 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-20 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-21 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-22 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-23 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-24 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-25 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-26 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .bracket-indent-guide.lvl-27 { --guide-color: rgba(255, 215, 0, 0.3); --guide-color-active: #ffd700; }
+.monaco-editor .bracket-indent-guide.lvl-28 { --guide-color: rgba(218, 112, 214, 0.3); --guide-color-active: #da70d6; }
+.monaco-editor .bracket-indent-guide.lvl-29 { --guide-color: rgba(23, 159, 255, 0.3); --guide-color-active: #179fff; }
+.monaco-editor .vertical { box-shadow: 1px 0 0 0 var(--guide-color) inset; }
+.monaco-editor .horizontal-top { border-top: 1px solid var(--guide-color); }
+.monaco-editor .horizontal-bottom { border-bottom: 1px solid var(--guide-color); }
+.monaco-editor .vertical.indent-active { box-shadow: 1px 0 0 0 var(--guide-color-active) inset; }
+.monaco-editor .horizontal-top.indent-active { border-top: 1px solid var(--guide-color-active); }
+.monaco-editor .horizontal-bottom.indent-active { border-bottom: 1px solid var(--guide-color-active); }
+.monaco-editor .lines-content .core-guide-indent.lvl-0 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-1 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-2 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-3 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-4 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-5 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-6 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-7 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-8 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-9 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-10 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-11 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-12 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-13 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-14 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-15 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-16 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-17 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-18 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-19 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-20 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-21 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-22 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-23 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-24 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-25 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-26 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-27 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-28 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent.lvl-29 { --indent-color: #404040; --indent-color-active: #707070; }
+.monaco-editor .lines-content .core-guide-indent { box-shadow: 1px 0 0 0 var(--indent-color) inset; }
+.monaco-editor .lines-content .core-guide-indent.indent-active { box-shadow: 1px 0 0 0 var(--indent-color-active) inset; }
+.monaco-editor .line-numbers.dimmed-line-number { color: rgba(133, 133, 133, 0.4); }
+.monaco-editor .cursors-layer .cursor { background-color: #aeafad; border-color: #aeafad; color: #515052; }
+.monaco-editor .cursors-layer .cursor-primary { background-color: #aeafad; border-color: #aeafad; color: #515052; }
+.monaco-editor .cursors-layer .cursor-secondary { background-color: #aeafad; border-color: #aeafad; color: #515052; }
+.monaco-editor .unexpected-closing-bracket { color: rgba(255, 18, 18, 0.8); }
+.monaco-editor .bracket-highlighting-0 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-1 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-2 { color: #179fff; }
+.monaco-editor .bracket-highlighting-3 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-4 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-5 { color: #179fff; }
+.monaco-editor .bracket-highlighting-6 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-7 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-8 { color: #179fff; }
+.monaco-editor .bracket-highlighting-9 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-10 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-11 { color: #179fff; }
+.monaco-editor .bracket-highlighting-12 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-13 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-14 { color: #179fff; }
+.monaco-editor .bracket-highlighting-15 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-16 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-17 { color: #179fff; }
+.monaco-editor .bracket-highlighting-18 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-19 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-20 { color: #179fff; }
+.monaco-editor .bracket-highlighting-21 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-22 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-23 { color: #179fff; }
+.monaco-editor .bracket-highlighting-24 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-25 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-26 { color: #179fff; }
+.monaco-editor .bracket-highlighting-27 { color: #ffd700; }
+.monaco-editor .bracket-highlighting-28 { color: #da70d6; }
+.monaco-editor .bracket-highlighting-29 { color: #179fff; }
+.monaco-editor .squiggly-error { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%206%203'%20enable-background%3D'new%200%200%206%203'%20height%3D'3'%20width%3D'6'%3E%3Cg%20fill%3D'%23f14c4c'%3E%3Cpolygon%20points%3D'5.5%2C0%202.5%2C3%201.1%2C3%204.1%2C0'%2F%3E%3Cpolygon%20points%3D'4%2C0%206%2C2%206%2C0.6%205.4%2C0'%2F%3E%3Cpolygon%20points%3D'0%2C2%201%2C3%202.4%2C3%200%2C0.6'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x bottom left; }
+.monaco-editor .squiggly-warning { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%206%203'%20enable-background%3D'new%200%200%206%203'%20height%3D'3'%20width%3D'6'%3E%3Cg%20fill%3D'%23cca700'%3E%3Cpolygon%20points%3D'5.5%2C0%202.5%2C3%201.1%2C3%204.1%2C0'%2F%3E%3Cpolygon%20points%3D'4%2C0%206%2C2%206%2C0.6%205.4%2C0'%2F%3E%3Cpolygon%20points%3D'0%2C2%201%2C3%202.4%2C3%200%2C0.6'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x bottom left; }
+.monaco-editor .squiggly-info { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%206%203'%20enable-background%3D'new%200%200%206%203'%20height%3D'3'%20width%3D'6'%3E%3Cg%20fill%3D'%233794ff'%3E%3Cpolygon%20points%3D'5.5%2C0%202.5%2C3%201.1%2C3%204.1%2C0'%2F%3E%3Cpolygon%20points%3D'4%2C0%206%2C2%206%2C0.6%205.4%2C0'%2F%3E%3Cpolygon%20points%3D'0%2C2%201%2C3%202.4%2C3%200%2C0.6'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x bottom left; }
+.monaco-editor .squiggly-hint { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%223%22%20width%3D%2212%22%3E%3Cg%20fill%3D%22rgba(238%2C%20238%2C%20238%2C%200.7)%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%2F%3E%3Ccircle%20cx%3D%225%22%20cy%3D%221%22%20r%3D%221%22%2F%3E%3Ccircle%20cx%3D%229%22%20cy%3D%221%22%20r%3D%221%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat bottom left; }
+.monaco-editor.showUnused .squiggly-inline-unnecessary { opacity: 0.667; }
+.monaco-editor .quickfix-edit-highlight { background-color: rgba(234, 92, 0, 0.33); }
+.monaco-editor .selectionHighlight { background-color: rgba(173, 214, 255, 0.07); }
+.monaco-editor .monaco-hover .hover-row:not(:first-child):not(:empty) { border-top: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .monaco-hover hr { border-top: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .monaco-hover hr { border-bottom: 0px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor, .monaco-diff-editor, .monaco-component { --vscode-foreground: #cccccc;
+--vscode-disabledForeground: rgba(204, 204, 204, 0.5);
+--vscode-errorForeground: #f48771;
+--vscode-descriptionForeground: rgba(204, 204, 204, 0.7);
+--vscode-icon-foreground: #c5c5c5;
+--vscode-focusBorder: #007fd4;
+--vscode-textLink-foreground: #3794ff;
+--vscode-textLink-activeForeground: #3794ff;
+--vscode-textSeparator-foreground: rgba(255, 255, 255, 0.18);
+--vscode-textPreformat-foreground: #d7ba7d;
+--vscode-textPreformat-background: rgba(255, 255, 255, 0.1);
+--vscode-textBlockQuote-background: #222222;
+--vscode-textBlockQuote-border: rgba(0, 122, 204, 0.5);
+--vscode-textCodeBlock-background: rgba(10, 10, 10, 0.4);
+--vscode-sash-hoverBorder: #007fd4;
+--vscode-badge-background: #4d4d4d;
+--vscode-badge-foreground: #ffffff;
+--vscode-scrollbar-shadow: #000000;
+--vscode-scrollbarSlider-background: rgba(121, 121, 121, 0.4);
+--vscode-scrollbarSlider-hoverBackground: rgba(100, 100, 100, 0.7);
+--vscode-scrollbarSlider-activeBackground: rgba(191, 191, 191, 0.4);
+--vscode-progressBar-background: #0e70c0;
+--vscode-editor-background: #1e1e1e;
+--vscode-editor-foreground: #d4d4d4;
+--vscode-editorStickyScroll-background: #1e1e1e;
+--vscode-editorStickyScrollHover-background: #2a2d2e;
+--vscode-editorStickyScroll-shadow: #000000;
+--vscode-editorWidget-background: #252526;
+--vscode-editorWidget-foreground: #cccccc;
+--vscode-editorWidget-border: #454545;
+--vscode-editorError-foreground: #f14c4c;
+--vscode-editorWarning-foreground: #cca700;
+--vscode-editorInfo-foreground: #3794ff;
+--vscode-editorHint-foreground: rgba(238, 238, 238, 0.7);
+--vscode-editorLink-activeForeground: #4e94ce;
+--vscode-editor-selectionBackground: #264f78;
+--vscode-editor-inactiveSelectionBackground: #3a3d41;
+--vscode-editor-selectionHighlightBackground: rgba(173, 214, 255, 0.15);
+--vscode-editor-findMatchBackground: #515c6a;
+--vscode-editor-findMatchHighlightBackground: rgba(234, 92, 0, 0.33);
+--vscode-editor-findRangeHighlightBackground: rgba(58, 61, 65, 0.4);
+--vscode-editor-hoverHighlightBackground: rgba(38, 79, 120, 0.25);
+--vscode-editorHoverWidget-background: #252526;
+--vscode-editorHoverWidget-foreground: #cccccc;
+--vscode-editorHoverWidget-border: #454545;
+--vscode-editorHoverWidget-statusBarBackground: #2c2c2d;
+--vscode-editorInlayHint-foreground: #969696;
+--vscode-editorInlayHint-background: rgba(77, 77, 77, 0.1);
+--vscode-editorInlayHint-typeForeground: #969696;
+--vscode-editorInlayHint-typeBackground: rgba(77, 77, 77, 0.1);
+--vscode-editorInlayHint-parameterForeground: #969696;
+--vscode-editorInlayHint-parameterBackground: rgba(77, 77, 77, 0.1);
+--vscode-editorLightBulb-foreground: #ffcc00;
+--vscode-editorLightBulbAutoFix-foreground: #75beff;
+--vscode-editorLightBulbAi-foreground: #ffcc00;
+--vscode-editor-snippetTabstopHighlightBackground: rgba(124, 124, 124, 0.3);
+--vscode-editor-snippetFinalTabstopHighlightBorder: #525252;
+--vscode-diffEditor-insertedTextBackground: rgba(156, 204, 44, 0.2);
+--vscode-diffEditor-removedTextBackground: rgba(255, 0, 0, 0.2);
+--vscode-diffEditor-insertedLineBackground: rgba(155, 185, 85, 0.2);
+--vscode-diffEditor-removedLineBackground: rgba(255, 0, 0, 0.2);
+--vscode-diffEditor-diagonalFill: rgba(204, 204, 204, 0.2);
+--vscode-diffEditor-unchangedRegionForeground: #cccccc;
+--vscode-diffEditor-unchangedCodeBackground: rgba(116, 116, 116, 0.16);
+--vscode-widget-shadow: rgba(0, 0, 0, 0.36);
+--vscode-toolbar-hoverBackground: rgba(90, 93, 94, 0.31);
+--vscode-toolbar-activeBackground: rgba(99, 102, 103, 0.31);
+--vscode-breadcrumb-foreground: rgba(204, 204, 204, 0.8);
+--vscode-breadcrumb-background: #1e1e1e;
+--vscode-breadcrumb-focusForeground: #e0e0e0;
+--vscode-breadcrumb-activeSelectionForeground: #e0e0e0;
+--vscode-breadcrumbPicker-background: #252526;
+--vscode-merge-currentHeaderBackground: rgba(64, 200, 174, 0.5);
+--vscode-merge-currentContentBackground: rgba(64, 200, 174, 0.2);
+--vscode-merge-incomingHeaderBackground: rgba(64, 166, 255, 0.5);
+--vscode-merge-incomingContentBackground: rgba(64, 166, 255, 0.2);
+--vscode-merge-commonHeaderBackground: rgba(96, 96, 96, 0.4);
+--vscode-merge-commonContentBackground: rgba(96, 96, 96, 0.16);
+--vscode-editorOverviewRuler-currentContentForeground: rgba(64, 200, 174, 0.5);
+--vscode-editorOverviewRuler-incomingContentForeground: rgba(64, 166, 255, 0.5);
+--vscode-editorOverviewRuler-commonContentForeground: rgba(96, 96, 96, 0.4);
+--vscode-editorOverviewRuler-findMatchForeground: rgba(209, 134, 22, 0.49);
+--vscode-editorOverviewRuler-selectionHighlightForeground: rgba(160, 160, 160, 0.8);
+--vscode-problemsErrorIcon-foreground: #f14c4c;
+--vscode-problemsWarningIcon-foreground: #cca700;
+--vscode-problemsInfoIcon-foreground: #3794ff;
+--vscode-input-background: #3c3c3c;
+--vscode-input-foreground: #cccccc;
+--vscode-inputOption-activeBorder: #007acc;
+--vscode-inputOption-hoverBackground: rgba(90, 93, 94, 0.5);
+--vscode-inputOption-activeBackground: rgba(0, 127, 212, 0.4);
+--vscode-inputOption-activeForeground: #ffffff;
+--vscode-input-placeholderForeground: rgba(204, 204, 204, 0.5);
+--vscode-inputValidation-infoBackground: #063b49;
+--vscode-inputValidation-infoBorder: #007acc;
+--vscode-inputValidation-warningBackground: #352a05;
+--vscode-inputValidation-warningBorder: #b89500;
+--vscode-inputValidation-errorBackground: #5a1d1d;
+--vscode-inputValidation-errorBorder: #be1100;
+--vscode-dropdown-background: #3c3c3c;
+--vscode-dropdown-foreground: #f0f0f0;
+--vscode-dropdown-border: #3c3c3c;
+--vscode-button-foreground: #ffffff;
+--vscode-button-separator: rgba(255, 255, 255, 0.4);
+--vscode-button-background: #0e639c;
+--vscode-button-hoverBackground: #1177bb;
+--vscode-button-secondaryForeground: #ffffff;
+--vscode-button-secondaryBackground: #3a3d41;
+--vscode-button-secondaryHoverBackground: #45494e;
+--vscode-checkbox-background: #3c3c3c;
+--vscode-checkbox-selectBackground: #252526;
+--vscode-checkbox-foreground: #f0f0f0;
+--vscode-checkbox-border: #3c3c3c;
+--vscode-checkbox-selectBorder: #c5c5c5;
+--vscode-keybindingLabel-background: rgba(128, 128, 128, 0.17);
+--vscode-keybindingLabel-foreground: #cccccc;
+--vscode-keybindingLabel-border: rgba(51, 51, 51, 0.6);
+--vscode-keybindingLabel-bottomBorder: rgba(68, 68, 68, 0.6);
+--vscode-list-focusOutline: #007fd4;
+--vscode-list-activeSelectionBackground: #04395e;
+--vscode-list-activeSelectionForeground: #ffffff;
+--vscode-list-inactiveSelectionBackground: #37373d;
+--vscode-list-hoverBackground: #2a2d2e;
+--vscode-list-dropBackground: #062f4a;
+--vscode-list-dropBetweenBackground: #c5c5c5;
+--vscode-list-highlightForeground: #2aaaff;
+--vscode-list-focusHighlightForeground: #2aaaff;
+--vscode-list-invalidItemForeground: #b89500;
+--vscode-list-errorForeground: #f88070;
+--vscode-list-warningForeground: #cca700;
+--vscode-listFilterWidget-background: #252526;
+--vscode-listFilterWidget-outline: rgba(0, 0, 0, 0);
+--vscode-listFilterWidget-noMatchesOutline: #be1100;
+--vscode-listFilterWidget-shadow: rgba(0, 0, 0, 0.36);
+--vscode-list-filterMatchBackground: rgba(234, 92, 0, 0.33);
+--vscode-list-deemphasizedForeground: #8c8c8c;
+--vscode-tree-indentGuidesStroke: #585858;
+--vscode-tree-inactiveIndentGuidesStroke: rgba(88, 88, 88, 0.4);
+--vscode-tree-tableColumnsBorder: rgba(204, 204, 204, 0.13);
+--vscode-tree-tableOddRowsBackground: rgba(204, 204, 204, 0.04);
+--vscode-menu-foreground: #f0f0f0;
+--vscode-menu-background: #3c3c3c;
+--vscode-menu-selectionForeground: #ffffff;
+--vscode-menu-selectionBackground: #04395e;
+--vscode-menu-separatorBackground: #606060;
+--vscode-minimap-findMatchHighlight: #d18616;
+--vscode-minimap-selectionOccurrenceHighlight: #676767;
+--vscode-minimap-selectionHighlight: #264f78;
+--vscode-minimap-infoHighlight: #3794ff;
+--vscode-minimap-warningHighlight: #cca700;
+--vscode-minimap-errorHighlight: rgba(255, 18, 18, 0.7);
+--vscode-minimap-foregroundOpacity: #000000;
+--vscode-minimapSlider-background: rgba(121, 121, 121, 0.2);
+--vscode-minimapSlider-hoverBackground: rgba(100, 100, 100, 0.35);
+--vscode-minimapSlider-activeBackground: rgba(191, 191, 191, 0.2);
+--vscode-charts-foreground: #cccccc;
+--vscode-charts-lines: rgba(204, 204, 204, 0.5);
+--vscode-charts-red: #f14c4c;
+--vscode-charts-blue: #3794ff;
+--vscode-charts-yellow: #cca700;
+--vscode-charts-orange: #d18616;
+--vscode-charts-green: #89d185;
+--vscode-charts-purple: #b180d7;
+--vscode-quickInput-background: #252526;
+--vscode-quickInput-foreground: #cccccc;
+--vscode-quickInputTitle-background: rgba(255, 255, 255, 0.1);
+--vscode-pickerGroup-foreground: #3794ff;
+--vscode-pickerGroup-border: #3f3f46;
+--vscode-quickInputList-focusForeground: #ffffff;
+--vscode-quickInputList-focusBackground: #04395e;
+--vscode-search-resultsInfoForeground: rgba(204, 204, 204, 0.65);
+--vscode-searchEditor-findMatchBackground: rgba(234, 92, 0, 0.22);
+--vscode-multiDiffEditor-headerBackground: #262626;
+--vscode-symbolIcon-arrayForeground: #cccccc;
+--vscode-symbolIcon-booleanForeground: #cccccc;
+--vscode-symbolIcon-classForeground: #ee9d28;
+--vscode-symbolIcon-colorForeground: #cccccc;
+--vscode-symbolIcon-constantForeground: #cccccc;
+--vscode-symbolIcon-constructorForeground: #b180d7;
+--vscode-symbolIcon-enumeratorForeground: #ee9d28;
+--vscode-symbolIcon-enumeratorMemberForeground: #75beff;
+--vscode-symbolIcon-eventForeground: #ee9d28;
+--vscode-symbolIcon-fieldForeground: #75beff;
+--vscode-symbolIcon-fileForeground: #cccccc;
+--vscode-symbolIcon-folderForeground: #cccccc;
+--vscode-symbolIcon-functionForeground: #b180d7;
+--vscode-symbolIcon-interfaceForeground: #75beff;
+--vscode-symbolIcon-keyForeground: #cccccc;
+--vscode-symbolIcon-keywordForeground: #cccccc;
+--vscode-symbolIcon-methodForeground: #b180d7;
+--vscode-symbolIcon-moduleForeground: #cccccc;
+--vscode-symbolIcon-namespaceForeground: #cccccc;
+--vscode-symbolIcon-nullForeground: #cccccc;
+--vscode-symbolIcon-numberForeground: #cccccc;
+--vscode-symbolIcon-objectForeground: #cccccc;
+--vscode-symbolIcon-operatorForeground: #cccccc;
+--vscode-symbolIcon-packageForeground: #cccccc;
+--vscode-symbolIcon-propertyForeground: #cccccc;
+--vscode-symbolIcon-referenceForeground: #cccccc;
+--vscode-symbolIcon-snippetForeground: #cccccc;
+--vscode-symbolIcon-stringForeground: #cccccc;
+--vscode-symbolIcon-structForeground: #cccccc;
+--vscode-symbolIcon-textForeground: #cccccc;
+--vscode-symbolIcon-typeParameterForeground: #cccccc;
+--vscode-symbolIcon-unitForeground: #cccccc;
+--vscode-symbolIcon-variableForeground: #75beff;
+--vscode-actionBar-toggledBackground: rgba(0, 127, 212, 0.4);
+--vscode-editor-lineHighlightBorder: #282828;
+--vscode-editor-rangeHighlightBackground: rgba(255, 255, 255, 0.04);
+--vscode-editor-symbolHighlightBackground: rgba(234, 92, 0, 0.33);
+--vscode-editorCursor-foreground: #aeafad;
+--vscode-editorMultiCursor-primary-foreground: #aeafad;
+--vscode-editorMultiCursor-secondary-foreground: #aeafad;
+--vscode-editorWhitespace-foreground: rgba(227, 228, 226, 0.16);
+--vscode-editorLineNumber-foreground: #858585;
+--vscode-editorIndentGuide-background: rgba(227, 228, 226, 0.16);
+--vscode-editorIndentGuide-activeBackground: rgba(227, 228, 226, 0.16);
+--vscode-editorIndentGuide-background1: #404040;
+--vscode-editorIndentGuide-background2: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-background3: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-background4: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-background5: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-background6: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-activeBackground1: #707070;
+--vscode-editorIndentGuide-activeBackground2: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-activeBackground3: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-activeBackground4: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-activeBackground5: rgba(0, 0, 0, 0);
+--vscode-editorIndentGuide-activeBackground6: rgba(0, 0, 0, 0);
+--vscode-editorActiveLineNumber-foreground: #c6c6c6;
+--vscode-editorLineNumber-activeForeground: #c6c6c6;
+--vscode-editorRuler-foreground: #5a5a5a;
+--vscode-editorCodeLens-foreground: #999999;
+--vscode-editorBracketMatch-background: rgba(0, 100, 0, 0.1);
+--vscode-editorBracketMatch-border: #888888;
+--vscode-editorOverviewRuler-border: rgba(127, 127, 127, 0.3);
+--vscode-editorGutter-background: #1e1e1e;
+--vscode-editorUnnecessaryCode-opacity: rgba(0, 0, 0, 0.67);
+--vscode-editorGhostText-foreground: rgba(255, 255, 255, 0.34);
+--vscode-editorOverviewRuler-rangeHighlightForeground: rgba(0, 122, 204, 0.6);
+--vscode-editorOverviewRuler-errorForeground: rgba(255, 18, 18, 0.7);
+--vscode-editorOverviewRuler-warningForeground: #cca700;
+--vscode-editorOverviewRuler-infoForeground: #3794ff;
+--vscode-editorBracketHighlight-foreground1: #ffd700;
+--vscode-editorBracketHighlight-foreground2: #da70d6;
+--vscode-editorBracketHighlight-foreground3: #179fff;
+--vscode-editorBracketHighlight-foreground4: rgba(0, 0, 0, 0);
+--vscode-editorBracketHighlight-foreground5: rgba(0, 0, 0, 0);
+--vscode-editorBracketHighlight-foreground6: rgba(0, 0, 0, 0);
+--vscode-editorBracketHighlight-unexpectedBracket-foreground: rgba(255, 18, 18, 0.8);
+--vscode-editorBracketPairGuide-background1: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-background2: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-background3: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-background4: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-background5: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-background6: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-activeBackground1: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-activeBackground2: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-activeBackground3: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-activeBackground4: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-activeBackground5: rgba(0, 0, 0, 0);
+--vscode-editorBracketPairGuide-activeBackground6: rgba(0, 0, 0, 0);
+--vscode-editorUnicodeHighlight-border: #cca700;
+--vscode-editorOverviewRuler-bracketMatchForeground: #a0a0a0;
+--vscode-editor-linkedEditingBackground: rgba(255, 0, 0, 0.3);
+--vscode-editor-wordHighlightBackground: rgba(87, 87, 87, 0.72);
+--vscode-editor-wordHighlightStrongBackground: rgba(0, 73, 114, 0.72);
+--vscode-editor-wordHighlightTextBackground: rgba(87, 87, 87, 0.72);
+--vscode-editorOverviewRuler-wordHighlightForeground: rgba(160, 160, 160, 0.8);
+--vscode-editorOverviewRuler-wordHighlightStrongForeground: rgba(192, 160, 192, 0.8);
+--vscode-editorOverviewRuler-wordHighlightTextForeground: rgba(160, 160, 160, 0.8);
+--vscode-peekViewTitle-background: #252526;
+--vscode-peekViewTitleLabel-foreground: #ffffff;
+--vscode-peekViewTitleDescription-foreground: rgba(204, 204, 204, 0.7);
+--vscode-peekView-border: #3794ff;
+--vscode-peekViewResult-background: #252526;
+--vscode-peekViewResult-lineForeground: #bbbbbb;
+--vscode-peekViewResult-fileForeground: #ffffff;
+--vscode-peekViewResult-selectionBackground: rgba(51, 153, 255, 0.2);
+--vscode-peekViewResult-selectionForeground: #ffffff;
+--vscode-peekViewEditor-background: #001f33;
+--vscode-peekViewEditorGutter-background: #001f33;
+--vscode-peekViewEditorStickyScroll-background: #001f33;
+--vscode-peekViewResult-matchHighlightBackground: rgba(234, 92, 0, 0.3);
+--vscode-peekViewEditor-matchHighlightBackground: rgba(255, 143, 0, 0.6);
+--vscode-editorMarkerNavigationError-background: #f14c4c;
+--vscode-editorMarkerNavigationError-headerBackground: rgba(241, 76, 76, 0.1);
+--vscode-editorMarkerNavigationWarning-background: #cca700;
+--vscode-editorMarkerNavigationWarning-headerBackground: rgba(204, 167, 0, 0.1);
+--vscode-editorMarkerNavigationInfo-background: #3794ff;
+--vscode-editorMarkerNavigationInfo-headerBackground: rgba(55, 148, 255, 0.1);
+--vscode-editorMarkerNavigation-background: #1e1e1e;
+--vscode-editorHoverWidget-highlightForeground: #2aaaff;
+--vscode-editorSuggestWidget-background: #252526;
+--vscode-editorSuggestWidget-border: #454545;
+--vscode-editorSuggestWidget-foreground: #d4d4d4;
+--vscode-editorSuggestWidget-selectedForeground: #ffffff;
+--vscode-editorSuggestWidget-selectedBackground: #04395e;
+--vscode-editorSuggestWidget-highlightForeground: #2aaaff;
+--vscode-editorSuggestWidget-focusHighlightForeground: #2aaaff;
+--vscode-editorSuggestWidgetStatus-foreground: rgba(212, 212, 212, 0.5);
+--vscode-diffEditor-move-border: rgba(139, 139, 139, 0.61);
+--vscode-diffEditor-moveActive-border: #ffa500;
+--vscode-diffEditor-unchangedRegionShadow: #000000;
+--vscode-editor-foldBackground: rgba(38, 79, 120, 0.3);
+--vscode-editorGutter-foldingControlForeground: #c5c5c5; }
+
+.mtk1 { color: #d4d4d4; }
+.mtk2 { color: #1e1e1e; }
+.mtk3 { color: #cc6666; }
+.mtk4 { color: #9cdcfe; }
+.mtk5 { color: #ce9178; }
+.mtk6 { color: #b5cea8; }
+.mtk7 { color: #608b4e; }
+.mtk8 { color: #569cd6; }
+.mtk9 { color: #dcdcdc; }
+.mtk10 { color: #808080; }
+.mtk11 { color: #f44747; }
+.mtk12 { color: #c586c0; }
+.mtk13 { color: #a79873; }
+.mtk14 { color: #dd6a6f; }
+.mtk15 { color: #5bb498; }
+.mtk16 { color: #909090; }
+.mtk17 { color: #778899; }
+.mtk18 { color: #ff00ff; }
+.mtk19 { color: #b46695; }
+.mtk20 { color: #ff0000; }
+.mtk21 { color: #4f76ac; }
+.mtk22 { color: #3dc9b0; }
+.mtk23 { color: #74b0df; }
+.mtk24 { color: #4864aa; }
+.mtki { font-style: italic; }
+.mtkb { font-weight: bold; }
+.mtku { text-decoration: underline; text-underline-position: under; }
+.mtks { text-decoration: line-through; }
+.mtks.mtku { text-decoration: underline line-through; text-underline-position: under; }</style></head>
+<body class="enable-motion">
+
+    <div id="top-menu">
+        <div class="menu-item" id="file-menu-item">Файл
+            <div class="dropdown-menu" id="file-dropdown" style="display: none;">
+                <div class="dropdown-menu-item" id="new-file-option">Новый файл</div>
+                <div class="dropdown-menu-item" id="open-file-option">Открыть файл...</div>
+                <div class="dropdown-menu-item" id="open-folder-option">Открыть папку (имитация)</div>
+                <hr style="border-color: #3c3c3c; margin: 5px 0;">
+                <div class="dropdown-menu-item" id="save-as-option">Сохранить как...</div>
             </div>
         </div>
-        <div class="user-menu" id="userMenu" style="display: none;">
-            <button onclick="window.location.href='accunt'">Setings</button>
-            <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
-            <button onclick="window.location.href='riegist'">register or login</button>
-        </div>
-        <div class="menuContainer" id="menuContainer">
-            <div class="appItem">
-                <form action="results.html" method="get">
-                    <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
-                    <button type="submit" style="height: 40px;width: 80px;">Search</button>
-                </form>
-            </div>
-            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
-                <i class="fab fa-google-play appIcon"></i>
-                <span>Play</span>
-            </div>
-            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
-                <img src="img/Home.png" alt="png">
-                <span>Home</span>
-            </div>
-            <div class="appItem" onclick="openApp('Install_PerrotOS')">
-                <img src="img/ico1.png" alt="png">
-                <span>install OS</span>
-            </div>
-            <div class="appItem" onclick="openApp('datapedia')">
-                <img src="img/datapedia icon1.png" alt="png">
-                <span>dataPedia</span>
-            </div>
-            <div class="appItem" onclick="openApp('pmaill')">
-                <img src="img/PM.png" alt="png">
-                <span>Pmaill</span>
-            </div>
-            <div class="appItem" onclick="openApp('accunt')">
-                <img src="img/as.png" alt="png">
-                <span>Account settings.</span>
-            </div>
-            <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
-                <img src="img/PMS.png" alt="png">
-                <span>Parrot Soft Market</span>
-            </div>
-        </div>
-        <div class="account-panel">
-            <h2>Developent panel</h2>
-            <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
-            <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
-            <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
-            <button class="button" onclick="showProjects('all')">View/Manage My Projects</button>
-            <hr>
-            <div class="appItem" onclick="openApp('ParrotSoftIDE.html')">
-                <img src="img/ParrotIDE_mini.png" alt="png">
-                <span>ParrotSoftIDE</span>
-            </div>
+        <div class="menu-item">Правка</div>
+        <div class="menu-item">Выделение</div>
+        <div class="menu-item">Вид</div>
+        <div class="menu-item">Перейти</div>
+        <div class="menu-item">Выполнить</div>
+        <div class="menu-item">Терминал</div>
+        <div class="menu-item">Справка</div>
+    </div>
+
+    <div id="main-area">
+        <div id="activity-bar">
+            <div class="activity-icon active" data-panel="explorer" title="Проводник"><i class="fas fa-files"></i></div>
+            <div class="activity-icon" data-panel="search" title="Поиск"><i class="fas fa-search"></i></div>
+            <div class="activity-icon" data-panel="source-control" title="Система управления версиями"><i class="fas fa-code-branch"></i></div>
+            <div class="activity-icon" data-panel="debug" title="Запуск и отладка"><i class="fas fa-bug"></i></div>
+            <div class="activity-icon" data-panel="extensions" title="Расширения"><i class="fas fa-puzzle-piece"></i></div>
         </div>
 
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">Add Search</h3>
-                <div id="modal-fields">
-                    <input type="text" name="searchName" placeholder="Search Name" required>
-                    <input type="text" name="searchUrl" placeholder="Search URL" required>
-                    <input type="text" name="searchdata" placeholder="Search data" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('search')">Confirm</button>
-                </div>
-            </div>
+        <div id="sidebar">
+            <div id="sidebar-header">Проводник</div>
+            <div id="file-tree"><div class="file-item active" data-file-id="file-0"><i class="fab fa-markdown"></i><span>README.md</span></div></div>
         </div>
 
-        <div id="modal1" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">creating an article</h3>
-                <div id="modal1-fields">
-                    <input type="text" name="Name" placeholder="Name" required>
-                    <input type="text" name="img" placeholder="img" required>
-                    <input type="text" name="code" placeholder="code" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal1').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('datapedia')">Confirm</button>
+        <div id="editor-area">
+            <div id="editor-top-bar">
+                <div id="file-tabs"><div class="file-tab active" data-file-id="file-0"><i class="fab fa-markdown"></i><span>README.md</span><button class="close-tab-btn" data-file-id="file-0">×</button></div></div>
+                <div id="editor-controls">
+                    <span style="margin-right: 10px;">Язык: <span id="current-language">markdown</span></span>
+                    <button id="run-button">Запустить код</button>
                 </div>
             </div>
-        </div>
-
-        <div id="modal2" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">Add Game/App</h3>
-                <div id="modal2-fields">
-                    <input type="text" name="Name" placeholder="Name" required>
-                    <input type="text" name="price" placeholder="price" required>
-                    <input type="text" name="image" placeholder="image URL" required>
-                    <input type="text" name="installURL" placeholder="Install URL" required> 
+            <div id="editor-container" data-keybinding-context="1" data-mode-id="markdown" style="--vscode-editorCodeLens-lineHeight: 16px; --vscode-editorCodeLens-fontSize: 12px; --vscode-editorCodeLens-fontFeatureSettings: &quot;liga&quot; off, &quot;calt&quot; off;">
+                <div class="monaco-editor no-user-select  showUnused showDeprecated vs-dark" role="code" data-uri="inmemory://model/1" style="width: 891px; height: 556px;"><div data-mprt="3" class="overflow-guard" style="width: 891px; height: 556px;"><div class="margin" role="presentation" aria-hidden="true" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; height: 556px; width: 64px;"><div class="glyph-margin" style="left: 0px; width: 0px; height: 556px;"></div><div class="margin-view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="margin-view-overlays" role="presentation" aria-hidden="true" style="position: absolute; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; font-variation-settings: normal; line-height: 19px; letter-spacing: 0px; width: 64px; height: 556px;"><div style="top:0px;height:19px;"><div class="current-line current-line-margin-both" style="width:64px"></div><div class="line-numbers active-line-number" style="left:0px;width:38px;">1</div></div><div style="top:19px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">2</div></div><div style="top:38px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">3</div></div><div style="top:57px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">4</div></div><div style="top:76px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">5</div></div><div style="top:95px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">6</div></div><div style="top:114px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">7</div></div><div style="top:133px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">8</div></div><div style="top:152px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">9</div></div><div style="top:171px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">10</div></div><div style="top:190px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">11</div></div><div style="top:209px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">12</div></div><div style="top:228px;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">13</div></div></div><div class="glyph-margin-widgets" style="position: absolute; top: 0px;"></div></div><div class="monaco-scrollable-element editor-scrollable vs-dark" role="presentation" data-mprt="6" style="position: absolute; overflow: hidden; left: 64px; width: 827px; height: 556px;"><div class="lines-content monaco-editor-background" style="position: absolute; overflow: hidden; width: 1.67772e+07px; height: 1.67772e+07px; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; left: 0px;"><div class="view-overlays" role="presentation" aria-hidden="true" style="position: absolute; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; font-variation-settings: normal; line-height: 19px; letter-spacing: 0px; height: 0px; width: 1368px;"><div style="top:0px;height:19px;"><div class="current-line current-line-exact" style="width:1368px;"></div></div><div style="top:19px;height:19px;"></div><div style="top:38px;height:19px;"></div><div style="top:57px;height:19px;"></div><div style="top:76px;height:19px;"></div><div style="top:95px;height:19px;"></div><div style="top:114px;height:19px;"></div><div style="top:133px;height:19px;"></div><div style="top:152px;height:19px;"></div><div style="top:171px;height:19px;"></div><div style="top:190px;height:19px;"></div><div style="top:209px;height:19px;"></div><div style="top:228px;height:19px;"></div></div><div role="presentation" aria-hidden="true" class="view-rulers"></div><div class="view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="view-lines monaco-mouse-cursor-text" role="presentation" aria-hidden="true" data-mprt="8" style="position: absolute; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; font-variation-settings: normal; line-height: 19px; letter-spacing: 0px; width: 1368px; height: 556px;"><div style="top:0px;height:19px;" class="view-line"><span><span class="mtk8">#&nbsp;Добро&nbsp;пожаловать&nbsp;в&nbsp;ParrotIDE!</span></span></div><div style="top:19px;height:19px;" class="view-line"><span><span></span></span></div><div style="top:38px;height:19px;" class="view-line"><span><span class="mtk1">Это&nbsp;ваша&nbsp;первая&nbsp;Web&nbsp;IDE,&nbsp;разработанная&nbsp;с&nbsp;помощью&nbsp;</span><span class="mtk1">Monaco&nbsp;Editor&nbsp;и&nbsp;чистым&nbsp;JavaScript.</span></span></div><div style="top:57px;height:19px;" class="view-line"><span><span></span></span></div><div style="top:76px;height:19px;" class="view-line"><span><span class="mtk8">###&nbsp;Как&nbsp;использовать:</span></span></div><div style="top:95px;height:19px;" class="view-line"><span><span class="mtk8">*&nbsp;</span><span class="mtk1 mtkb">**Новый&nbsp;файл:**</span><span class="mtk1">&nbsp;Создайте&nbsp;пустой&nbsp;файл&nbsp;через&nbsp;меню&nbsp;"Файл".</span></span></div><div style="top:114px;height:19px;" class="view-line"><span><span class="mtk8">*&nbsp;</span><span class="mtk1 mtkb">**Открыть&nbsp;файл...:**</span><span class="mtk1">&nbsp;Загрузите&nbsp;файл&nbsp;с&nbsp;вашего&nbsp;компьютера.</span></span></div><div style="top:133px;height:19px;" class="view-line"><span><span class="mtk8">*&nbsp;</span><span class="mtk1 mtkb">**Сохранить&nbsp;как...:**</span><span class="mtk1">&nbsp;Сохраните&nbsp;текущий&nbsp;файл&nbsp;на&nbsp;ваш&nbsp;компьютер.</span></span></div><div style="top:152px;height:19px;" class="view-line"><span><span class="mtk8">*&nbsp;</span><span class="mtk1 mtkb">**Пишите&nbsp;код:**</span><span class="mtk1">&nbsp;Редактор&nbsp;поддерживает&nbsp;подсветку&nbsp;синтаксиса&nbsp;и&nbsp;</span><span class="mtk1">автодополнение&nbsp;для&nbsp;многих&nbsp;языков.</span></span></div><div style="top:171px;height:19px;" class="view-line"><span><span class="mtk8">*&nbsp;</span><span class="mtk1 mtkb">**Запускайте&nbsp;HTML/JavaScript/Python:**</span><span class="mtk1">&nbsp;Нажмите&nbsp;"Запустить&nbsp;код"&nbsp;для&nbsp;выполнения.</span></span></div><div style="top:190px;height:19px;" class="view-line"><span><span class="mtk8">*&nbsp;</span><span class="mtk1 mtkb">**Имитация&nbsp;для&nbsp;других&nbsp;языков:**</span><span class="mtk1">&nbsp;Для&nbsp;C++,&nbsp;C#,&nbsp;WebAssembly,&nbsp;Assembly,&nbsp;P#&nbsp;и&nbsp;других&nbsp;</span><span class="mtk1">языков&nbsp;вывод&nbsp;будет&nbsp;имитироваться,&nbsp;так&nbsp;как&nbsp;для&nbsp;</span><span class="mtk1">реального&nbsp;выполнения&nbsp;нужен&nbsp;серверный&nbsp;бэкенд.</span></span></div><div style="top:209px;height:19px;" class="view-line"><span><span></span></span></div><div style="top:228px;height:19px;" class="view-line"><span><span class="mtk1">Приятного&nbsp;кодирования!</span></span></div></div><div data-mprt="1" class="contentWidgets" style="position: absolute; top: 0px;"></div><div role="presentation" aria-hidden="true" class="cursors-layer cursor-line-style cursor-solid"><div class="cursor  monaco-mouse-cursor-text " style="height: 19px; top: 0px; left: 0px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; font-variation-settings: normal; line-height: 19px; letter-spacing: 0px; display: block; visibility: hidden; padding-left: 0px; width: 2px;"></div></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal fade" style="position: absolute; width: 813px; height: 12px; left: 0px; bottom: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 12px; transform: translate3d(0px, 0px, 0px); contain: strict; width: 491px;"></div></div><canvas class="decorationsOverviewRuler" aria-hidden="true" width="14" height="556" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; right: 0px; width: 14px; height: 556px; display: block;"></canvas><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute; width: 14px; height: 556px; right: 0px; top: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 14px; transform: translate3d(0px, 0px, 0px); contain: strict; height: 556px;"></div></div></div><div role="presentation" aria-hidden="true" style="width: 891px;"></div><textarea data-mprt="7" class="inputarea monaco-mouse-cursor-text" wrap="off" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" aria-label="Editor content;Press Alt+F1 for Accessibility Options." aria-required="false" tabindex="0" role="textbox" aria-roledescription="editor" aria-multiline="true" aria-autocomplete="both" style="tab-size: 30.7969px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; font-variation-settings: normal; line-height: 19px; letter-spacing: 0px; top: 0px; left: 64px; width: 1px; height: 1px;"></textarea><div style="position: absolute; top: 0px; left: 0px; width: 0px; height: 0px;" class="monaco-editor-background textAreaCover line-numbers"></div><div data-mprt="4" class="overlayWidgets" style="width: 891px;"><div class="sticky-widget" widgetid="editor.contrib.stickyScrollWidget" style="width: 877px; position: absolute; display: none;"><div class="sticky-widget-line-numbers" role="none" style="width: 64px;"></div><div class="sticky-widget-lines-scrollable" style="--vscode-editorStickyScroll-scrollableWidth: 1354px;"><div class="sticky-widget-lines" role="list" style="left: 0px;"></div></div></div></div><div data-mprt="9" class="minimap slider-mouseover" role="presentation" aria-hidden="true" style="position: absolute; left: 0px; width: 0px; height: 556px;"><div class="minimap-shadow-hidden" style="height: 556px;"></div><canvas width="0" height="556" style="position: absolute; left: 0px; width: 0px; height: 556px;"></canvas><canvas class="minimap-decorations-layer" width="0" height="556" style="position: absolute; left: 0px; width: 0px; height: 556px;"></canvas><div class="minimap-slider" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; width: 0px;"><div class="minimap-slider-horizontal" style="position: absolute; width: 0px; height: 0px;"></div></div></div><div role="presentation" aria-hidden="true" class="blockDecorations-container"></div></div><div data-mprt="2" class="overflowingContentWidgets"><div widgetid="editor.contrib.resizableContentHoverWidget" style="position: absolute; height: 27px; width: 150px; z-index: 50; display: none; visibility: hidden; max-width: 975px;"><div class="monaco-sash vertical" style="left: 148px;"></div><div class="monaco-sash vertical" style="left: -2px;"></div><div class="monaco-sash orthogonal-edge-north horizontal" style="top: -2px;"><div class="orthogonal-drag-handle start"></div><div class="orthogonal-drag-handle end"></div></div><div class="monaco-sash orthogonal-edge-south horizontal" style="top: 25px;"><div class="orthogonal-drag-handle start"></div><div class="orthogonal-drag-handle end"></div></div><div class="monaco-hover hidden" tabindex="0" role="tooltip"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-hover-content" style="overflow: hidden;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow"></div></div></div></div></div><div data-mprt="5" class="overflowingOverlayWidgets"></div></div><div class="context-view" aria-hidden="true" style="display: none;"></div></div>
+            <div id="panel">
+                <div id="panel-tabs">
+                    <div class="panel-tab" data-panel-content="output">Вывод</div>
+                    <div class="panel-tab active" data-panel-content="problems">Проблемы</div>
+                    <div class="panel-tab" data-panel-content="terminal">Терминал</div>
                 </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal2').style.display='none'">Cancel</button>
-                    <button onclick="confirmChanges('gameApp')">Confirm</button>
-                </div>
+                <pre id="output-console" style="display: block;">Проблем не обнаружено (это имитация).</pre>
             </div>
         </div>
+    </div>
 
-        <div id="modal3" class="modal">
-            <div class="modal-content">
-                <h3>My Projects</h3>
-                <div class="project-filter">
-                    <button id="filter-all" class="active" onclick="showProjects('all')">All</button>
-                    <button id="filter-search" onclick="showProjects('search')">Search</button>
-                    <button id="filter-datapedia" onclick="showProjects('datapedia')">Datapedia</button>
-                    <button id="filter-gameApp" onclick="showProjects('gameApp')">Games/Apps</button>
-                </div>
-                <div id="projects-list">
-                    <p>No projects found. Add some projects using the buttons above!</p>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('modal3').style.display='none'">Close</button>
-                </div>
-            </div>
-        </div>
+    <div id="status-bar">
+        <div class="status-item">Строка: <span id="status-line">1</span>, Столбец: <span id="status-col">1</span></div>
+        <div class="status-item">LF</div>
+        <div class="status-item">UTF-8</div>
+        <div class="status-item"><span id="status-language">Markdown</span></div>
+        <div class="status-item">ParrotIDE</div>
+    </div>
 
-        <div id="editSearchModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Search Project</h3>
-                <div id="editSearchFields">
-                    <input type="hidden" id="editSearchOriginalString"> 
-                    <label for="editSearchName">Search Name:</label>
-                    <input type="text" id="editSearchName" placeholder="Search Name" required>
-                    <label for="editSearchUrl">Search URL:</label>
-                    <input type="text" id="editSearchUrl" placeholder="Search URL" required>
-                    <label for="editSearchData">Search Data:</label>
-                    <input type="text" id="editSearchData" placeholder="Search data" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editSearchModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('search')">Save Changes</button>
-                </div>
-            </div>
-        </div>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs/loader.js"></script>
 
-        <div id="editDatapediaModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Datapedia Article</h3>
-                <div id="editDatapediaFields">
-                    <input type="hidden" id="editDatapediaOriginalString"> 
-                    <label for="editDatapediaName">Article Name:</label>
-                    <input type="text" id="editDatapediaName" placeholder="Name" required>
-                    <label for="editDatapediaImg">Image URL:</label>
-                    <input type="text" id="editDatapediaImg" placeholder="img" required>
-                    <label for="editDatapediaCode">Code:</label>
-                    <input type="text" id="editDatapediaCode" placeholder="code" required>
-                </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editDatapediaModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('datapedia')">Save Changes</button>
-                </div>
-            </div>
-        </div>
+    <script>
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs' } });
 
-        <div id="editGameAppModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Game/App Project</h3>
-                <div id="editGameAppFields">
-                    <input type="hidden" id="editGameAppProjectId"> <label for="editGameAppName">Name:</label>
-                    <input type="text" id="editGameAppName" placeholder="Name" required>
-                    <label for="editGameAppPrice">Price:</label>
-                    <input type="text" id="editGameAppPrice" placeholder="price" required>
-                    <label for="editGameAppImage">Image URL:</label>
-                    <input type="text" id="editGameAppImage" placeholder="image URL" required>
-                    <label for="editGameAppInstallURL">Install URL:</label>
-                    <input type="text" id="editGameAppInstallURL" placeholder="Install URL" required>
-                    </div>
-                <div class="modal-buttons">
-                    <button onclick="document.getElementById('editGameAppModal').style.display='none'">Cancel</button>
-                    <button onclick="saveProjectChanges('gameApp')">Save Changes</button>
-                </div>
-            </div>
-        </div>
+        require(['vs/editor/editor.main'], function () {
+            let editor;
+            const outputConsole = document.getElementById('output-console');
+            const runButton = document.getElementById('run-button');
+            const fileTree = document.getElementById('file-tree');
+            const currentLanguageSpan = document.getElementById('current-language');
+            const fileTabsContainer = document.getElementById('file-tabs');
+            const statusBarLine = document.getElementById('status-line');
+            const statusBarCol = document.getElementById('status-col');
+            const statusBarLanguage = document.getElementById('status-language');
+            const panelTabs = document.getElementById('panel-tabs');
+
+            // File Menu elements
+            const fileMenuItem = document.getElementById('file-menu-item');
+            const fileDropdown = document.getElementById('file-dropdown');
+            const newFileOption = document.getElementById('new-file-option');
+            const openFileOption = document.getElementById('open-file-option');
+            const openFolderOption = document.getElementById('open-folder-option');
+            const saveAsOption = document.getElementById('save-as-option');
 
 
-        <script>
-            // Глобальные переменные
-            let userid = 0;
-            let allUserData = {
-                search: "",    // Соответствует 'L' + userid
-                datapedia: "", // Соответствует 'K' + userid
-                gameApp: ""    // Соответствует 'J' + userid
+            const files = {}; // Объект для хранения файлов: { id: { name, content, language, model, path } }
+            let fileCounter = 0; // Для генерации уникальных ID
+            let currentFileId = null; // ID текущего активного файла
+            const folderStructure = {}; // Для имитации иерархии папок
+
+            // --- Icon Mapping ---
+            function getFileIcon(fileName) {
+                const parts = fileName.split('.');
+                const ext = parts[parts.length - 1];
+                switch (ext) {
+                    case 'js': return '<i class="fab fa-js"></i>';
+                    case 'html': return '<i class="fab fa-html5"></i>';
+                    case 'css': return '<i class="fab fa-css3-alt"></i>';
+                    case 'json': return '<i class="fas fa-file-code"></i>';
+                    case 'py': return '<i class="fab fa-python"></i>';
+                    case 'c': return '<i class="fas fa-file-code"></i>';
+                    case 'cpp': return '<i class="fas fa-file-code"></i>';
+                    case 'cs': return '<i class="fas fa-file-code"></i>'; // C#
+                    case 'java': return '<i class="fab fa-java"></i>';
+                    case 'ts': return '<i class="fab fa-node-js"></i>'; // Using node-js for typescript
+                    case 'md': return '<i class="fab fa-markdown"></i>';
+                    case 'go': return '<i class="fab fa-go"></i>';
+                    case 'rs': return '<i class="fab fa-rust"></i>';
+                    case 'php': return '<i class="fab fa-php"></i>';
+                    case 'rb': return '<i class="fas fa-gem"></i>';
+                    case 'xml': return '<i class="fas fa-file-code"></i>';
+                    case 'yaml': case 'yml': return '<i class="fas fa-file-alt"></i>';
+                    case 'sh': return '<i class="fas fa-terminal"></i>';
+                    case 'txt': return '<i class="fas fa-file-alt"></i>';
+                    case 'wasm': return '<i class="fas fa-box"></i>'; // WebAssembly
+                    case 'asm': return '<i class="fas fa-microchip"></i>'; // Assembly
+                    case 'p#': return '<i class="fas fa-feather-alt"></i>'; // ParrotSharp, using a feather for "parrot"
+                    default: return '<i class="fas fa-file"></i>'; // Generic file icon
+                }
+            }
+
+            // Функция для определения языка по расширению файла
+            function getLanguageByFileName(fileName) {
+                const parts = fileName.split('.');
+                const ext = parts[parts.length - 1].toLowerCase(); // Приводим к нижнему регистру для сравнения
+                switch (ext) {
+                    case 'js': return 'javascript';
+                    case 'html': return 'html';
+                    case 'css': return 'css';
+                    case 'json': return 'json';
+                    case 'py': return 'python';
+                    case 'c': return 'c';
+                    case 'cpp': return 'cpp';
+                    case 'cs': return 'csharp';
+                    case 'java': return 'java';
+                    case 'ts': return 'typescript';
+                    case 'md': return 'markdown';
+                    case 'go': return 'go';
+                    case 'rs': return 'rust';
+                    case 'php': return 'php';
+                    case 'rb': return 'ruby';
+                    case 'xml': return 'xml';
+                    case 'yaml':
+                    case 'yml': return 'yaml';
+                    case 'sh': return 'shell';
+                    case 'wasm': return 'plaintext'; // Monaco doesn't have WASM language, use plaintext
+                    case 'asm': return 'plaintext'; // Monaco might not have assembly, use plaintext
+                    case 'p#': return 'plaintext'; // Custom language, use plaintext
+                    case 'txt': return 'plaintext';
+                    default: return 'plaintext';
+                }
+            }
+
+            // Добавление файла в память и в UI
+            function addFile(fullPath, content) {
+                const id = 'file-' + fileCounter++;
+                const pathParts = fullPath.split('/');
+                const fileName = pathParts.pop();
+                const language = getLanguageByFileName(fileName);
+                const model = monaco.editor.createModel(content, language);
+
+                files[id] = {
+                    id: id,
+                    name: fileName,
+                    content: content,
+                    language: language,
+                    model: model,
+                    path: fullPath
+                };
+
+                // Add to simulated folder structure
+                let currentLevel = folderStructure;
+                for (let i = 0; i < pathParts.length; i++) {
+                    const part = pathParts[i];
+                    if (!currentLevel[part]) {
+                        currentLevel[part] = { __isFolder: true, __files: [], __subfolders: {} };
+                    }
+                    currentLevel = currentLevel[part].__subfolders;
+                }
+                if (!currentLevel.__files) currentLevel.__files = [];
+                currentLevel.__files.push(id);
+
+                return id;
+            }
+
+            // Clear all files and folder structure
+            function clearAllFiles() {
+                for (const id in files) {
+                    files[id].model.dispose();
+                }
+                Object.keys(files).forEach(key => delete files[key]);
+                Object.keys(folderStructure).forEach(key => delete folderStructure[key]); // Clear top-level
+                fileCounter = 0;
+                currentFileId = null;
+                if (editor) {
+                    editor.dispose();
+                    editor = null;
+                }
+            }
+
+
+            // Рендеринг дерева файлов в сайдбаре
+            function renderFileTree() {
+                fileTree.innerHTML = '';
+                function renderLevel(container, level) {
+                    const sortedKeys = Object.keys(level).sort((a, b) => {
+                        const isAFolder = level[a].__isFolder;
+                        const isBFolder = level[b].__isFolder;
+                        if (isAFolder && !isBFolder) return -1; // Folders first
+                        if (!isAFolder && isBFolder) return 1;
+                        return a.localeCompare(b); // Alphabetical sort
+                    });
+
+                    sortedKeys.forEach(key => {
+                        if (level[key].__isFolder) {
+                            const folderId = 'folder-' + key.replace(/[^a-zA-Z0-9]/g, '-');
+                            const folderItem = document.createElement('div');
+                            folderItem.className = 'folder-item';
+                            folderItem.dataset.folderId = folderId; // Assign a unique ID for expansion state
+                            folderItem.innerHTML = `<span class="folder-toggle"><i class="fas fa-chevron-right"></i></span><i class="fas fa-folder"></i><span>${key}</span>`;
+                            container.appendChild(folderItem);
+
+                            const folderContentsDiv = document.createElement('div');
+                            folderContentsDiv.className = 'folder-contents';
+                            folderContentsDiv.style.display = 'none'; // Hidden by default
+                            folderContentsDiv.dataset.folderContentOf = folderId; // Link to parent folder
+                            container.appendChild(folderContentsDiv);
+
+                            folderItem.addEventListener('click', (e) => {
+                                if (e.target.closest('.folder-toggle')) { // Only toggle on icon click
+                                    folderItem.classList.toggle('expanded');
+                                    folderContentsDiv.style.display = folderItem.classList.contains('expanded') ? 'block' : 'none';
+                                } else {
+                                    // Optionally select folder, or do nothing.
+                                    // For now, it doesn't "open" a folder in editor.
+                                }
+                            });
+
+                            renderLevel(folderContentsDiv, level[key].__subfolders);
+
+                            // Render files directly under this folder
+                            if (level[key].__files) {
+                                level[key].__files.forEach(fileId => {
+                                    const fileItem = document.createElement('div');
+                                    fileItem.className = 'file-item';
+                                    fileItem.dataset.fileId = fileId;
+                                    fileItem.innerHTML = `${getFileIcon(files[fileId].name)}<span>${files[fileId].name}</span>`;
+                                    if (fileId === currentFileId) {
+                                        fileItem.classList.add('active');
+                                    }
+                                    folderContentsDiv.appendChild(fileItem);
+                                });
+                            }
+                        } else {
+                            // This case should ideally not happen if __isFolder is correctly set
+                            // But for standalone files at root, it would be handled here
+                            // This part is mostly covered by the file listing within the folderContents above
+                        }
+                    });
+                }
+                renderLevel(fileTree, folderStructure);
+
+                 // Render files directly at the root (not in any folder)
+                 Object.values(files).filter(file => !file.path.includes('/')).forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.dataset.fileId = file.id;
+                    fileItem.innerHTML = `${getFileIcon(file.name)}<span>${file.name}</span>`;
+                    if (file.id === currentFileId) {
+                        fileItem.classList.add('active');
+                    }
+                    fileTree.appendChild(fileItem);
+                });
+            }
+
+            // Рендеринг вкладок файлов
+            function renderFileTabs() {
+                fileTabsContainer.innerHTML = '';
+                for (const id in files) {
+                    const tab = document.createElement('div');
+                    tab.className = 'file-tab';
+                    tab.dataset.fileId = id;
+                    if (id === currentFileId) {
+                        tab.classList.add('active');
+                    }
+                    tab.innerHTML = `${getFileIcon(files[id].name)}<span>${files[id].name}</span><button class="close-tab-btn" data-file-id="${id}">&times;</button>`;
+                    fileTabsContainer.appendChild(tab);
+                }
+            }
+
+            // Открытие файла в редакторе
+            function openFile(fileId) {
+                if (!files[fileId]) {
+                    console.error('Файл не найден:', fileId);
+                    return;
+                }
+
+                currentFileId = fileId;
+
+                if (!editor) {
+                    editor = monaco.editor.create(document.getElementById('editor-container'), {
+                        model: files[fileId].model,
+                        theme: 'vs-dark',
+                        automaticLayout: true,
+                        minimap: { enabled: false },
+                        fontSize: 14,
+                        lineNumbers: 'on',
+                        scrollBeyondLastLine: false,
+                        autoClosingBrackets: 'always',
+                        autoClosingQuotes: 'always',
+                        formatOnType: true,
+                        formatOnPaste: true,
+                    });
+
+                    editor.onDidChangeCursorPosition((e) => {
+                        statusBarLine.textContent = e.position.lineNumber;
+                        statusBarCol.textContent = e.position.column;
+                    });
+                } else {
+                    editor.setModel(files[fileId].model);
+                }
+
+                statusBarLanguage.textContent = files[fileId].language.charAt(0).toUpperCase() + files[fileId].language.slice(1);
+                currentLanguageSpan.textContent = files[fileId].language;
+
+                renderFileTree();
+                renderFileTabs();
+            }
+
+            // Удаление файла
+            function deleteFile(fileIdToDelete) {
+                if (!files[fileIdToDelete]) return;
+
+                const modelToDispose = files[fileIdToDelete].model;
+                const filePath = files[fileIdToDelete].path;
+                delete files[fileIdToDelete];
+
+                if (modelToDispose) {
+                    modelToDispose.dispose();
+                }
+
+                // Remove from folderStructure (simple removal for now, not cleaning empty folders)
+                const pathParts = filePath.split('/');
+                let currentLevel = folderStructure;
+                for (let i = 0; i < pathParts.length - 1; i++) {
+                    const part = pathParts[i];
+                    if (currentLevel[part] && currentLevel[part].__subfolders) {
+                        currentLevel = currentLevel[part].__subfolders;
+                    } else {
+                        currentLevel = null; // Path broken
+                        break;
+                    }
+                }
+                if (currentLevel && currentLevel.__files) {
+                    const index = currentLevel.__files.indexOf(fileIdToDelete);
+                    if (index > -1) {
+                        currentLevel.__files.splice(index, 1);
+                    }
+                }
+
+
+                if (currentFileId === fileIdToDelete) {
+                    const remainingFileIds = Object.keys(files);
+                    if (remainingFileIds.length > 0) {
+                        openFile(remainingFileIds[0]);
+                    } else {
+                        if (editor) {
+                            editor.dispose();
+                            editor = null;
+                        }
+                        outputConsole.textContent = '';
+                        currentLanguageSpan.textContent = '';
+                        statusBarLanguage.textContent = '';
+                        statusBarLine.textContent = '1';
+                        statusBarCol.textContent = '1';
+                        currentFileId = null;
+                    }
+                }
+                renderFileTree();
+                renderFileTabs();
+            }
+
+            // --- Real File Operations (via browser dialogs) ---
+
+            // Function to open a file from the user's computer
+            async function openLocalFile() {
+                try {
+                    const [fileHandle] = await window.showOpenFilePicker();
+                    const file = await fileHandle.getFile();
+                    const content = await file.text();
+
+                    const newFileId = addFile(file.name, content); // Use file.name for path
+                    openFile(newFileId);
+                    outputConsole.textContent = `Файл "${file.name}" успешно открыт.`;
+                } catch (err) {
+                    if (err.name !== 'AbortError') { // User cancelled the dialog
+                        outputConsole.textContent = `Ошибка при открытии файла: ${err.message}`;
+                        console.error('Error opening file:', err);
+                    } else {
+                        outputConsole.textContent = `Открытие файла отменено.`;
+                    }
+                }
+            }
+
+            // Function to save the current file to the user's computer
+            async function saveCurrentFileAs() {
+                if (!currentFileId || !editor) {
+                    outputConsole.textContent = 'Нет открытого файла для сохранения.';
+                    return;
+                }
+
+                const currentFile = files[currentFileId];
+                const content = editor.getValue();
+
+                try {
+                    const fileHandle = await window.showSaveFilePicker({
+                        suggestedName: currentFile.name,
+                        types: [{
+                            description: `${currentFile.language.toUpperCase()} File`,
+                            accept: {
+                                [currentFile.language === 'plaintext' ? 'text/plain' : `text/${currentFile.language}`]: [`.${currentFile.name.split('.').pop()}`],
+                            },
+                        }],
+                    });
+
+                    const writableStream = await fileHandle.createWritable();
+                    await writableStream.write(content);
+                    await writableStream.close();
+
+                    outputConsole.textContent = `Файл "${currentFile.name}" успешно сохранен.`;
+                } catch (err) {
+                    if (err.name !== 'AbortError') { // User cancelled the dialog
+                        outputConsole.textContent = `Ошибка при сохранении файла: ${err.message}`;
+                        console.error('Error saving file:', err);
+                    } else {
+                         outputConsole.textContent = `Сохранение файла отменено.`;
+                    }
+                }
+            }
+
+
+            // --- Simulated Folder Opening ---
+            function openFolder() {
+
+            }
+
+
+            // Инициализация стартовых файлов
+            const initialContents = {
+                'README.md': `# Добро пожаловать в ParrotIDE!
+
+Это ваша первая Web IDE, разработанная с помощью Monaco Editor и чистым JavaScript.
+
+### Как использовать:
+* **Новый файл:** Создайте пустой файл через меню "Файл".
+* **Открыть файл...:** Загрузите файл с вашего компьютера.
+* **Сохранить как...:** Сохраните текущий файл на ваш компьютер.
+* **Пишите код:** Редактор поддерживает подсветку синтаксиса и автодополнение для многих языков.
+* **Запускайте HTML/JavaScript/Python:** Нажмите "Запустить код" для выполнения.
+* **Имитация для других языков:** Для C++, C#, WebAssembly, Assembly, P# и других языков вывод будет имитироваться, так как для реального выполнения нужен серверный бэкенд.
+
+Приятного кодирования!`,
             };
 
-            // Асинхронная функция для получения данных при загрузке
-            (async function() {
-                try {
-                    userid = await userID(getCookie('name'));
-                    console.log("Fetched UserID:", userid);
-
-                    // Загружаем все типы данных
-                    allUserData.search = await readCell('L' + userid) || "";
-                    console.log("Fetched Search Data (L):", allUserData.search);
-
-                    allUserData.datapedia = await readCell('K' + userid) || "";
-                    console.log("Fetched Datapedia Data (K):", allUserData.datapedia);
-
-                    allUserData.gameApp = await readCell('J' + userid) || "";
-                    console.log("Fetched Game/App Data (J):", allUserData.gameApp);
-
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                }
-            })();
-
-            // Универсальная функция для добавления проекта
-            async function confirmChanges(projectType) {
-                let modalId, fieldsSelector, targetColumn, currentDataKey, newEntryParts = [];
-
-                switch (projectType) {
-                    case 'search':
-                        modalId = 'modal';
-                        fieldsSelector = '#modal-fields input';
-                        targetColumn = 'L' + userid;
-                        currentDataKey = 'search';
-                        break;
-                    case 'datapedia':
-                        modalId = 'modal1';
-                        fieldsSelector = '#modal1-fields input';
-                        targetColumn = 'K' + userid;
-                        currentDataKey = 'datapedia';
-                        break;
-                    case 'gameApp':
-                        modalId = 'modal2';
-                        fieldsSelector = '#modal2-fields input';
-                        targetColumn = 'J' + userid;
-                        currentDataKey = 'gameApp';
-                        break;
-                    default:
-                        console.error("Unknown project type:", projectType);
-                        return;
-                }
-
-                const modal = document.getElementById(modalId);
-                const fields = document.querySelectorAll(fieldsSelector);
-                
-                // Проверяем, что все поля заполнены
-                let allFieldsFilled = true;
-                fields.forEach(field => {
-                    if (field.value.trim() === '') {
-                        allFieldsFilled = false;
-                    }
-                    newEntryParts.push(field.value.trim());
-                });
-
-                if (!allFieldsFilled) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                let newEntryString;
-
-                if (projectType === 'gameApp') {
-                    // Для Game/App: id, name, price, image, owned(false), installed(false), installURL
-                    const newGameAppId = Date.now(); // Генерируем уникальный числовой ID
-                    const name = newEntryParts[0];
-                    const price = newEntryParts[1];
-                    const image = newEntryParts[2];
-                    const installURL = newEntryParts[3];
-                    const owned = 'false';    // Автоматически false
-                    const installed = 'false'; // Автоматически false
-                    // Формируем строку с ID в начале
-                    newEntryString = `${newGameAppId}~${name}~${price}~${image}~${owned}~${installed}~${installURL}`;
-                } else {
-                    // Для Search и Datapedia: без ID, как и раньше
-                    newEntryString = newEntryParts.join('~'); 
-                }
-                
-                let currentData = allUserData[currentDataKey] || "";
-
-                if (currentData && currentData.trim() !== "") {
-                    currentData += "|"; 
-                }
-                let updatedData = currentData + newEntryString;
-
-                try {
-                    await writeCell(targetColumn, updatedData);
-                    console.log(`Changes confirmed (${projectType}):`, updatedData);
-                    allUserData[currentDataKey] = updatedData; // Обновляем глобальную переменную
-                    modal.style.display = 'none';
-                    alert('Project added successfully!');
-                    fields.forEach(field => field.value = ''); // Очистка полей
-                } catch (error) {
-                    console.error(`Error saving ${projectType} project:`, error);
-                    alert(`Failed to save ${projectType} project. Please try again.`);
-                }
+            for (const fileName in initialContents) {
+                addFile(fileName, initialContents[fileName]);
             }
-            
-            // Адаптируем showProjects для отображения всех типов и фильтрации
-            async function showProjects(filterType = 'all') {
-                const projectsListDiv = document.getElementById('projects-list');
-                projectsListDiv.innerHTML = ''; // Очищаем список перед заполнением
-
-                // Снимаем активность со всех кнопок фильтра и добавляем активный класс к выбранной
-                document.querySelectorAll('.project-filter button').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.getElementById(`filter-${filterType}`).classList.add('active');
-
-                console.log(`Starting showProjects() with filter: ${filterType}`);
-                console.log("Current allUserData for display:", allUserData);
-
-                let allParsedProjects = [];
-
-                // Парсим Search проекты (L-колонка: Name~Url~data)
-                if (allUserData.search) {
-                    allUserData.search.split('|').filter(s => s.trim() !== '').forEach((projectString) => {
-                        const parts = projectString.split('~');
-                        if (parts.length >= 3) { // Ожидаем 3 части: Name, Url, data
-                            allParsedProjects.push({
-                                // Для Search используем originalString как идентификатор для удаления/редактирования
-                                id: projectString, 
-                                type: 'search',
-                                name: parts[0].trim(),
-                                url: parts[1].trim(),
-                                data: parts[2].trim(),
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        }
-                    });
-                }
-
-                // Парсим Datapedia проекты (K-колонка: Name~img~code)
-                if (allUserData.datapedia) {
-                    allUserData.datapedia.split('|').filter(s => s.trim() !== '').forEach((projectString) => {
-                        const parts = projectString.split('~');
-                        if (parts.length >= 3) { // Ожидаем 3 части: Name, img, code
-                            allParsedProjects.push({
-                                // Для Datapedia используем originalString как идентификатор
-                                id: projectString,
-                                type: 'datapedia',
-                                name: parts[0].trim(),
-                                img: parts[1].trim(),
-                                code: parts[2].trim(),
-                                originalString: projectString
-                            });
-                        }
-                    });
-                }
-
-                // Парсим Game/App проекты (J-колонка: id~name~price~image~owned~installed~installURL)
-                if (allUserData.gameApp) {
-                    allUserData.gameApp.split('|').filter(s => s.trim() !== '').forEach((projectString) => {
-                        const parts = projectString.split('~');
-                        // Проверяем на новый формат с 7 частями (id, name, price, image, owned, installed, installURL)
-                        if (parts.length === 7) { 
-                            allParsedProjects.push({
-                                id: parseInt(parts[0]), // ID
-                                type: 'gameApp',
-                                name: parts[1].trim(),
-                                price: parseFloat(parts[2]),
-                                image: parts[3].trim(), 
-                                owned: parts[4] === "true", 
-                                installed: parts[5] === "true", 
-                                installURL: parts[6].trim(), 
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        } else if (parts.length >= 4) { // Обработка старых форматов (без ID, owned, installed, installURL)
-                            // Если старый формат, где был Name~price~image~Url
-                            // Создаем временный ID, но для редактирования/удаления будет использоваться full string
-                            allParsedProjects.push({
-                                id: projectString, // Временный ID для старых записей, т.к. ID отсутствует
-                                type: 'gameApp',
-                                name: parts[0].trim(),
-                                price: parseFloat(parts[1]),
-                                image: parts[2].trim(),
-                                installURL: parts[3].trim(), 
-                                owned: false, // По умолчанию для старых
-                                installed: false, // По умолчанию для старых
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        }
-                    });
-                }
-
-                console.log("All parsed projects:", allParsedProjects);
-
-                let filteredProjects = allParsedProjects;
-                if (filterType !== 'all') {
-                    filteredProjects = allParsedProjects.filter(p => p.type === filterType);
-                }
-
-                if (filteredProjects.length === 0) {
-                    projectsListDiv.innerHTML = `<p>No ${filterType !== 'all' ? filterType : ''} projects found.</p>`;
-                } else {
-                    filteredProjects.forEach(project => {
-                        const projectDiv = document.createElement('div');
-                        projectDiv.classList.add('project-item');
-
-                        let detailsHtml = '';
-                        let deleteIdentifier; // Идентификатор для удаления
-                        let editIdentifier;   // Идентификатор для редактирования
-
-                        if (project.type === 'gameApp' && typeof project.id === 'number') {
-                            // Для НОВЫХ Game/App используем числовой ID
-                            deleteIdentifier = project.id;
-                            editIdentifier = project.id;
-                        } else {
-                            // Для Search, Datapedia и СТАРЫХ Game/App используем originalString
-                            deleteIdentifier = project.originalString;
-                            editIdentifier = project.originalString;
-                        }
-
-                        switch (project.type) {
-                            case 'search':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Search)</span></h4>
-                                    <p>URL: <a href="${project.url}" target="_blank">${project.url}</a></p>
-                                    <p>Data: ${project.data}</p>
-                                `;
-                                break;
-                            case 'datapedia':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Datapedia Article)</span></h4>
-                                    <p>Image: <a href="${project.img}" target="_blank">${project.img}</a></p>
-                                    <p>Code: ${project.code}</p>
-                                `;
-                                break;
-                            case 'gameApp':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Game/App)</span></h4>
-                                    <p>ID: ${project.id}</p>
-                                    <p>Price: ${project.price}</p>
-                                    <p>Image: <a href="${project.image}" target="_blank">${project.image}</a></p>
-                                    <p>Install URL: <a href="${project.installURL}" target="_blank">${project.installURL}</a></p>
-                                    <p>Status: Owned: ${project.owned ? 'Yes' : 'No'}, Installed: ${project.installed ? 'Yes' : 'No'}</p>
-                                `;
-                                break;
-                        }
-
-                        // Важно: передаем идентификатор в виде строки, экранируя кавычки
-                        projectDiv.innerHTML = `
-                            ${detailsHtml}
-                            <div class="actions">
-                                <button onclick="editProject('${String(editIdentifier).replace(/'/g, "\\'")}', '${project.type}')">Edit</button>
-                                <button class="delete-btn" onclick="deleteProject('${String(deleteIdentifier).replace(/'/g, "\\'")}', '${project.type}')">Delete</button>
-                            </div>
-                        `;
-                        projectsListDiv.appendChild(projectDiv);
-                    });
-                }
-                document.getElementById('modal3').style.display = 'flex';
-            }
+            // Открываем первый файл из списка при старте
+            openFile(Object.keys(files)[0]);
 
 
-            // Универсальная функция для удаления проекта
-            // projectIdentifier может быть ID (для Game/App, тип number) или полной строкой (для Search/Datapedia/старых Game/App, тип string)
-            async function deleteProject(projectIdentifier, projectType) {
-                if (!confirm(`Are you sure you want to delete this ${projectType} project?`)) {
-                    return;
-                }
-
-                console.log(`Attempting to delete ${projectType} project with identifier:`, projectIdentifier);
-                
-                let currentDataKey, targetColumn;
-                switch (projectType) {
-                    case 'search':
-                        currentDataKey = 'search';
-                        targetColumn = 'L' + userid;
-                        break;
-                    case 'datapedia':
-                        currentDataKey = 'datapedia';
-                        targetColumn = 'K' + userid;
-                        break;
-                    case 'gameApp':
-                        currentDataKey = 'gameApp';
-                        targetColumn = 'J' + userid;
-                        break;
-                    default:
-                        console.error("Unknown project type for deletion:", projectType);
-                        return;
-                }
-
-                let projectData = allUserData[currentDataKey] || "";
-                if (!projectData || projectData.trim() === "") {
-                    console.error("No project data of this type to delete from.");
-                    alert("No project data of this type to delete from.");
-                    return;
-                }
-
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                const updatedProjects = [];
-
-                let found = false;
-                projects.forEach(projectString => {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        // Если это новый формат с ID в начале
-                        if (parts.length === 7 && parseInt(parts[0]) === parseInt(projectIdentifier)) {
-                            found = true;
-                            console.log(`Deleting Game/App project by ID: ${projectIdentifier}`);
-                        } 
-                        // Если это старый формат, где идентификатор - это вся строка (например, без ID)
-                        else if (parts.length < 7 && projectString === projectIdentifier) {
-                             found = true;
-                             console.log(`Deleting old Game/App project by full string: ${projectIdentifier}`);
-                        }
-                        else {
-                            updatedProjects.push(projectString);
-                        }
-                    } else {
-                        // Для Search/Datapedia всегда сравниваем полные строки
-                        if (projectString === projectIdentifier) { 
-                            found = true;
-                            console.log(`Deleting ${projectType} project: ${projectString}`);
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    }
-                });
-
-                if (found) {
-                    const newProjectData = updatedProjects.join('|');
-                    try {
-                        await writeCell(targetColumn, newProjectData);
-                        allUserData[currentDataKey] = newProjectData; // Обновляем глобальную переменную
-                        alert(`${projectType} project deleted successfully!`);
-                        showProjects(projectType); // Обновляем список проектов после удаления
-                    } catch (error) {
-                        console.error(`Error deleting ${projectType} project:`, error);
-                        alert(`Failed to delete ${projectType} project. Please try again.`);
-                    }
-                } else {
-                    alert(`Project not found for deletion.`);
-                    console.warn(`Project with identifier "${projectIdentifier}" (Type: ${projectType}) not found for deletion.`);
-                }
-            }
-
-            // Универсальная функция для открытия модального окна редактирования
-            // projectIdentifier может быть ID (для Game/App, тип number) или полной строкой (для Search/Datapedia/старых Game/App, тип string)
-            async function editProject(projectIdentifier, projectType) {
-                console.log(`Attempting to edit ${projectType} project with identifier:`, projectIdentifier);
-
-                let currentDataKey, modalId;
-                switch (projectType) {
-                    case 'search':
-                        currentDataKey = 'search';
-                        modalId = 'editSearchModal';
-                        break;
-                    case 'datapedia':
-                        currentDataKey = 'datapedia';
-                        modalId = 'editDatapediaModal';
-                        break;
-                    case 'gameApp':
-                        currentDataKey = 'gameApp';
-                        modalId = 'editGameAppModal';
-                        break;
-                    default:
-                        console.error("Unknown project type for editing:", projectType);
-                        return;
-                }
-
-                let projectData = allUserData[currentDataKey] || "";
-                if (!projectData || projectData.trim() === "") {
-                    alert("No project data of this type to edit.");
-                    return;
-                }
-
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                let projectToEditParts = null;
-                let originalProjectStringForSave = ''; // Для Game/App это будет вся строка, для Search/Datapedia тоже
-
-                for (const projectString of projects) {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        // Если это новый формат с ID в начале
-                        if (parts.length === 7 && parseInt(parts[0]) === parseInt(projectIdentifier)) {
-                            projectToEditParts = parts;
-                            originalProjectStringForSave = projectString; // Сохраняем всю строку для Game/App
-                            break;
-                        } 
-                        // Если это старый формат, где идентификатор - это вся строка
-                        else if (parts.length < 7 && projectString === projectIdentifier) {
-                             projectToEditParts = parts;
-                             originalProjectStringForSave = projectString; // Сохраняем всю строку для старых Game/App
-                             break;
-                        }
-                    } else {
-                        // Для Search/Datapedia всегда сравниваем по полной строке
-                        if (projectString === projectIdentifier) {
-                            projectToEditParts = projectString.split('~');
-                            originalProjectStringForSave = projectString; // Сохраняем всю строку
-                            break;
-                        }
-                    }
-                }
-
-                if (projectToEditParts) {
-                    if (projectType === 'gameApp') {
-                        // Для Game/App: сохраняем оригинальную полную строку и ID
-                        document.getElementById('editGameAppProjectId').value = projectToEditParts[0]; // ID
-                        document.getElementById('editGameAppName').value = projectToEditParts[1] || '';
-                        document.getElementById('editGameAppPrice').value = projectToEditParts[2] || '';
-                        document.getElementById('editGameAppImage').value = projectToEditParts[3] || '';
-                        document.getElementById('editGameAppInstallURL').value = projectToEditParts[6] || '';
-                    } else {
-                        // Для Search и Datapedia: сохраняем оригинальную полную строку
-                        document.getElementById(`${modalId.replace('Modal', '')}OriginalString`).value = originalProjectStringForSave;
-                        switch (projectType) {
-                            case 'search':
-                                document.getElementById('editSearchName').value = projectToEditParts[0] || '';
-                                document.getElementById('editSearchUrl').value = projectToEditParts[1] || '';
-                                document.getElementById('editSearchData').value = projectToEditParts[2] || '';
-                                break;
-                            case 'datapedia':
-                                document.getElementById('editDatapediaName').value = projectToEditParts[0] || '';
-                                document.getElementById('editDatapediaImg').value = projectToEditParts[1] || '';
-                                document.getElementById('editDatapediaCode').value = projectToEditParts[2] || '';
-                                break;
-                        }
-                    }
-                    document.getElementById(modalId).style.display = 'flex';
-                } else {
-                    alert(`Project not found for editing.`);
-                    console.warn(`Project with identifier "${projectIdentifier}" (Type: ${projectType}) not found for editing.`);
-                }
-            }
-
-
-            // Универсальная функция для сохранения изменений проекта
-            async function saveProjectChanges(projectType) {
-                let identifierValue, newValues = [], currentDataKey, targetColumn, modalId;
-
-                switch (projectType) {
-                    case 'search':
-                        identifierValue = document.getElementById('editSearchOriginalString').value.trim(); // Это originalString
-                        newValues = [
-                            document.getElementById('editSearchName').value.trim(),
-                            document.getElementById('editSearchUrl').value.trim(),
-                            document.getElementById('editSearchData').value.trim()
-                        ];
-                        currentDataKey = 'search';
-                        targetColumn = 'L' + userid;
-                        modalId = 'editSearchModal';
-                        break;
-                    case 'datapedia':
-                        identifierValue = document.getElementById('editDatapediaOriginalString').value.trim(); // Это originalString
-                        newValues = [
-                            document.getElementById('editDatapediaName').value.trim(),
-                            document.getElementById('editDatapediaImg').value.trim(),
-                            document.getElementById('editDatapediaCode').value.trim()
-                        ];
-                        currentDataKey = 'datapedia';
-                        targetColumn = 'K' + userid;
-                        modalId = 'editDatapediaModal';
-                        break;
-                    case 'gameApp':
-                        identifierValue = document.getElementById('editGameAppProjectId').value.trim(); // Это ID проекта
-                        newValues = [
-                            document.getElementById('editGameAppName').value.trim(),
-                            document.getElementById('editGameAppPrice').value.trim(),
-                            document.getElementById('editGameAppImage').value.trim(),
-                            document.getElementById('editGameAppInstallURL').value.trim()
-                        ];
-                        currentDataKey = 'gameApp';
-                        targetColumn = 'J' + userid;
-                        modalId = 'editGameAppModal';
-                        break;
-                    default:
-                        console.error("Unknown project type for saving changes:", projectType);
-                        return;
-                }
-
-                // Проверка, что все поля заполнены
-                if (newValues.some(val => val === '')) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                console.log(`Attempting to save changes for ${projectType} project (Identifier):`, identifierValue);
-                
-                let projectData = allUserData[currentDataKey] || "";
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                const updatedProjects = [];
-
-                let found = false;
-                for (const projectString of projects) {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        // Ищем по ID, если это новый формат
-                        if (parts.length === 7 && parseInt(parts[0]) === parseInt(identifierValue)) {
-                            // Сохраняем старые owned и installed значения
-                            const owned = parts[4] || 'false'; 
-                            const installed = parts[5] || 'false';
-                            // Формируем новую строку с сохранением ID и булевых значений
-                            const newGameAppString = `${identifierValue}~${newValues[0]}~${newValues[1]}~${newValues[2]}~${owned}~${installed}~${newValues[3]}`; 
-                            updatedProjects.push(newGameAppString);
-                            found = true;
-                        } 
-                        // Если это старый формат, где идентификатор - это вся строка
-                        else if (parts.length < 7 && projectString === identifierValue) {
-                            // Для старых форматов, где ID не было, обновляем всю строку.
-                            // Предполагаем, что старые части Name~price~image~Url
-                            // И добавляем дефолтные owned/installed, если их не было
-                            const oldParts = projectString.split('~');
-                            const updatedOldString = `${newValues[0]}~${newValues[1]}~${newValues[2]}~${newValues[3]}~${oldParts[4] || 'false'}~${oldParts[5] || 'false'}`;
-                            updatedProjects.push(updatedOldString);
-                            found = true;
-                        }
-                        else {
-                            updatedProjects.push(projectString);
-                        }
-                    } else {
-                        // Для Search и Datapedia сравниваем по полной строке
-                        if (projectString === identifierValue) {
-                            const newString = newValues.join('~');
-                            updatedProjects.push(newString);
-                            found = true;
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    }
-                }
-
-                if (found) {
-                    const newProjectData = updatedProjects.join('|');
-                    try {
-                        await writeCell(targetColumn, newProjectData);
-                        allUserData[currentDataKey] = newProjectData; // Обновляем глобальную переменную
-                        alert(`${projectType} project updated successfully!`);
-                        document.getElementById(modalId).style.display = 'none';
-                        showProjects(projectType); // Обновляем список проектов
-                    } catch (error) {
-                        console.error(`Error saving ${projectType} project changes:`, error);
-                        alert(`Failed to save ${projectType} project changes. Please try again.`);
-                    }
-                } else {
-                    alert(`Error: Project not found during save.`);
-                    console.error(`Error: Project with identifier "${identifierValue}" (Type: ${projectType}) not found during save.`);
-                }
-            }
-
-            // Функции для управления боковым меню и пользовательским виджетом (оставляем как есть)
-            function toggleMenu() {
-                const menu = document.getElementById('menuContainer');
-                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-            }
-
-            function openApp(url) {
-                if (url.startsWith('http')) {
-                    window.open(url, '_blank');
-                } else {
-                    window.location.href = url;
-                }
-            }
-
-            function toggleUserMenu() {
-                const userMenu = document.getElementById('userMenu');
-                userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
-            }
-
-            // Дополнительно: Добавим обработчик для закрытия меню по клику вне его
-            document.addEventListener('click', function(event) {
-                const userMenu = document.getElementById('userMenu');
-                const userWidget = document.querySelector('.user-widget');
-                const toggleButton = document.querySelector('.toggleButton');
-                const menuContainer = document.getElementById('menuContainer');
-
-                // Закрытие userMenu
-                if (userMenu && userWidget && !userWidget.contains(event.target) && !userMenu.contains(event.target)) {
-                    userMenu.style.display = 'none';
-                }
-
-                // Закрытие menuContainer
-                if (menuContainer && toggleButton && !toggleButton.contains(event.target) && !menuContainer.contains(event.target)) {
-                    menuContainer.style.display = 'none';
+            // Обработчики событий
+            // Клик по файлам в сайдбаре
+            fileTree.addEventListener('click', (event) => {
+                const fileId = event.target.dataset.fileId || event.target.closest('.file-item')?.dataset.fileId;
+                if (fileId) {
+                    openFile(fileId);
                 }
             });
 
-        </script>
-    </div>
-</body>
+            // Клик по вкладкам файлов
+            fileTabsContainer.addEventListener('click', (event) => {
+                const target = event.target;
+                const fileId = target.dataset.fileId || target.closest('.file-tab')?.dataset.fileId;
+
+                if (target.classList.contains('close-tab-btn')) {
+                    deleteFile(fileId);
+                    event.stopPropagation();
+                } else if (fileId) {
+                    openFile(fileId);
+                }
+            });
+
+            // Кнопка "Запустить код"
+            runButton.addEventListener('click', () => {
+                if (!currentFileId || !editor) {
+                    outputConsole.textContent = 'Нет открытого файла для запуска.';
+                    return;
+                }
+
+                const code = editor.getValue();
+                const language = files[currentFileId].language;
+                outputConsole.textContent = `Запускаю код на ${language.toUpperCase()}...\n\n`;
+
+                if (language === 'javascript') {
+                    try {
+                        const originalLog = console.log;
+                        let outputBuffer = '';
+                        console.log = (...args) => {
+                            outputBuffer += args.join(' ') + '\n';
+                        };
+                        eval(code);
+                        console.log = originalLog; // Restore original console.log
+                        outputConsole.textContent += outputBuffer;
+                    } catch (e) {
+                        outputConsole.textContent += `Ошибка выполнения JavaScript: ${e.message}\n`;
+                    }
+                } else if (language === 'html') {
+                    outputConsole.textContent += `--- Открываю HTML в новом окне/вкладке ---\n`;
+                    const newWindow = window.open();
+                    newWindow.document.write(code);
+                    newWindow.document.close();
+                } else if (language === 'css') {
+                    outputConsole.textContent += `--- CSS — это язык стилей, не может быть выполнен напрямую. Он применяется к HTML. ---\n`;
+                } else if (language === 'python') {
+                     outputConsole.textContent += `--- Имитация выполнения Python ---\n`;
+                     // Simple Python execution imitation
+                     if (code.includes('print(') || code.includes('console.log(')) {
+                         const match = code.match(/print\s*\((.*?)\)|console\.log\s*\((.*?)\)/);
+                         if (match) {
+                             const content = match[1] || match[2];
+                             outputConsole.textContent += `(Симулированный вывод из print/console.log): ${content.replace(/["']/g, '')}\n`;
+                         }
+                     }
+                     outputConsole.textContent += `Для реального выполнения Python кода требуется серверный компонент или WebAssembly-интерпретатор.\n`;
+                     outputConsole.textContent += `Вывод: "Python код успешно 'выполнен'!"\n`;
+                } else if (language === 'csharp' || language === 'c' || language === 'cpp') {
+                    outputConsole.textContent += `--- Имитация компиляции и выполнения ${language.toUpperCase()} ---\n`;
+                    outputConsole.textContent += `Компиляция... (это симуляция)\n`;
+                    outputConsole.textContent += `Cоздание исполняемого файла... (симуляция)\n`;
+                    outputConsole.textContent += `Запуск... (симуляция)\n`;
+                    outputConsole.textContent += `\nПривет из ${language.toUpperCase()}! (Симулированный вывод)\n`;
+                    outputConsole.textContent += `Для реальной компиляции и выполнения ${language.toUpperCase()} необходим серверный компонент (бэкенд) с установленным компилятором.\n`;
+                } else if (language === 'plaintext' && files[currentFileId].name.endsWith('.wasm')) {
+                    outputConsole.textContent += `--- Имитация выполнения WebAssembly (.wasm) ---\n`;
+                    outputConsole.textContent += `WebAssembly - это низкоуровневый бинарный формат. Для его запуска обычно требуется JavaScript-хост, который загружает и выполняет WASM-модуль.\n`;
+                    outputConsole.textContent += `(Симулированный вывод: WebAssembly модуль готов к работе!)\n`;
+                } else if (language === 'plaintext' && files[currentFileId].name.endsWith('.asm')) {
+                    outputConsole.textContent += `--- Имитация выполнения Assembly (.asm) ---\n`;
+                    outputConsole.textContent += `Код на Ассемблере очень низкоуровневый и специфичен для архитектуры процессора. Для его запуска нужна ассемблер-программа и прямой доступ к системе.\n`;
+                    outputConsole.textContent += `(Симулированный вывод: Ассемблерный код 'скомпилирован' и 'запущен'.)\n`;
+                } else if (language === 'plaintext' && files[currentFileId].name.endsWith('.p#')) {
+                     outputConsole.textContent += `--- Имитация выполнения P# (ParrotSharp) ---\n`;
+                     outputConsole.textContent += `Ваш уникальный язык P# 'компилируется' и 'запускается'!\n`;
+                     outputConsole.textContent += `(Симулированный вывод: "Мир пернатых приветствует вас на P#!")\n`;
+                     outputConsole.textContent += `На самом деле для этого нужен собственный компилятор P# и среда выполнения.\n`;
+                }
+                else {
+                    outputConsole.textContent += `--- Имитация выполнения для ${language.toUpperCase()} ---\n`;
+                    outputConsole.textContent += `Для реальной компиляции/интерпретации "${language.toUpperCase()}" требуется серверный компонент (бэкенд).\n`;
+                    outputConsole.textContent += `Вывод: "Это симулированный результат для ${language.toUpperCase()}!"\n`;
+                }
+            });
+
+            // Переключение вкладок панели (Вывод, Проблемы, Терминал)
+            panelTabs.addEventListener('click', (event) => {
+                document.querySelectorAll('.panel-tab').forEach(tab => tab.classList.remove('active'));
+                event.target.classList.add('active');
+                const contentToShow = event.target.dataset.panelContent;
+
+                outputConsole.style.display = 'block';
+                outputConsole.textContent = '';
+
+                if (contentToShow === 'output') {
+                    outputConsole.textContent = "Здесь будет вывод вашего кода после запуска.";
+                } else if (contentToShow === 'problems') {
+                    outputConsole.textContent = "Проблем не обнаружено (это имитация).";
+                } else if (contentToShow === 'terminal') {
+                    outputConsole.textContent = "Это имитация терминала.\nНастоящий терминал требует серверного компонента и WebSockets.";
+                }
+            });
+
+            // --- File Menu Dropdown Logic ---
+            fileMenuItem.addEventListener('click', (event) => {
+                // Toggle dropdown visibility
+                const isVisible = fileDropdown.style.display === 'block';
+                fileDropdown.style.display = isVisible ? 'none' : 'block';
+                event.stopPropagation(); // Prevent document click from immediately closing
+            });
+
+            // Handle clicks on dropdown items
+            newFileOption.addEventListener('click', () => {
+                const fileName = prompt('Введите имя нового файла (например, new.js):');
+                if (fileName) {
+                    const newFileId = addFile(fileName, '');
+                    openFile(newFileId);
+                }
+                fileDropdown.style.display = 'none';
+            });
+
+            openFileOption.addEventListener('click', () => {
+                openLocalFile();
+                fileDropdown.style.display = 'none';
+            });
+
+            openFolderOption.addEventListener('click', () => {
+                openFolder();
+                fileDropdown.style.display = 'none';
+            });
+
+            saveAsOption.addEventListener('click', () => {
+                saveCurrentFileAs();
+                fileDropdown.style.display = 'none';
+            });
+
+            // Close dropdown if clicked outside
+            document.addEventListener('click', (e) => {
+                if (!fileMenuItem.contains(e.target) && !fileDropdown.contains(e.target)) {
+                    fileDropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </html>

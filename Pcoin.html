@@ -9,200 +9,238 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style1.css">
     <script src="js/sitefun.js" type="module"></script>
-    <style>
-        body {
-          overflow-y: scroll;
-          font-family: Arial, sans-serif;
-          background: #f1f3f4;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-        }
-    
-        .account-panel {
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-          width: 90%;
-          max-width: 600px;
-          padding: 40px;
-          box-sizing: border-box;
-          text-align: center;
-        }
-    
-        .avatar {
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          background: #ccc;
-          margin: 0 auto 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 32px;
-          font-weight: bold;
-          color: white;
-        }
-    
-        .username {
-          font-size: 24px;
-          font-weight: bold;
-          margin-bottom: 6px;
-        }
-    
-        .email {
-          font-size: 16px;
-          color: gray;
-          margin-bottom: 20px;
-        }
-    
-        hr {
-          border: none;
-          height: 1px;
-          background-color: #e0e0e0;
-          margin: 24px 0;
-        }
-    
-        .button {
-          display: block;
-          width: 100%;
-          padding: 14px;
-          background: #1a73e8;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 18px;
-          margin-bottom: 16px;
-        }
-    
-        .button:hover {
-          background: #0c5dc0;
-        }
-    
-        .note {
-          font-size: 14px;
-          color: #666;
-          margin-top: -10px;
-          margin-bottom: 16px;
-        }
-    
-        .modal {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          justify-content: center;
-          align-items: center;
-          z-index: 999;
-        }
-    
-        .modal-content {
-          background: white;
-          padding: 30px;
-          border-radius: 12px;
-          width: 90%;
-          max-width: 400px;
-          box-sizing: border-box;
-          text-align: left;
-        }
-    
-        .modal input {
-          width: 100%;
-          padding: 10px;
-          margin: 10px 0;
-          font-size: 16px;
-          border: 1px solid #ccc;
-          border-radius: 6px;
-        }
-    
-        .modal-buttons {
-          text-align: right;
-        }
-    
-        .modal-buttons button {
-          margin-left: 10px;
-        }
-        /* mcss: мобильная версия для Pcoin.html */
-@media (max-width: 768px) {
-  body {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    height: auto;
-    padding: 0;
-  }
-  .account-panel {
-    width: 98vw;
-    max-width: 100%;
-    padding: 16px;
-    border-radius: 8px;
-    margin: 10px auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-  .user-icn1, .avatar {
-    width: 70px !important;
-    height: 70px !important;
-    font-size: 24px !important;
-    margin-bottom: 10px !important;
-  }
-  .name1, .username {
-    font-size: 18px !important;
-  }
-  .email1, .email {
-    font-size: 14px !important;
-  }
-  .button, .account-panel button {
-    font-size: 16px;
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-  }
-  .modal-content {
-    width: 98vw;
-    max-width: 100%;
-    padding: 14px;
-    border-radius: 8px;
-  }
-  .modal input {
-    font-size: 15px;
-    padding: 8px;
-    margin: 8px 0;
-  }
-  .modal-buttons button {
-    font-size: 15px;
-    padding: 7px 14px;
-    margin-left: 6px;
-  }
-  .note {
-    font-size: 12px;
-    margin-bottom: 10px;
-  }
-  .menuContainer {
-    flex-direction: column;
-    gap: 6px;
-    padding: 0 4px;
-  }
-  .appItem {
-    flex-direction: row;
-    align-items: center;
-    padding: 7px 0;
-  }
-  .appItem img,
-  .appItem .appIcon {
-    width: 28px;
-    height: 28px;
-    margin-right: 8px;
-  }
-}
-      </style>
     <script src="js/user.js"></script>
+    <style>
+        /* General styles for the new layout */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1f1d1d; /* Will be overridden by JS */
+            margin: 0;
+            padding-top: 60px;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ------------------------------------- */
+        /* Sidebar Menu - GitHub Style */
+        /* ------------------------------------- */
+        nav {
+            background-color: #2b2c2e; /* Will be overridden by JS */
+            width: 250px;
+            min-width: 200px;
+            padding: 10px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            height: 100%;
+            color: #ffffff;
+            overflow-y: auto;
+            top: 0;
+            left: 0;
+            z-index: 99;
+            box-sizing: border-box;
+            padding-top: 70px;
+        }
+
+        /* Cluster Title */
+        .cluster-title {
+            color: #A9B2BB; /* Will be overridden by JS */
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 15px 15px 5px 15px;
+            margin-top: 5px;
+        }
+
+        /* Separator line between clusters */
+        .cluster-separator {
+            border: none;
+            height: 1px;
+            background-color: #444C56; /* Will be overridden by JS */
+            margin: 5px 15px;
+        }
+
+        /* Sidebar link style (static, will be overridden) */
+        nav a {
+            text-decoration: none;
+            display: block;
+            margin: 0;
+            color: #C8D1D9; /* Will be overridden by JS */
+            font-size: 15px;
+            padding: 10px 15px;
+            border-left: 3px solid transparent;
+            transition: background-color 0.2s, border-left-color 0.2s, color 0.2s;
+        }
+        nav a:hover {
+            background-color: #444C56; /* Will be overridden by JS */
+            color: #FFFFFF; /* Will be overridden by JS */
+        }
+        nav a.active {
+            background-color: #3C444B; /* Will be overridden by JS */
+            border-left-color: #0366D6; /* Will be overridden by JS */
+            color: #FFFFFF; /* Will be overridden by JS */
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            flex-grow: 1;
+            width: calc(100% - 250px);
+            box-sizing: border-box;
+            color: inherit;
+        }
+        
+        .main-content h2 {
+            margin-top: 0;
+        }
+
+        /* Top User Panel (preserved and adapted) */
+        .top-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #191919; /* Will be overridden by JS */
+            color: white; /* Will be overridden by JS */
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .user-icn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        #userMenu {
+            position: fixed;
+            right: 10px; 
+            top: 60px; 
+            z-index: 1000; 
+            background: white; 
+            border: 1px solid #ccc; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            padding: 10px; 
+            border-radius: 8px; 
+            text-align: left;
+            min-width: 180px;
+        }
+        #userMenu button {
+            display: block; 
+            width: 100%; 
+            margin-bottom: 5px;
+            padding: 8px 15px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+        }
+        #userMenu button:hover {
+            background: #e0e0e0;
+        }
+
+
+        /* Style for content inputs */
+        .settings-container label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555; /* Will be overridden by JS */
+        }
+        .settings-container input[type="text"],
+        .settings-container input[type="password"],
+        .settings-container textarea {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: inherit; /* For correct display in dark theme */
+            color: inherit; /* For correct display in dark theme */
+        }
+        .settings-container .button {
+            display: inline-block;
+            width: auto;
+            min-width: 150px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+        .settings-container .button:hover {
+            background: #0c5dc0;
+        }
+        .note {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .user-icn1 {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Override styles for mobile devices */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 50px;
+                flex-direction: column;
+            }
+            .top-panel {
+                height: 50px;
+                justify-content: flex-start;
+                gap: 10px;
+            }
+            .toggleButton {
+                display: block; /* Show on mobile */
+            }
+            nav {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 70vw;
+                height: 100vh;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                padding-top: 50px;
+            }
+            nav.active {
+                transform: translateX(0);
+                box-shadow: 5px 0 10px rgba(0, 0, 0, 0.3);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .settings-container input[type="text"],
+            .settings-container input[type="password"],
+            .settings-container textarea {
+                max-width: 100%;
+            }
+            .settings-container .button {
+                font-size: 16px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -220,6 +258,7 @@
                 <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
                 <button onclick="window.location.href='riegist'">register or login</button>
             </div>
+
         <div class="menuContainer" id="menuContainer">
             <div class="appItem"><form action="results.html" method="get">
                 <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
@@ -241,59 +280,361 @@
               <img src="img/datapedia icon1.png" alt="png">
               <span>dataPedia</span>
           </div>
-          <div class="appItem" onclick="openApp('pmaill')">
-            <img src="img/PM.png" alt="png">
-            <span>Pmaill</span>
+          <div class="appItem" onclick="openApp('ParrotSoft_Apps')">
+            <img src="img/Apps.png" width="30px" height="30px" alt="png">
+            <span>ParrotSoft Apps</span>
+        </div>
+        <div class="appItem" onclick="openApp('https://wavychatapp.github.io/')">
+            <img src="https://wavychatapp.github.io/WavyChatApp.ico" width="30px" height="30px" alt="png">
+            <span>WavyChatApp</span>
         </div>
             <div class="appItem" onclick="openApp('accunt')">
                 <img src="img/as.png" alt="png">
                 <span>Account settings.</span>
             </div>
-          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
-            <img src="img/PMS.png" alt="png">
-            <span>Parrot Soft Market</span>
         </div>
-        </div>
-        <body>
-            <div style="height: 60px;margin-top: 60px;"></div>
-            <div class="account-panel">
-              <img class="user-icn1" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="png">
-              <div class="name1">User Name</div>
-              <div class="email1"></div>
-              <hr>
-            <a href="accunt.html">Setings Acaunt</a><p style="color: #1a73e8;">Bay P-coin</p></hr>
-              <hr>
-              <button onclick="processPayment(0.01)">$0.01</button>
-              <button onclick="processPayment(0.1)">$0.1</button>
-              <button onclick="processPayment(1)">$1</button>
-              <button onclick="processPayment(10)">$10</button>
+</div>
+        <nav id="settingsNav"></nav>
+
+            <div class="main-content" id="mainContent">
+                <h1>Welcome to Account Settings</h1>
+                <p>Please select a section from the left menu to manage your account.</p>
             </div>
-            <script>
-              let text; 
-              let uid
-              (async function() {
-                uid = await userID(getCookie('name'));
-                console.log(uid);
-              })();
-              const name = getCookie('name');
-                function processPayment(amount) {
+        </div>
+    
+    <script>
+        let uid;
+        let currentField = 'PcoinWallet'; 
+        const name = getCookie('name');
+        const email = getCookie('email');
+        const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+
+        // --- Styles table for themes (Retained from original accunt.html) ---
+        const themeStyles = {
+            'dark': {
+                'body-bg': '#1f1d1d', 'text-color': '#FFFFFF',
+                'top-panel-bg': '#191919', 'top-panel-color': '#FFFFFF',
+                'nav-bg': '#2b2c2e', 'nav-text': '#FFFFFF',
+                'nav-hover': '#444C56', 'nav-active-bg': '#3C444B',
+                'cluster-title': '#A9B2BB', 'input-color': '#DDDDDD',
+                'main-content-h2': '#FFFFFF', 'link-accent': '#0366D6',
+            },
+            'white': {
+                'body-bg': '#FFFFFF', 'text-color': '#333333',
+                'top-panel-bg': '#FFFFFF', 'top-panel-color': '#333333',
+                'nav-bg': '#FFFFFF', 'nav-text': '#333333',
+                'nav-hover': '#F0F0F0', 'nav-active-bg': '#E0E0E0',
+                'cluster-title': '#888888', 'input-color': '#333',
+                'main-content-h2': '#000', 'link-accent': '#007bff',
+            },
+            'gray': {
+                'body-bg': '#CCCCCC', 'text-color': '#111111',
+                'top-panel-bg': '#3C444B', 'top-panel-color': '#EBEBEB',
+                'nav-bg': '#555C66', 'nav-text': '#EBEBEB',
+                'nav-hover': '#6E7985', 'nav-active-bg': '#505760',
+                'cluster-title': '#C0C8D0', 'input-color': '#333',
+                'main-content-h2': '#222', 'link-accent': '#00BFFF',
+            }
+        };
+
+        // --- Theme application logic (Retained from original accunt.html) ---
+        function applyTheme(themeName) {
+            const theme = themeStyles[themeName];
+            if (!theme) return;
+
+            document.body.style.backgroundColor = theme['body-bg'];
+            document.body.style.color = theme['text-color'];
+            
+            const topPanel = document.querySelector('.top-panel');
+            if (topPanel) {
+                topPanel.style.backgroundColor = theme['top-panel-bg'];
+                topPanel.style.color = theme['top-panel-color'];
+            }
+            const nav = document.getElementById('settingsNav');
+            if (nav) {
+                nav.style.backgroundColor = theme['nav-bg'];
+            }
+            const nav3123 = document.querySelector('.user-widget');
+            if (nav3123) {
+                nav3123.style.color = '#333333';
+            }
+            const nav31231 = document.querySelector('appItem');
+            if (nav31231) {
+                nav31231.style.color = '#000000';
+            }
+            let styleSheet = document.getElementById('theme-style');
+            if (!styleSheet) {
+                styleSheet = document.createElement('style');
+                styleSheet.id = 'theme-style';
+                document.head.appendChild(styleSheet);
+            }
+            styleSheet.textContent = `
+                /* Dynamic Theme Overrides for ${themeName} */
+                .main-content h1, .main-content h2, .settings-container label, .main-content p { color: ${theme['text-color']} !important; }
+                .settings-container h2 { color: ${theme['main-content-h2']}; }
+                .main-content { background-color: ${theme['body-bg']} !important; }
+
+                /* Nav Links & Titles */
+                nav a { color: ${theme['nav-text']} !important; border-left-color: transparent !important; }
+                nav a:hover { background-color: ${theme['nav-hover']} !important; color: ${theme['top-panel-color']} !important; }
+                nav a.active { background-color: ${theme['nav-active-bg']} !important; border-left-color: ${theme['link-accent']} !important; color: ${theme['top-panel-color']} !important; }
+                .cluster-separator { background-color: ${theme['nav-hover']} !important; }
+                .cluster-title { color: ${theme['cluster-title']} !important; }
+                .note { color: ${theme['cluster-title']} !important; }
+
+                /* Inputs */
+                .settings-container input[type="text"], 
+                .settings-container input[type="password"], 
+                .settings-container textarea { 
+                    color: ${theme['text-color']}; 
+                    background-color: ${theme['body-bg']}; 
+                    border-color: ${theme['cluster-title']};
+                }
+
+                /* User Menu */
+                #userMenu { background-color: ${theme['body-bg']} !important; border-color: ${theme['nav-hover']} !important; }
+                #userMenu button { 
+                    background-color: ${theme['nav-bg']} !important; 
+                    color: ${theme['nav-text']} !important; 
+                    border: 1px solid ${theme['nav-hover']} !important;
+                }
+                #userMenu button:hover { background-color: ${theme['nav-hover']} !important; }
+                .top-panel div[style*="font-weight: bold;"] { color: ${theme['top-panel-color']} !important; }
+            `;
+        }
+
+        function selectTheme(themeName) {
+            if (themeStyles[themeName]) {
+                applyTheme(themeName);
+                setCookie('theme', themeName, 30); 
+            }
+        }
+        
+        // --- ADDED PCOIN PAYMENT LOGIC ---
+        // Helper function for load from Pcoin original logic
+    
+
+        // Extracted and adapted processPayment function
+        function processPayment(amount) {
             let paymentUrl = `https://www.paypal.com/donate/?business=FC595CMZJVDEJ&amount=${amount}`;
             window.open(paymentUrl, '_blank');
-            setTimeout(() => {
-                let int = parseInt(getCookie('p-coin')) || 0; // Make sure it's a number
-                let add = amount * 100;
+            // Give 3 seconds for payment window to open and user to potentially pay
+            setTimeout(async () => {
+                let int = parseInt(getCookie('p-coin')) || 0; 
+                let add = amount * 100; // Original logic: $1 = 100 P-coin
 
                 int += add;
 
-                console.log(int);
+                console.log("New P-coin balance:", int);
 
                 setCookie('p-coin', int);
-                addmoney(name, add);
-                load();
+                
+                // Assuming addmoney is available from user.js/sitefun.js
+                if (typeof addmoney === 'function') {
+                    await addmoney(getCookie('name'), add); 
+                } else {
+                     console.warn("addmoney function not found. Balance only updated locally in cookie.");
+                }
+                
+                const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+    const name = getCookie('name');
+const email = getCookie('email');
+const pcoin = "Pcoin " + getCookie('p-coin');
+    document.querySelector('div[class="name"]').innerText = name || "No Name";
+    document.querySelector('div[class="email"]').innerText = email || "No Email";
+    document.querySelector('div[class="pcoin"]').innerText = pcoin || "Pcoin 0";
+    document.querySelector('img[class="user-icn"]').src = icon;
+                alert(`Successfully added ${add} P-coin. Your new balance is ${int}.`);
             }, 3000);
         }
-            </script>
-    </div>
-    </div>
+        // ---------------------------------
+
+        // --- Content settings by cluster ---
+        const settingsSections = {
+            
+            'Security': {
+                title: 'Password and Security',
+                html: `
+                    <div class="settings-container">
+                        <h2>Password and Security</h2>
+                        
+                        <h3>Change Password</h3>
+                        <label>New Password</label>
+                        <input type="password" id="passwordInput" class="ggg" placeholder="Enter new password">
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="button" onclick="confirmChange('Password')" style="flex-grow: 1; background-color: #0366D6; font-size: 16px; min-width: auto;">Change Password</button>
+                            <button class="button" onclick="alert('The password recovery button is not active yet. You need to wait.')" style="flex-grow: 1; background-color: #555; font-size: 16px; min-width: auto;">Recover Password</button>
+                        </div>
+                        <div class="note" style="margin-top: 10px;">The Recover Password button is not active yet.</div>
+                    </div>
+                `
+            },
+            // --- NEW PCOIN WALLET SECTION ---
+            'PcoinWallet': {
+                title: 'P-coin Wallet',
+                html: `
+                    <div class="settings-container" style="max-width: 600px;">
+                        <h2>P-coin Wallet / Top-up Balance</h2>
+                        <div style="font-size: 18px; margin-bottom: 20px;">
+                            Your current balance: <span id="currentPcoinBalance" style="font-weight: bold; color: #1a73e8;">Loading...</span>
+                        </div>
+                        <p>Select the amount to top up your P-coin balance via PayPal:</p>
+                        <hr style="border: none; height: 1px; background-color: #e0e0e0; margin: 20px 0;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                            <button class="button" onclick="processPayment(0.01)" style="margin: 0; padding: 10px; font-size: 16px;">$0.01 (1 P-coin)</button>
+                            <button class="button" onclick="processPayment(0.1)" style="margin: 0; padding: 10px; font-size: 16px;">$0.1 (10 P-coin)</button>
+                            <button class="button" onclick="processPayment(1)" style="margin: 0; padding: 10px; font-size: 16px;">$1 (100 P-coin)</button>
+                            <button class="button" onclick="processPayment(10)" style="margin: 0; padding: 10px; font-size: 16px;">$10 (1000 P-coin)</button>
+                        </div>
+                        <div class="note" style="margin-top: 20px;">
+                            Note: 1 P-coin = $0.01. After payment, your balance will be updated automatically, but this may take up to 3 seconds.
+                        </div>
+                    </div>
+                    <script>
+                        // Display the balance when this section is loaded
+                        document.getElementById('currentPcoinBalance').textContent = getCookie('p-coin') || '0';
+                    
+                `
+            }
+          
+        };
+
+        // --- Navigation cluster structure ---
+        const navClusters = [
+            {
+                title: 'ACCOUNT',
+                id: 'account',
+                items: [
+                    { id: 'Styling', title: 'Account Styling', type: 'link', url: 'accunt.html' },
+                    { id: 'Theme', title: 'Design Theme', type: 'link', url: 'accunt.html' }, 
+                    { id: 'Security', title: 'Password and Security', type: 'link', url: 'accunt.html' },
+                    { id: 'Deletion', title: 'Delete Account', type: 'link', url: 'accunt.html' }, 
+                ]
+            },
+            {
+                title: 'FINANCES',
+                id: 'financial',
+                items: [
+                    { id: 'PcoinWallet', title: 'P-coin Wallet', type: 'section' }, // Changed to type: 'section'
+                ]
+            },
+            {
+                title: 'TOOLS',
+                id: 'tools',
+                items: [
+                    { id: 'Developer', title: 'Developer Menu', type: 'link', url: 'Dvelopent.html' },
+                ]
+            }
+        ];
+            //load();
+        // --- Initialization and Navigation ---
+
+        (async function() {
+            // Update top panel user info
+            
+
+            // Apply theme from Cookie first
+            const savedTheme = getCookie('theme') || 'dark';
+            applyTheme(savedTheme);
+
+            try {
+                // Assuming userID is an async function in user.js
+                uid = await userID(getCookie('name'));
+                console.log("User ID:", uid);
+            } catch (e) {
+                console.error("Error fetching UID or user.js not loaded:", e);
+                uid = -1; // Set default invalid UID
+            }
+            updateSettingsList(); 
+            showSettingsSection('PcoinWallet'); // Show styling by default
+        })();
+
+        // Update settings list in sidebar (Retained from original accunt.html)
+        function updateSettingsList() {
+            const nav = document.getElementById('settingsNav');
+            nav.innerHTML = '';
+            
+            navClusters.forEach((cluster, clusterIndex) => {
+                if (clusterIndex > 0) {
+                     const separator = document.createElement('hr');
+                     separator.className = 'cluster-separator';
+                     nav.appendChild(separator);
+                }
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'cluster-title';
+                titleDiv.textContent = cluster.title;
+                nav.appendChild(titleDiv);
+
+                cluster.items.forEach(item => {
+                    const link = document.createElement('a');
+                    link.textContent = item.title;
+                    
+                    if (item.type === 'section') {
+                        link.href = '#';
+                        link.setAttribute('data-section', item.id);
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            showSettingsSection(item.id);
+                            if (window.innerWidth <= 768) {
+                                document.getElementById('settingsNav').classList.remove('active');
+                            }
+                        });
+                    } else if (item.type === 'link') {
+                        link.href = item.url;
+                    }
+
+                    nav.appendChild(link);
+                });
+            });
+            applyTheme(getCookie('theme') || 'dark');
+        }
+
+        // Display selected settings section (Retained from original accunt.html)
+        function showSettingsSection(sectionId) {
+            currentField = sectionId;
+            const mainContent = document.getElementById('mainContent');
+            const navLinks = document.querySelectorAll('#settingsNav a[data-section]');
+
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+            });
+
+            mainContent.innerHTML = settingsSections[sectionId].html;
+            applyTheme(getCookie('theme') || 'dark');
+
+           if (sectionId === 'PcoinWallet') {
+                // This script block is embedded in the html template for PcoinWallet
+            }
+        }
+        
+        // --- Base64 conversion logic (Retained from original accunt.html) ---
+        function fileToBase64(fileInput, targetInputId, previewId) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64String = reader.result;
+                document.getElementById(targetInputId).value = base64String;
+                document.getElementById(previewId).src = base64String;
+            };
+            reader.onerror = function(error) {
+                console.error("Error reading file:", error);
+                alert("Error reading file for Base64 conversion.");
+            };
+            reader.readAsDataURL(file);
+        }
+        // --- Main save logic (Retained from original accunt.html) ---
+        async function confirmChange(field) {
+            if (uid === null || isNaN(uid) || uid < 0) {
+                alert('Error: User is not authorized or UID is invalid.');
+                return;
+            }
+
+            
+        }
+    </script>
 </body>
 </html>

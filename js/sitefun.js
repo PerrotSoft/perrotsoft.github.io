@@ -4,12 +4,13 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
 }
-const name = getCookie('name');
-const email = getCookie('email');
-const pcoin = "Pcoin " + getCookie('p-coin');
+
 load();
 
 function load() {
+    const name = getCookie('name');
+const email = getCookie('email');
+const pcoin = "Pcoin " + getCookie('p-coin');
     const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
 
     document.querySelector('div[class="name"]').innerText = name || "No Name";

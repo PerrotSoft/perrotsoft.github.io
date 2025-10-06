@@ -6,7 +6,6 @@
     <title>Account settings</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="img/ico.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style1.css">
     <script src="js/sitefun.js" type="module"></script>
     <style>
@@ -69,6 +68,48 @@
     font-size: 15px;
     padding: 7px 14px;
   }
+
+  /* **Стили для иконок-ссылок в мобильной версии** */
+  .social-icons {
+    justify-content: center; /* Центрируем в мобильной версии */
+    padding-bottom: 10px;
+  }
+}
+
+/* **НОВЫЕ СТИЛИ ДЛЯ КРУГЛЫХ ИКОНОК-ССЫЛОК** */
+.social-icons {
+    display: flex;
+    /* Выравниваем иконки по правому краю */
+    justify-content: flex-end; 
+    align-items: center;
+    gap: 15px; /* Расстояние между иконками */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-right: 15px; /* Отступ справа */
+    width: 100%; /* Занимает всю доступную ширину */
+    box-sizing: border-box;
+}
+
+.social-icon-link {
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%; /* Делаем круглым */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden; /* Обрезает изображение по кругу */
+}
+
+.social-icon-link:hover {
+    transform: translateY(-2px); /* Небольшой эффект поднятия */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.social-icon-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Обеспечивает заполнение круга */
+    display: block;
 }
     </style>
 </head>
@@ -88,6 +129,7 @@
                 <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
                 <button onclick="window.location.href='riegist'">register or login</button>
             </div>
+
         <div class="menuContainer" id="menuContainer">
             <div class="appItem"><form action="results.html" method="get">
                 <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
@@ -109,19 +151,20 @@
               <img src="img/datapedia icon1.png" alt="png">
               <span>dataPedia</span>
           </div>
-          <div class="appItem" onclick="openApp('pmaill')">
-            <img src="img/PM.png" alt="png">
-            <span>Pmaill</span>
+        <div class="appItem" onclick="openApp('https://wavychatapp.github.io/')">
+            <img src="https://wavychatapp.github.io/WavyChatApp.ico" width="30px" height="30px" alt="png">
+            <span>WavyChatApp</span>
         </div>
             <div class="appItem" onclick="openApp('accunt')">
                 <img src="img/as.png" alt="png">
                 <span>Account settings.</span>
             </div>
-          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
-            <img src="img/PMS.png" alt="png">
-            <span>Parrot Soft Market</span>
+            <div class="appItem" onclick="openApp('ParrotSoft_Apps')">
+            <img src="img/Apps.png" width="30px" height="30px" alt="png">
+            <span>ParrotSoft Apps</span>
         </div>
         </div>
+
         <div style="height: 40px;margin-top: 40px;"></div>
         <div class="search-container"style="color: #000;position: fixed;top: 35px;">
             <h1>ParrotSearch</h1>
@@ -129,7 +172,16 @@
                 <input type="text" name="query" placeholder="Enter your query" required>
                 <button type="submit">Search</button>
             </form>
-    </div>
-    </div>
+        </div>
+
+        <div class="social-icons">
+            <a href="https://wavychatapp.github.io/" target="_blank" class="social-icon-link" title="WavyChatApp">
+                <img src="https://wavychatapp.github.io/WavyChatApp.ico" alt="WavyChatApp">
+            </a>
+            <a href="datapedia.html" target="_blank" class="social-icon-link" title="DataPedia">
+                <img src="img/datapedia icon.png" alt="datapedia">
+            </a>
+        </div>
+        </div>
 </body>
 </html>

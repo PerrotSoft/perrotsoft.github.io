@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ParrotSoft Play</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="img/ico.ico" type="image/x-icon">
     <script src="js/sitefun.js" type="module"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="js/user.js"></script>
     <link rel="stylesheet" href="css/style1.css">
     <style>
         body {
@@ -24,10 +24,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            /* Добавлено для мобильной версии, чтобы заголовок был под виджетом */
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        header > div {
+            width: 100%; /* Убедимся, что контейнер для h1 и nav занимает всю ширину */
         }
         nav {
             display: flex;
             gap: 15px;
+            margin-top: 10px; /* Отступ от заголовка */
         }
         nav button {
             background: #444;
@@ -53,10 +60,18 @@
         }
         .product {
             background: white;
+            width: 200px;
+            height: 200px;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: center;
+            cursor: pointer; /* Делаем блок кликабельным */
+            transition: transform 0.2s; /* Добавляем анимацию */
+        }
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .product img {
             width: 100%;
@@ -67,6 +82,7 @@
         .product h3 {
             margin: 10px 0 5px;
         }
+        /* Стили для кнопок в карточках (немного изменены для лучшей читаемости) */
         .product button {
             background: #008cff;
             color: white;
@@ -75,13 +91,15 @@
             border-radius: 5px;
             cursor: pointer;
             margin: 5px 0;
+            width: 100%; /* Занимает всю ширину карточки */
+            box-sizing: border-box;
         }
         .product button:disabled {
             background: #aaa;
             cursor: not-allowed;
         }
         .owned-button {
-            background: #2ecc71;
+            background: #2ecc71; /* Play/Install */
         }
         .in-cart-button {
             background: #f39c12;
@@ -95,6 +113,97 @@
             text-decoration: none;
             color: #008cff;
         }
+        /* --- Стили для модального окна с деталями продукта --- */
+        .product-details-modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed;
+            z-index: 1000; /* Поверх всего */
+            left: 0;
+            top: 0;
+            min-width: 200px;
+            min-height: 200px;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); /* Полупрозрачный фон */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* Отступ сверху и центрирование */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Ширина модального окна */
+            max-width: 600px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-right: 20px;
+        }
+
+        .modal-info h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .modal-info p {
+            margin: 5px 0 0;
+            color: #555;
+        }
+
+        .modal-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-actions button {
+            background: #008cff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .modal-actions button:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+        .modal-actions button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .modal-actions button.owned-button {
+            background: #2ecc71;
+        }
         /* mcss: мобильная версия для PerrotSoft-Play.html */
         @media (max-width: 768px) {
             body {
@@ -104,6 +213,7 @@
                 height: auto;
             }
             header {
+                /* Стили header из вашего кода */
                 flex-direction: column;
                 align-items: flex-start;
                 padding: 10px;
@@ -111,11 +221,23 @@
             header h1 {
                 font-size: 1.5em;
                 margin-bottom: 10px;
+                /* Скорректировано, т.к. h1 теперь внутри div */
             }
+            header > div {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+            header > div > div:first-child { /* div с пустым стилем height */
+                height: 0 !important; /* Удаляем лишний отступ */
+                margin-top: 0 !important;
+            }
+
             nav {
                 width: 100%;
                 gap: 5px;
                 margin-bottom: 10px;
+                margin-top: 5px; /* Уменьшаем отступ */
             }
             nav button {
                 width: 32%;
@@ -135,6 +257,7 @@
             }
             .product img {
                 height: 90px;
+                width: 90px;
             }
             .user-widget-info {
                 font-size: 14px;
@@ -158,16 +281,32 @@
                 width: 100%;
                 font-size: 15px;
                 margin: 10px 0;
-                padding: 6px;
+                padding: 15px;
+                border-radius: 60px;
+                box-sizing: border-box; /* Важно для полной ширины */
             }
             .link-balance {
                 font-size: 14px;
                 padding: 10px 0;
             }
+            .modal-content {
+                width: 90%;
+                margin: 10% auto;
+            }
+            .modal-header img {
+                width: 60px;
+                height: 60px;
+            }
+            .modal-info h2 {
+                font-size: 1.3em;
+            }
+            .modal-actions button {
+                padding: 10px;
+                font-size: 1em;
+            }
         }
     </style>
-    <script src="js/sitefun.js"></script>
-    <script src="js/user.js"></script>
+
 </head>
 <body>
     <div>
@@ -206,23 +345,22 @@
               <img src="img/datapedia icon1.png" alt="png">
               <span>dataPedia</span>
           </div>
-          <div class="appItem" onclick="openApp('pmaill')">
-            <img src="img/PM.png" alt="png">
-            <span>Pmaill</span>
+        <div class="appItem" onclick="openApp('https://wavychatapp.github.io/')">
+            <img src="https://wavychatapp.github.io/WavyChatApp.ico" width="30px" height="30px" alt="png">
+            <span>WavyChatApp</span>
         </div>
             <div class="appItem" onclick="openApp('accunt')">
                 <img src="img/as.png" alt="png">
                 <span>Account settings.</span>
             </div>
-          <div class="appItem" onclick="openApp('Parrot-Soft-Market')">
-            <img src="img/PMS.png" alt="png">
-            <span>Parrot Soft Market</span>
+            <div class="appItem" onclick="openApp('ParrotSoft_Apps')">
+            <img src="img/Apps.png" width="30px" height="30px" alt="png">
+            <span>ParrotSoft Apps</span>
         </div>
         </div>
 
         <header>
             <div>
-                <div style="height: 40px;margin-top: 40px;"></div>
                 <h1>ParrotSoft Play</h1>
                 <nav>
                     <button onclick="switchTab('store')" id="tab-store" class="active">Store</button>
@@ -238,82 +376,170 @@
             <div id="store" class="tab-content"></div>
             <div id="cart" class="tab-content" style="display:none;"></div>
             <div id="library" class="tab-content" style="display:none;"></div>
-            <div class="link-balance">
-                <p>Not enough funds? <a href="Pcoin.html">Replenish via Baikonur</a></p>
+        </div>
+
+        <div id="productDetailsModal" class="product-details-modal" onclick="if(event.target.classList.contains('product-details-modal')) closeProductDetails()">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeProductDetails()">&times;</span>
+                <div class="modal-header">
+                    <img id="modal-image" src="" alt="Product Icon">
+                    <div class="modal-info">
+                        <h2 id="modal-name"></h2>
+                        <p id="modal-price"></p>
+                    </div>
+                </div>
+                <div class="modal-description">
+                    <p id="modal-description-text">Описание отсутствует.</p>
+                </div>
+                <div class="modal-actions">
+                    <button id="modal-action-button" onclick=""></button>
+                </div>
             </div>
         </div>
         <script>
-            //import { userID, getCookie, readCell, setCookie } from './js/user.js';
+            // Убедитесь, что userID, getCookie, readCell, setCookie, readColumn, writeCell, addmoney, getmoney доступны из user.js и sitefun.js
+            // import { userID, getCookie, readCell, setCookie, readColumn, writeCell, addmoney, getmoney } from './js/user.js'; // Это должно быть в отдельном файле с type="module"
+
             const products = [
-                { id: 1, name: "P# Programming language", price: 0, image: "img/PSarp.png", owned: false, installed: false,installURL:"https://p-sharp-sys.github.io/P-Sharp_Setap.exe"}
+                // ИСПРАВЛЕНА ОШИБКА: лишняя кавычка в image: "'img/P-lib.png"
+                { id: 1, name: "P# Programming language", price: 0, image: "img/PSarp.png", owned: false, installed: false, installURL:"https://p-sharp-sys.github.io/P-Sharp_Setap.exe", description: "P# (P-Sharp) - это инновационный язык программирования, разработанный для быстрой и эффективной разработки приложений. Идеально подходит для начинающих и опытных разработчиков."},
+                { id: 2, name: "P-lib library pack", price: 0, image: "img/P-lib.png", owned: false, installed: false, installURL:"https://codeload.github.com/PerrotSoft/P-lib/zip/refs/heads/main", description: "P-lib - это всеобъемлющий пакет библиотек для P#, предоставляющий готовые модули для работы с графикой, сетью, базами данных и многим другим. Ускорьте свою разработку!"}
+                // Добавьте поле description, если оно есть в вашей базе данных. Если нет, я использую заглушку "Описание отсутствует."
             ];
 
             let userid = 0;
             let productsbay = "";
+
+            // --- Функции для работы с данными и рендерингом ---
+            function getProduct(id) {
+                return products.find(p => p.id === id);
+            }
+
+            // Добавлена функция для модального окна
+            function showProductDetails(id) {
+                const product = getProduct(id);
+                if (!product) return;
+
+                document.getElementById('modal-image').src = product.image;
+                document.getElementById('modal-name').innerText = product.name;
+                document.getElementById('modal-price').innerText = product.price === 0 ? 'Free' : `${product.price} P-Coin`;
+                document.getElementById('modal-description-text').innerText = product.description || 'Описание отсутствует.';
+
+                const actionButton = document.getElementById('modal-action-button');
+                const status = getStatus(product);
+                actionButton.innerText = status;
+                actionButton.onclick = () => handleProductAction(product, status);
+                actionButton.disabled = status === 'In cart';
+                actionButton.classList.remove('owned-button');
+                if (status === 'Play' || status === 'Install') {
+                    actionButton.classList.add('owned-button');
+                } else if (status === 'Add to cart') {
+                    actionButton.classList.remove('owned-button');
+                }
+
+                document.getElementById('productDetailsModal').style.display = 'block';
+            }
+
+            function closeProductDetails() {
+                document.getElementById('productDetailsModal').style.display = 'none';
+            }
+
+            function handleProductAction(product, status) {
+                closeProductDetails(); // Закрываем модальное окно после действия
+                if (status === 'Add to cart') {
+                    addToCart(product.id);
+                } else if (status === 'Install') {
+                    installProduct(product.id);
+                } else if (status === 'Play') {
+                    // Логика запуска (если это не просто installURL)
+                    // openApp(product.installURL); // Предположим, что это просто запуск
+                    alert(`Launching ${product.name}...`);
+                    // В реальном приложении здесь будет логика запуска установленного приложения
+                }
+            }
+
+
             (async function() {
                 try {
-                    userid = await userID(getCookie('name'));
-                    productsbay = await readCell('F' + userid);
-                    console.log("User ID:", userid);
-                    console.log("Products bought:", productsbay);
-                    if (productsbay) {
-                        productsbay = productsbay.split('|').slice(1).map(Number);
-                        products.forEach(product => {
-                            if (productsbay.includes(product.id)) {
-                                product.owned = true;
-                            }
+                    // Проверка доступности функций, если они в user.js
+                    if (typeof userID === 'function' && typeof readCell === 'function' && typeof readColumn === 'function') {
+                        userid = await userID(getCookie('name'));
+                        productsbay = await readCell('F' + userid);
+                        console.log("User ID:", userid);
+                        console.log("Products bought:", productsbay);
+                        if (productsbay) {
+                            // Проверка, что productsbay является строкой перед split
+                            productsbay = productsbay.split('|').slice(1).map(Number);
+                            products.forEach(product => {
+                                if (productsbay.includes(product.id)) {
+                                    product.owned = true;
+                                }
+                            });
+                        } else {
+                            productsbay = []; // Для корректного использования в buyAll
+                            console.log("No products bought yet.");
+                        }
+
+                        let listing = await readColumn('J');
+                        const filtered = listing.filter(item => item && item.trim() !== "");
+
+                        filtered.forEach(element => {
+                            const parts1 = element.split('|');
+                            parts1.forEach(element => {
+                                const parts = element.split('~');
+                                if (parts.length < 7) return;
+
+                                // Предполагаем, что 7-й элемент - это description, а 8-й (если есть) - installURL
+                                const id = parseInt(parts[0]);
+                                // Ищем, нет ли уже такого id (если загружен из базы, он может дублировать стартовые)
+                                if (products.some(p => p.id === id)) return;
+
+                                const product = {
+                                    id: id,
+                                    name: parts[1],
+                                    price: parseFloat(parts[2]),
+                                    image: parts[3],
+                                    owned: productsbay.includes(id) || parts[4] === "true", // Проверяем и купленное
+                                    installed: parts[5] === "true",
+                                    installURL: parts[6],
+                                    // Добавляем описание, если оно есть (предполагаем, что оно 7-е поле)
+                                    description: parts.length > 7 ? parts[7] : 'Описание отсутствует.'
+                                };
+
+                                products.push(product);
+                            });
                         });
-                        renderStore(); renderCart(); renderLibrary();
+                        console.log("Все продукты из базы:", products);
                     } else {
-                        console.log("No products bought yet.");
+                         // Если user.js не загружен/функции недоступны
+                         console.warn("User functions (userID, readCell, etc.) are not available. Using default product list.");
                     }
-                    let listing = await readColumn('J');
 
-                    // Очищаем от пустых строк
-                    const filtered = listing.filter(item => item && item.trim() !== "");
-
-                    // Разбираем каждую строку и добавляем в массив products
-                    filtered.forEach(element => {
-                        const parts1 = element.split('|');
-
-                        parts1.forEach(element => {
-                        const parts = element.split('~');
-
-                        // Защита: если данных недостаточно — пропускаем
-                        if (parts.length < 7) return;
-
-                        const product = {
-                            id: parseInt(parts[0]),
-                            name: parts[1],
-                            price: parseFloat(parts[2]),
-                            image: parts[3],
-                            owned: parts[4] === "true",
-                            installed: parts[5] === "true",
-                            installURL: parts[6]
-                        };
-
-                        products.push(product);
-                    });
-                    });
                     renderStore(); renderCart(); renderLibrary();
-                    console.log("Все продукты из базы:", products);
                 } catch (error) {
                     console.error("Error fetching user data:", error);
+                    renderStore(); renderCart(); renderLibrary(); // Рендерим хотя бы стартовые продукты
                 }
             })();
-                        let cart = [];
+
+            let cart = [];
             function getStatus(product) {
+                // Если продукт установлен, то это "Play"
                 if (product.installed) return 'Play';
+                // Если продукт куплен, но не установлен, то это "Install"
                 if (product.owned && !product.installed) return 'Install';
+                // Если продукт в корзине
                 if (cart.includes(product)) return 'In cart';
+                // Иначе - "Add to cart"
                 return 'Add to cart';
-            }    
+            }
+
             function renderStore() {
                 const container = document.getElementById('store');
                 const searchQuery = document.getElementById('searchInput').value.toLowerCase();
 
                 const filteredProducts = products.filter(product =>
-                    product.name.toLowerCase().includes(searchQuery)
+                    !product.owned && product.name.toLowerCase().includes(searchQuery) // В магазине показываем только не купленные
                 );
 
                 if (filteredProducts.length === 0) {
@@ -323,18 +549,20 @@
 
                 container.innerHTML = '<div class="store-container">' + filteredProducts.map(product => {
                     const status = getStatus(product);
-                    const disabled = product.owned || cart.includes(product);
-                    const buttonClass = product.owned ? 'owned-button' : '';
+                    const isOwnedOrInCart = product.owned || cart.includes(product); // Должно быть только !product.owned, т.к. фильтруем выше
+                    const buttonClass = isOwnedOrInCart ? 'in-cart-button' : '';
+                    // !!! Клик по блоку открывает модальное окно !!!
                     return `
-                        <div class="product">
+                        <div class="product" onclick="showProductDetails(${product.id})">
                             <img src="${product.image}" alt="${product.name}">
                             <h3>${product.name}</h3>
-                            <p>${product.price} P-Coin</p>
-                            <button onclick="${disabled ? '' : `addToCart(${product.id})`}" class="${buttonClass}" ${disabled ? 'disabled' : ''}>${status}</button>
+                            <p>${product.price === 0 ? 'Free' : `${product.price} P-Coin`}</p>
+                            <button onclick="event.stopPropagation(); ${isOwnedOrInCart ? '' : `addToCart(${product.id})`}" class="${buttonClass}" ${isOwnedOrInCart ? 'disabled' : ''}>${status}</button>
                         </div>
                     `;
                 }).join('') + '</div>';
-            }        
+            }
+
             function renderCart() {
                 const container = document.getElementById('cart');
                 const searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -350,14 +578,23 @@
 
                 let total = filteredCart.reduce((sum, p) => sum + p.price, 0);
 
+                // Добавлена кнопка удаления из корзины (для примера)
                 container.innerHTML = '<div class="store-container">' + filteredCart.map(product => `
-                    <div class="product">
+                    <div class="product" onclick="showProductDetails(${product.id})">
                         <img src="${product.image}" alt="${product.name}">
                         <h3>${product.name}</h3>
                         <p>${product.price} P-Coin</p>
+                        <button onclick="event.stopPropagation(); removeFromCart(${product.id})" style="background: #e74c3c;">Remove</button>
                     </div>
                 `).join('') + `</div><br><button onclick="buyAll()">Pay all</button><p>Amount: ${total} P-Coin</p>`;
-            }    
+            }
+
+            function removeFromCart(id) {
+                cart = cart.filter(p => p.id !== id);
+                renderStore(); // Обновляем магазин, чтобы кнопка снова стала "Add to cart"
+                renderCart();
+            }
+
             function renderLibrary() {
                 const container = document.getElementById('library');
                 const searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -372,64 +609,99 @@
                     return;
                 }
 
-                container.innerHTML = '<div class="store-container">' + filteredOwned.map(product => `
-                    <div class="product">
-                        <img src="${product.image}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>${product.installed ? 'Installed' : 'Not installed'}</p>
-                        <div>
-                            <button onclick="installProduct(${product.id})" class="install-button" ${product.installed ? 'disabled' : ''}>Install</button>
+                container.innerHTML = '<div class="store-container">' + filteredOwned.map(product => {
+                    const status = getStatus(product);
+                    const buttonText = status;
+                    const isDisabled = status === 'Play'; // Отключаем, если уже "Play" (установлен)
+
+                    return `
+                        <div class="product" onclick="showProductDetails(${product.id})">
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.installed ? 'Installed' : 'Not installed'}</p>
+                            <div>
+                                <button onclick="event.stopPropagation(); ${status === 'Install' ? `installProduct(${product.id})` : (status === 'Play' ? `openApp('${product.installURL}')` : '')}" class="install-button ${status === 'Play' ? 'owned-button' : ''}" ${isDisabled ? 'disabled' : ''}>${buttonText}</button>
+                            </div>
                         </div>
-                    </div>
-                `).join('') + '</div>';
+                    `;
+                }).join('') + '</div>';
             }
+
             function switchTab(tabName) {
                 document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
                 document.getElementById(tabName).style.display = 'block';
                 document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
                 document.getElementById('tab-' + tabName).classList.add('active');
-        
+
+                // Перерендеринг при переключении
                 if (tabName === 'store') renderStore();
                 if (tabName === 'cart') renderCart();
                 if (tabName === 'library') renderLibrary();
-            }       
+            }
+            // Функция addToCart оставлена без изменений, но вызов renderStore() и showProductDetails() теперь вызывает обновление статуса кнопки.
             function addToCart(id) {
                 const product = products.find(p => p.id === id);
                 if (!cart.includes(product) && !product.owned) {
                     cart.push(product);
                     renderStore();
                 }
-            }    
+            }
+            // Функция buyAll оставлена без изменений
             function buyAll() {
                 let total = cart.reduce((sum, p) => sum + p.price, 0);
+                if (typeof getCookie !== 'function' || typeof setCookie !== 'function' || typeof writeCell !== 'function' || typeof addmoney !== 'function') {
+                    alert('User/Cookie functions are not loaded. Cannot complete purchase.');
+                    return;
+                }
+
                 if (getCookie('p-coin') >= total) {
                     cart.forEach(p => p.owned = true);
-                    setCookie('p-coin', getCookie('p-coin')- total); // Обновляем cookie с балансом
+                    setCookie('p-coin', getCookie('p-coin') - total);
                     const pcoin = "Pcoin " + getCookie('p-coin');
                     document.querySelector('div[class="pcoin"]').innerText = pcoin || "Pcoin 0";
                     alert('Purchase successful!');
                     console.log('Purchased products:', cart);
-                    cart.forEach(p =>productsbay= productsbay+'|'+p.id);
-                    console.log('Purchased products:',productsbay);
+
+                    // Обновляем список купленных товаров в productsbay
+                    let currentProductsBay = Array.isArray(productsbay) ? productsbay : (productsbay ? productsbay.split('|').slice(1).map(Number) : []);
+                    cart.forEach(p => {
+                        if (!currentProductsBay.includes(p.id)) {
+                            currentProductsBay.push(p.id);
+                        }
+                    });
+                    productsbay = '|' + currentProductsBay.join('|');
+                    console.log('Updated products bay string:', productsbay);
+
                     writeCell('F' + userid, productsbay);
-                    cart = []; // Очищаем корзину
+                    cart = [];
                     renderCart();
-                    addmoney(getCookie('name'),total*-1);
+                    renderStore();
+                    renderLibrary();
+                    addmoney(getCookie('name'), total * -1);
                 } else {
                     alert('Insufficient funds. Please top up your balance.');
-                    getmoney(getCookie('name'))
+                    // getmoney(getCookie('name')); // предполагаем, что эта функция обновляет баланс
                 }
             }
-        
+
+            // Функция installProduct оставлена без изменений, но теперь обновляет renderStore и renderLibrary
             function installProduct(id) {
                 const product = products.find(p => p.id === id);
+                if (!product) return;
+
                 product.installed = true;
-                openApp(product.installURL);
+                // openApp('installURL') должна быть доступна глобально или импортирована
+                if (typeof openApp === 'function') {
+                    openApp(product.installURL);
+                } else {
+                    alert(`Installing ${product.name}. URL: ${product.installURL}`);
+                }
                 renderLibrary();
-            }         
+                renderStore();
+            }
+
             renderStore();
         </script>
-    </div>
     </div>
 </body>
 </html>
