@@ -242,6 +242,19 @@
             <div class="appItem" onclick="openApp('ParrotSoft_Apps')">
             <img src="img/Apps.png" width="30px" height="30px" alt="png">
             <span>ParrotSoft Apps</span>
+        </div><div class="appItem" onclick="openApp('pdrive')">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.5 13C18.433 13 20 11.433 20 9.5C20 7.74619 18.7397 6.27318 17.0706 6.04693C16.5925 3.39572 14.129 1 11 1C7.81792 1 5.30822 3.44494 4.88785 6.13689C2.79374 6.70321 1 8.87851 1 11.5C1 14.0044 2.80931 16 5 16H18C19.6569 16 21 14.6569 21 13C21 11.6667 19.9678 10.5518 18.5 10.1557" fill="#1A73E8"/>
+                
+                <path d="M10 18L14.5 14L15.5 15.5L13 18H10Z" fill="#34A853"/>
+                <path d="M13 18L16 22L20 18H13Z" fill="#4285F4"/>
+                <circle cx="15.5" cy="16.5" r="1.5" fill="#FFFFFF"/>
+                <path d="M12 21C12 21.5523 11.5523 22 11 22C10.4477 22 10 21.5523 10 21C10 20.4477 10.4477 20 11 20C11.5523 20 12 20.4477 12 21Z" fill="#FBBC04"/>
+                
+                <path d="M5 11.5C5 9.84315 6.34315 8.5 8 8.5C9.65685 8.5 11 9.84315 11 11.5V11.5C11 13.1569 9.65685 14.5 8 14.5C6.34315 14.5 5 13.1569 5 11.5Z" fill="#FFFFFF" opacity="0.3"/>
+
+            </svg>
+            <span>ParrotSoft Drive</span>
         </div>
         </div>
     </div>
@@ -257,151 +270,178 @@
     </div>
 
     <div style="height: 40px;margin-top: 40px;"></div>
-
-    <script src="js/user.js"></script>
-    <script>
-        const data = {
-            "title": "DataPedia",
-            "pages": {
-                "P-Sharp coding": {
-                    "title": "P-Sharp",
-                    "image": "img/ico1.png",
-                    "content": "<h2>Информация о P-Sharp</h2><p>Язык P Sharp основан в 2025 году...</p>"
-                },
-                "ParrotSoft": {
-                    "title": "ParrotSoft",
-                    "image": "img/ico1.png",
-                    "content": "<p>ParrotSoft - это компания, основанная в начале 2024 года...</p>"
-                }
+<script src="js/user.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script type="module">
+import "./js/firebase_db.js";
+import { PDrive } from "./js/PDrive.js";
+const data = {
+        "title": "DataPedia",
+        "pages": {
+            "P-Sharp coding": {
+                "title": "P-Sharp",
+                "image": "img/ico1.png",
+                "content": "<h2>Информация о P-Sharp</h2><p>Язык P Sharp основан в 2025 году...</p>"
+            },
+            "ParrotSoft": {
+                "title": "ParrotSoft",
+                "image": "img/ico1.png",
+                "content": "<p>ParrotSoft - это компания, основанная в начале 2024 года...</p>"
             }
-        };
-        // Загрузка и расширение списка сайтов
-        (async function () {
-            try {
-                const listing = await readColumn('K') || [];
-
-                listing.forEach(row => {
-                    const parts = row.split('|');
-                    parts.forEach(part => {
-                        const f = part.split('~');
-                        if (f.length >= 2) {
-                            const key = f[0];
-                            const newPage = {
-                                title: f[0],
-                                image: f[1],
-                                content: f[2] || '<p>Нет информации</p>'
-                            };
-
-                            // Добавление в объект pages по ключу
-                            data.pages[key] = newPage;
-                        }
-                    });
-                });
-
-                console.log("Known sites loaded:", data.pages);
-
-                updatePageList();
-
-                // Автоматическое отображение страницы "ParrotSoft"
-                if (data.pages['ParrotSoft']) {
-                    showPage(data.pages['ParrotSoft']);
-                }
-
-            } catch (error) {
-                console.error("Ошибка при загрузке сайтов:", error);
-            }
-        })();
-
-        const pages = data.pages;
-        const pageList = document.getElementById('pageList');
-        const mainContent = document.getElementById('mainContent');
-        const searchInput = document.getElementById('searchInput');
-
-        // **ИЗМЕНЕНИЕ: Добавлена логика в filterPages для создания иконки**
-        function filterPages(e) {
-            const query = e.target.value.toLowerCase();
-            const filteredPages = Object.keys(pages).filter(pageName =>
-                pages[pageName].title.toLowerCase().includes(query)
-            );
-
-            pageList.innerHTML = '';
-            filteredPages.forEach(pageName => {
-                const page = pages[pageName];
-                const pageLink = document.createElement('a');
-                pageLink.href = '#';
-
-                // Добавление мини-иконки
-                if (page.image) {
-                    const iconImg = document.createElement('img');
-                    iconImg.src = page.image;
-                    iconImg.alt = page.title;
-                    iconImg.classList.add('nav-article-icon');
-                    pageLink.appendChild(iconImg);
-                }
-
-                // Добавление текста
-                const titleText = document.createTextNode(page.title);
-                pageLink.appendChild(titleText);
-                
-                pageLink.addEventListener('click', () => {
-                    showPage(page);
-                    if (window.innerWidth <= 768) {
-                        toggleNavMenu(); 
-                    }
-                });
-                pageList.appendChild(pageLink);
-            });
         }
+    };
+    
+    // Загрузка и расширение списка сайтов
+    (async function () {
+        try {
+            const username = getCookie('name') || 'guest';
+    
+            // 1. Инициализируем PDrive для текущего пользователя
+            const pdrive = new PDrive(username); 
+            await pdrive.init(); 
 
-        // Отображение страницы
-        function showPage(page) {
-            let imageHtml = "";
+            // 2. Получаем все проектные файлы с расширением ".ppdatapedia"
+            const projectFiles = await pdrive.get_progect_files(",ppdatapedia") || [];
+            console.log("Найденные файлы проекта:", projectFiles);
+
+            // 3. Итерируем по всем найденным файлам и объединяем их содержимое
+            let combinedFileContent = "";
+            
+            projectFiles.forEach(entry => {
+                // Убеждаемся, что entry.file.value существует и является строкой
+                if (entry.file && typeof entry.file.value === 'string') {
+                    // ИСПРАВЛЕНИЕ: Используем '|' как разделитель между файлами, 
+                    // так как страницы внутри файла также разделены '|'
+                    combinedFileContent += entry.file.value + '|'; 
+                    console.log(`Добавлен файл проекта от пользователя ${entry.user}: ${entry.file.name}`);
+                }
+            });
+
+            // 4. Разбиваем объединенное содержимое на отдельные определения страниц
+            const pageDefinitions = combinedFileContent.split('|').filter(part => part.trim() !== '');
+            
+            pageDefinitions.forEach(part => {
+                const f = part.trim().split('~');
+                // Проверяем, что есть как минимум заголовок и путь к изображению
+                if (f.length >= 2) { 
+                    const key = f[0];
+                    const newPage = {
+                        title: f[0],
+                        image: f[1],
+                        content: f[2] || '<p>Нет информации</p>'
+                    };
+
+                    // Добавление в объект pages по ключу
+                    data.pages[key] = newPage;
+                }
+            });
+
+            console.log("Known sites loaded:", data.pages);
+
+            updatePageList();
+
+            // Автоматическое отображение страницы "ParrotSoft"
+            if (data.pages['ParrotSoft']) {
+                showPage(data.pages['ParrotSoft']);
+            }
+
+        } catch (error) {
+            console.error("Ошибка при загрузке сайтов:", error);
+        }
+    })();
+
+    const pages = data.pages;
+    const pageList = document.getElementById('pageList');
+    const mainContent = document.getElementById('mainContent');
+    const searchInput = document.getElementById('searchInput');
+
+    // **ИЗМЕНЕНИЕ: Добавлена логика в filterPages для создания иконки**
+    function filterPages(e) {
+        const query = e.target.value.toLowerCase();
+        const filteredPages = Object.keys(pages).filter(pageName =>
+            pages[pageName].title.toLowerCase().includes(query)
+        );
+
+        pageList.innerHTML = '';
+        filteredPages.forEach(pageName => {
+            const page = pages[pageName];
+            const pageLink = document.createElement('a');
+            pageLink.href = '#';
+
+            // Добавление мини-иконки
             if (page.image) {
-                imageHtml = `<img src="${page.image}" alt="${page.title}" class="page-image">`;
+                const iconImg = document.createElement('img');
+                iconImg.src = page.image;
+                iconImg.alt = page.title;
+                iconImg.classList.add('nav-article-icon');
+                pageLink.appendChild(iconImg);
             }
-            mainContent.innerHTML = `
-                <div style="height: 30px;margin-top: 30px;"></div>
-                    <h2>${page.title}</h2>
-                    ${imageHtml}
-                    <div>${page.content}</div>
-                `;
-        }
 
-        // **ИЗМЕНЕНИЕ: Добавлена логика в updatePageList для создания иконки**
-        function updatePageList() {
-            pageList.innerHTML = '';
-            Object.keys(pages).forEach(pageName => {
-                const page = pages[pageName];
-                const pageLink = document.createElement('a');
-                pageLink.href = '#';
-
-                // Добавление мини-иконки
-                if (page.image) {
-                    const iconImg = document.createElement('img');
-                    iconImg.src = page.image;
-                    iconImg.alt = page.title;
-                    iconImg.classList.add('nav-article-icon');
-                    pageLink.appendChild(iconImg);
+            // Добавление текста
+            const titleText = document.createTextNode(page.title);
+            pageLink.appendChild(titleText);
+            
+            pageLink.addEventListener('click', () => {
+                showPage(page);
+                if (window.innerWidth <= 768) {
+                    toggleNavMenu(); 
                 }
-
-                // Добавление текста
-                const titleText = document.createTextNode(page.title);
-                pageLink.appendChild(titleText);
-                
-                pageLink.addEventListener('click', () => {
-                    showPage(page);
-                    if (window.innerWidth <= 768) {
-                        toggleNavMenu();
-                    }
-                });
-                pageList.appendChild(pageLink);
             });
+            pageList.appendChild(pageLink);
+        });
+    }
+
+    // Отображение страницы
+    function showPage(page) {
+        let imageHtml = "";
+        if (page.image) {
+            imageHtml = `<img src="${page.image}" alt="${page.title}" class="page-image">`;
         }
-        
-        function toggleNavMenu() {
-            const nav = document.querySelector('nav');
-            nav.classList.toggle('active');
-        }
+        mainContent.innerHTML = `
+            <div style="height: 30px;margin-top: 30px;"></div>
+                <h2>${page.title}</h2>
+                ${imageHtml}
+                <div>${page.content}</div>
+            `;
+    }
+
+    // **ИЗМЕНЕНИЕ: Добавлена логика в updatePageList для создания иконки**
+    function updatePageList() {
+        pageList.innerHTML = '';
+        Object.keys(pages).forEach(pageName => {
+            const page = pages[pageName];
+            const pageLink = document.createElement('a');
+            pageLink.href = '#';
+
+            // Добавление мини-иконки
+            if (page.image) {
+                const iconImg = document.createElement('img');
+                iconImg.src = page.image;
+                iconImg.alt = page.title;
+                iconImg.classList.add('nav-article-icon');
+                pageLink.appendChild(iconImg);
+            }
+
+            // Добавление текста
+            const titleText = document.createTextNode(page.title);
+            pageLink.appendChild(titleText);
+            
+            pageLink.addEventListener('click', () => {
+                showPage(page);
+                if (window.innerWidth <= 768) {
+                    toggleNavMenu();
+                }
+            });
+            pageList.appendChild(pageLink);
+        });
+    }
+    
+    function toggleNavMenu() {
+        const nav = document.querySelector('nav');
+        nav.classList.toggle('active');
+    }
     </script>
 </body>
 </html>

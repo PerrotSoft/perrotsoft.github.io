@@ -9,9 +9,9 @@ load();
 
 function load() {
     const name = getCookie('name');
-const email = getCookie('email');
-const pcoin = "Pcoin " + getCookie('p-coin');
-    const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+    const email = decodeURIComponent(getCookie('email'));
+    const pcoin = "Pcoin " + getCookie('p-coin');
+    const icon = decodeURIComponent(getCookie('icon')) || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
 
     document.querySelector('div[class="name"]').innerText = name || "No Name";
     document.querySelector('div[class="email"]').innerText = email || "No Email";
@@ -36,3 +36,9 @@ window.toggleMenu = function toggleMenu() {
     const menuContainer = document.getElementById('menuContainer');
     menuContainer.classList.toggle('open'); // Переключить класс open
 };
+function setCookie(name, value) {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000*5000)); // 1 год
+    const expires = "; expires=" + date.toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
+}

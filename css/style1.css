@@ -10,7 +10,7 @@ body {
     margin-bottom: 30px;
 }
 
-input {
+input[type="text"] {
     width: 500px;
     padding: 12px;
     font-size: 18px;
@@ -50,6 +50,7 @@ input {
 
 /* Стили для виджета пользователя */
 .user-widget {
+    z-index: 1000;
     position: fixed;
     top: 10px;
     right: 10px;

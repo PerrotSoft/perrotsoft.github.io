@@ -50,12 +50,6 @@ async function hashMessage(message) {
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     return hashHex;
 }  
-function setCookie(name, value) {
-    const date = new Date();
-    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000)); // 1 год
-    const expires = "; expires=" + date.toUTCString();
-    document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
-}
 
 
 // Получение cookie

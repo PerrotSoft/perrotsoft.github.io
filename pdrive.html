@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>PDrive — Виртуальный диск</title>
+    <link rel="icon" href="img/ico.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/style1.css">
+    <script src="js/sitefun.js" type="module"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body { margin:0; font-family:'Roboto',sans-serif; background:#f1f3f4; color:#202124; transition: background 0.3s, color 0.3s; }
+body.dark { background:#202124; color:#e8eaed; }
+header { background:#1a73e8; color:white; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom-left-radius:12px; border-bottom-right-radius:12px; position: fixed; width: 100%; top: 0; z-index: 900; box-sizing: border-box; }
+#user { font-size:14px; opacity:0.9; }
+.toolbar { display:flex; gap:16px; padding:12px 24px; background:white; border-bottom:1px solid #e0e0e0; align-items:center; position: sticky; top: 60px; z-index: 500; } /* Adjusted top for fixed header */
+.toolbar.dark { background:#303134; border-color:#5f6368; }
+
+/* New Button Style (Google Drive like) */
+#btn-new {
+    background:#fff;
+    color:#1a73e8;
+    border:1px solid #dadce0;
+    padding:10px 24px;
+    border-radius:16px;
+    font-weight:500;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+button{
+    color: #202124;
+}
+#btn-new:hover {
+    background:#f8f9fa;
+    box-shadow: 0 1px 3px 0 rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15);
+}
+#btn-new .plus-icon {
+    font-size: 24px;
+    line-height: 1;
+}
+.toolbar.dark #btn-new {
+    background: #3c4043;
+    color: #8ab4f8;
+    border-color: #5f6368;
+    box-shadow: none;
+}
+.toolbar.dark #btn-new:hover {
+    background: #5f6368;
+    box-shadow: none;
+}
+
+/* Other Buttons in toolbar */
+button { background:#f8f9fa; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; transition:.2s; }
+button:hover { background:#e8eaed; }
+button.dark { background:#3c4043; color:#e8eaed; }
+button.dark:hover { background:#5f6368; }
+
+#files { padding:16px; }
+table { width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+th,td { padding:12px; text-align:left; }
+th { background:#f1f3f4; }
+th.dark { background:#303134; }
+tr { transition: background 0.2s; cursor:pointer; }
+tr:hover { background:#e8eaed; }
+tr.dark:hover { background:#5f6368; }
+.path { margin:12px 24px; color:#5f6368; }
+.path.dark { color:#b8bbbe; }
+
+/* Checkbox column */
+td.checkbox-col { width:32px; text-align:center; }
+input[type=checkbox] { transform:scale(1.2); }
+
+/* Modal styles (File and New) */
+#file-modal, #new-modal, #editor-modal { 
+    display:none; 
+    position:fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background:rgba(0,0,0,0.5); 
+    justify-content:center; 
+    align-items:center; 
+    z-index:1000; 
+}
+#file-modal .content, #new-modal .content, #editor-modal .content { 
+    background:white; 
+    max-width:400px; 
+    border-radius:12px; 
+    padding:24px; 
+    position:relative; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 900px; 
+}
+#file-modal.dark .content, #new-modal.dark .content, #editor-modal.dark .content { 
+    background:#303134; 
+    color:#e8eaed; 
+}
+#file-modal .close, #new-modal .close, #editor-modal .close { 
+    position:absolute; 
+    top:12px; 
+    right:16px; 
+    cursor:pointer; 
+    font-weight:bold; 
+    font-size:18px; 
+    color:#5f6368;
+}
+#new-modal h3, #editor-modal h3 { margin-top:0; font-weight:400; font-size: 1.5rem;}
+#new-modal input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px 0;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background: #f1f3f4;
+    color: #202124;
+}
+#new-modal.dark input[type="text"] {
+    background: #3c4043;
+    border-color: #5f6368;
+    color: #e8eaed;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.modal-actions button {
+    font-weight: 500;
+}
+
+#btn-modal-create, #btn-editor-save {
+    background: #1a73e8;
+    color: white;
+}
+#btn-modal-create:hover, #btn-editor-save:hover {
+    background: #1565c0;
+}
+.dark #btn-modal-create, .dark #btn-editor-save {
+    background: #8ab4f8;
+    color: #202124;
+}
+.dark #btn-modal-create:hover, .dark #btn-editor-save:hover {
+    background: #a6c5fa;
+}
+
+/* File Modal Specifics (Гибкий размер для просмотра контента) */
+#file-modal .content { 
+    max-width: 90vw; 
+    max-height: 90vh; 
+    width: auto; 
+    height: auto; 
+    display: flex;
+    flex-direction: column;
+}
+#modal-body {
+    overflow-y: auto; 
+    flex-grow: 1; 
+}
+#modal-actions-bar { display: flex; justify-content: flex-end; margin-bottom: 12px; flex-shrink: 0; }
+#btn-edit { background: none; color: #1a73e8; border: 1px solid #dadce0; padding: 6px 10px; }
+#btn-edit:hover { background: #e8eaed; }
+#file-modal.dark #btn-edit { color: #8ab4f8; border-color: #5f6368; }
+#file-modal.dark #btn-edit:hover { background: #5f6368; }
+#modal-body pre { white-space: pre-wrap; word-break: break-word; }
+#markdown-raw-view { margin-top: 20px; padding-top: 10px; border-top: 1px solid #e0e0e0; font-size: 0.8rem; }
+#markdown-raw-view pre { background: #f8f9fa; padding: 10px; border-radius: 4px; }
+#file-modal.dark #markdown-raw-view pre { background: #3c4043; }
+
+/* Image Viewer (Удалены жесткие ограничения) */
+#modal-image {
+    max-width: 100%; 
+    max-height: 100%; 
+    width: auto;
+    height: auto;
+    display: block;
+    margin: 10px auto; 
+    border: 1px solid #ccc; 
+    padding: 10px;
+    box-sizing: border-box;
+    object-fit: contain; 
+}
+
+/* Editor Modal Specifics */
+#editor-modal .content { max-width: 800px; width: 90%; max-height: 90%; }
+#editor-modal textarea {
+    width: 100%;
+    height: 60vh;
+    min-height: 300px;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    resize: none;
+}
+#editor-modal.dark textarea {
+    background: #3c4043;
+    border-color: #5f6368;
+    color: #e8eaed;
+}
+
+/* New Menu Container */
+#new-menu {
+    display: none;
+    position: absolute;
+    top: 55px; /* Adjust based on toolbar height */
+    left: 24px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 100;
+    padding: 8px 0;
+    min-width: 250px;
+}
+#new-menu.dark {
+    background: #303134;
+}
+#new-menu button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    background: none;
+    border-radius: 0;
+}
+#new-menu button:hover {
+    background: #e8eaed;
+}
+#new-menu.dark button:hover {
+    background: #5f6368;
+}
+#new-menu .icon {
+    margin-right: 12px;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+/* ------------------- */
+/* MOBILE STYLES */
+/* ------------------- */
+@media (max-width: 768px) {
+    /* Main Content Padding (to clear fixed header/toolbar) */
+    body {
+        padding-top: calc(12px + 12px + 16px + 60px); /* header padding + toolbar padding + toolbar height + a bit of space */
+    }
+
+    /* Header adjustments */
+    header {
+        padding: 10px 16px;
+        top: 0;
+        border-radius: 0;
+        /* Убираем лишний отступ для лого, так как меню слева */
+        justify-content: space-between; 
+    }
+    header > div {
+        margin-left: 0 !important; /* Удаляем margin-left 60px */
+    }
+
+    /* Toolbar: Make it compact and scrollable for actions */
+    .toolbar {
+        padding: 8px 16px;
+        gap: 8px;
+        overflow-x: auto; /* Горизонтальная прокрутка для кнопок */
+        white-space: nowrap; /* Запрет переноса кнопок */
+        justify-content: flex-start;
+        top: 52px; /* Под фиксированным header (примерно 52px) */
+    }
+    .toolbar > div:last-child {
+        flex-grow: 0; /* Убираем flex-grow для пустого div */
+    }
+    
+    /* Hide some elements in the toolbar to save space, keeping only icons */
+    #btn-up span, #btn-view-link span, #btn-delete span, #btn-download span, #btn-theme span {
+        display: none; /* Скрываем текст, оставляем только иконки */
+    }
+    .toolbar button {
+        padding: 8px 12px; /* Делаем кнопки меньше */
+    }
+    
+    /* Make the 'New' button more compact */
+    #btn-new {
+        padding: 8px 16px; 
+    }
+
+    /* Path and File list padding */
+    .path, #files {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .path {
+        margin: 12px 0; /* Убираем горизонтальные margin */
+    }
+    
+    /* Table: Make it scrollable and/or hide less critical columns */
+    #files {
+        overflow-x: auto;
+    }
+    table {
+        min-width: 500px; /* Обеспечиваем минимальную ширину для прокрутки */
+        box-shadow: none; /* Убираем тень */
+    }
+    th, td {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
+    
+    /* Modals: Full screen on mobile */
+    #file-modal .content, #new-modal .content, #editor-modal .content { 
+        max-width: 100vw; 
+        max-height: 100vh;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+    
+    /* New Menu position fix */
+    #new-menu {
+        top: 90px; /* Adjust to sit below the scrolled toolbar */
+        left: 16px;
+        min-width: 80vw;
+    }
+
+    /* Editor height */
+    #editor-modal textarea {
+        height: 70vh;
+        min-height: 200px;
+    }
+}
+</style>
+</head>
+<body>
+<div>
+        <button class="toggleButton" onclick="toggleMenu()">☰</button>
+        <div class="user-widget" onclick="toggleUserMenu()">
+            <img class="user-icn" src="https://cdn-icons-png.flaticon.com/128/17807/17807725.png" alt="Иконка профиля">
+            <div class="user-widget-info">
+                <div class="name">User Name</div>
+                <div class="email"></div>
+                <div class="pcoin">Pcoin 0</div>
+            </div>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button onclick="window.location.href='accunt'">Setings</button>
+                <button onclick="window.location.href='accunt'">top up balance Pcoin</button>
+                <button onclick="window.location.href='riegist'">register or login</button>
+            </div>
+
+        <div class="menuContainer" id="menuContainer">
+            <div class="appItem"><form action="results.html" method="get">
+                <input type="text" name="query" placeholder="Enter your query" style="width: 70px ;height: 10px;" required>
+                <button type="submit"style="height: 40px;width: 80px;">Search</button>
+            </form></div>
+            <div class="appItem" onclick="openApp('PerrotSoft-Play')">
+                <i class="fab fa-google-play appIcon"></i>
+                <span>Play</span>
+            </div>
+            <div class="appItem" onclick="openApp('https://perrotsoft.github.io/')">
+                <img src="img/Home.png" alt="png">
+                <span>Home</span>
+            </div>
+            <div class="appItem" onclick="openApp('Install_PerrotOS')">
+                <img src="img/ico1.png" alt="png">
+                <span>install OS</span>
+            </div>
+            <div class="appItem" onclick="openApp('datapedia')">
+              <img src="img/datapedia icon1.png" alt="png">
+              <span>dataPedia</span>
+          </div>
+        <div class="appItem" onclick="openApp('https://wavychatapp.github.io/')">
+            <img src="https://wavychatapp.github.io/WavyChatApp.ico" width="30px" height="30px" alt="png">
+            <span>WavyChatApp</span>
+        </div>
+            <div class="appItem" onclick="openApp('accunt')">
+                <img src="img/as.png" alt="png">
+                <span>Account settings.</span>
+            </div>
+            <div class="appItem" onclick="openApp('ParrotSoft_Apps')">
+            <img src="img/Apps.png" width="30px" height="30px" alt="png">
+            <span>ParrotSoft Apps</span>
+        </div><div class="appItem" onclick="openApp('pdrive')">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.5 13C18.433 13 20 11.433 20 9.5C20 7.74619 18.7397 6.27318 17.0706 6.04693C16.5925 3.39572 14.129 1 11 1C7.81792 1 5.30822 3.44494 4.88785 6.13689C2.79374 6.70321 1 8.87851 1 11.5C1 14.0044 2.80931 16 5 16H18C19.6569 16 21 14.6569 21 13C21 11.6667 19.9678 10.5518 18.5 10.1557" fill="#1A73E8"/>
+                
+                <path d="M10 18L14.5 14L15.5 15.5L13 18H10Z" fill="#34A853"/>
+                <path d="M13 18L16 22L20 18H13Z" fill="#4285F4"/>
+                <circle cx="15.5" cy="16.5" r="1.5" fill="#FFFFFF"/>
+                <path d="M12 21C12 21.5523 11.5523 22 11 22C10.4477 22 10 21.5523 10 21C10 20.4477 10.4477 20 11 20C11.5523 20 12 20.4477 12 21Z" fill="#FBBC04"/>
+                
+                <path d="M5 11.5C5 9.84315 6.34315 8.5 8 8.5C9.65685 8.5 11 9.84315 11 11.5V11.5C11 13.1569 9.65685 14.5 8 14.5C6.34315 14.5 5 13.1569 5 11.5Z" fill="#FFFFFF" opacity="0.3"/>
+
+            </svg>
+            <span>ParrotSoft Drive</span>
+        </div>
+        </div>
+        
+
+<header>
+  <div style="display: flex; align-items: center; gap: 8px; margin-left: 60px;">
+    
+    <span style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.5 13C18.433 13 20 11.433 20 9.5C20 7.74619 18.7397 6.27318 17.0706 6.04693C16.5925 3.39572 14.129 1 11 1C7.81792 1 5.30822 3.44494 4.88785 6.13689C2.79374 6.70321 1 8.87851 1 11.5C1 14.0044 2.80931 16 5 16H18C19.6569 16 21 14.6569 21 13C21 11.6667 19.9678 10.5518 18.5 10.1557" fill="#1A73E8"/>
+        <path d="M10 18L14.5 14L15.5 15.5L13 18H10Z" fill="#34A853"/>
+        <path d="M13 18L16 22L20 18H13Z" fill="#4285F4"/>
+        <circle cx="15.5" cy="16.5" r="1.5" fill="#FFFFFF"/>
+        <path d="M12 21C12 21.5523 11.5523 22 11 22C10.4477 22 10 21.5523 10 21C10 20.4477 10.4477 20 11 20C11.5523 20 12 20.4477 12 21Z" fill="#FBBC04"/>
+        <path d="M5 11.5C5 9.84315 6.34315 8.5 8 8.5C9.65685 8.5 11 9.84315 11 11.5V11.5C11 13.1569 9.65685 14.5 8 14.5C6.34315 14.5 5 13.1569 5 11.5Z" fill="#FFFFFF" opacity="0.3"/>
+      </svg>
+      
+    </span>
+    
+    PDrive
+    
+  </div>
+
+</header>
+
+<div class="toolbar" id="toolbar">
+<button id="btn-new">
+    <span class="plus-icon">+</span> Новый
+</button>
+<div id="new-menu">
+    <button id="btn-new-folder"><span class="icon">📁</span> Новая папка</button>
+    <button id="btn-upload"><span class="icon">⬆️</span> Загрузить файл</button>
+    <button id="btn-upload-folder"><span class="icon">📁⬆️</span> Загрузить папку</button>
+    <hr style="margin: 8px 0; border: none; border-top: 1px solid #e0e0e0; border-color: #e0e0e0;">
+    <button id="btn-new-text"><span class="icon">📄</span> Текстовый файл (.txt)</button>
+    <button id="btn-new-markdown"><span class="icon">📝</span> Markdown файл (.md)</button>
+</div>
+
+<div style="flex-grow:1;"></div> 
+<button id="btn-up">⬆️ Назад</button>
+<button id="btn-view-link" style="display:none;">🔗 Ссылка</button>
+<button id="btn-delete">🗑️ Удалить</button>
+<button id="btn-download">⬇️ Скачать</button>
+<button id="btn-theme">🌓 Тема</button>
+</div>
+
+<div class="path" id="path">/</div>
+
+<div id="files">
+<table>
+<thead>
+<tr>
+<th class="checkbox-col"><input type="checkbox" id="select-all"></th>
+<th>Имя</th>
+<th>Тип</th>
+</tr>
+</thead>
+<tbody id="file-list"><tr><td colspan="3">Загрузка...</td></tr></tbody>
+</table>
+</div>
+
+<div id="file-modal">
+  <div class="content">
+    <span class="close" id="modal-close">✖</span>
+    <div id="modal-actions-bar">
+        <button id="btn-edit" style="display:none;">✏️ Редактировать</button>
+    </div>
+    <h3 id="modal-filename"></h3>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div id="new-modal">
+  <div class="content">
+    <span class="close" id="new-modal-close">✖</span>
+    <h3 id="new-modal-title"></h3>
+    <label for="new-modal-name">Имя:</label>
+    <input type="text" id="new-modal-name" placeholder="Введите имя">
+    <div class="modal-actions">
+        <button id="btn-modal-cancel">Отмена</button>
+        <button id="btn-modal-create">Создать</button>
+    </div>
+  </div>
+</div>
+
+<div id="editor-modal">
+  <div class="content">
+    <span class="close" id="editor-modal-close">✖</span>
+    <h3 id="editor-filename">Редактирование</h3>
+    <textarea id="editor-textarea"></textarea>
+    <div class="modal-actions">
+        <button id="btn-editor-cancel">Отмена</button>
+        <button id="btn-editor-save">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+        </div>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script type="module">
+import "./js/firebase_db.js";
+const JSZip1 = (await import('https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js')).default;
+import { PDrive } from "./js/PDrive.js";
+
+// --- FIREBASE KEY FIX FUNCTIONS ---
+function _encodeKey(key) {
+    if (!key) return key;
+    // Заменяем '.' на ',' и другие опасные символы
+    return key.replace(/\./g, ',').replace(/#/g, '~h').replace(/\$/g, '~d').replace(/\[/g, '~l').replace(/\]/g, '~r');
+}
+function _decodeKey(key) {
+    if (!key) return key;
+    // Обратная замена
+    return key.replace(/,/g, '.').replace(/~h/g, '#').replace(/~d/g, '$').replace(/~l/g, '[').replace(/~r/g, ']');
+}
+
+// --- UTILITY FUNCTIONS ---
+function _getMimeType(filename) {
+    const ext = filename.split('.').pop().toLowerCase();
+    switch (ext) {
+        case 'png': return 'image/png';
+        case 'jpg': return 'image/jpg';
+        case 'jpeg': return 'image/jpeg';
+        case 'gif': return 'image/gif';
+        case 'txt': return 'text/plain';
+        case 'ppsearch': return 'text/plain';
+        case 'ppdatapedia': return 'text/plain';
+        case 'txt': return 'text/plain';
+        case 'md': return 'text/markdown';
+        case 'html': return 'text/html';
+        case 'css': return 'text/css';
+        case 'js': return 'application/javascript';
+        case 'json': return 'application/json';
+        case 'pdf': return 'application/pdf';
+        case 'zip': return 'application/zip';
+        case 'mp3': return 'audio/mpeg';
+        case 'mp4': return 'video/mp4';
+        case 'svg': return 'image/svg+xml'; // Добавляем SVG
+        default: return 'application/octet-stream';
+    }
+}
+
+/**
+ * Определяет, является ли файл бинарным согласно явному списку.
+ * Все остальные файлы считаются текстовыми.
+ */
+function _isBinaryFile(filename) {
+    const mime = _getMimeType(filename);
+    // Явный список бинарных типов (изображения, медиа, архивы, неизвестные)
+    return mime.startsWith('image/') && mime !== 'image/svg+xml' || // SVG может быть как текст
+           mime.startsWith('audio/') || 
+           mime.startsWith('video/') || 
+           mime === 'application/pdf' || 
+           mime === 'application/zip' || 
+           mime === 'application/octet-stream'; // Неизвестные типы по умолчанию считаем бинарными
+}
+
+
+function getCookie(name){const match=document.cookie.match(new RegExp('(^| )'+name+'=([^;]+)'));return match?decodeURIComponent(match[2]):null;}
+function setCookie(name,value,days=365){document.cookie=name+'='+encodeURIComponent(value)+';max-age='+(days*24*60*60)+';path=/';}
+
+let currentPath="/", selectedFiles=new Set(), drive;
+let currentEncodedPath = ""; 
+const user=getCookie("name");
+const theme=getCookie("theme")||"light";
+const newMenu=document.getElementById("new-menu");
+const newModal=document.getElementById("new-modal");
+const editorModal=document.getElementById("editor-modal");
+const editorTextarea=document.getElementById("editor-textarea");
+const newModalContent=document.querySelector("#new-modal .content");
+const editorModalContent=document.querySelector("#editor-modal .content");
+const fileModal=document.getElementById("file-modal");
+const btnEdit=document.getElementById("btn-edit");
+const btnViewLink = document.getElementById("btn-view-link"); // Новая кнопка
+
+if(theme==="dark"){ 
+    document.body.classList.add("dark"); 
+    document.querySelectorAll(".toolbar,th,tr,button").forEach(e=>e.classList.add("dark")); 
+    newMenu.classList.add("dark");
+    newModalContent.classList.add("dark");
+    editorModalContent.classList.add("dark");
+}
+
+if(!user){ alert("Ошибка: cookie 'name' не найден."); }
+else initDrive();
+
+async function initDrive(){
+    drive=new PDrive(user); 
+    
+    // Инжектируем функции кодирования/декодирования
+    drive._encodeKey = _encodeKey;
+    drive._decodeKey = _decodeKey;
+
+    await drive.init(); 
+    
+    // --- НОВОЕ: Обработка ссылки для просмотра файла ---
+    await handleViewLink();
+    // -------------------------------------------------
+
+    await refreshList();
+}
+
+async function refreshList(){
+    selectedFiles.clear(); 
+    document.getElementById("select-all").checked=false;
+    // Обновление состояния кнопки "Ссылка"
+    btnViewLink.style.display = selectedFiles.size === 1 ? 'inline-block' : 'none';
+    
+    let list=[];
+    try{ 
+        list=await drive.listDir(currentPath); 
+    }catch(err){ 
+        currentPath="/"; 
+        document.getElementById("path").textContent=currentPath; 
+        list=await drive.listDir("/"); 
+    }
+    const tbody=document.getElementById("file-list"); tbody.innerHTML="";
+    if(!list.length){ tbody.innerHTML="<tr><td colspan='3'>Пусто</td></tr>"; return; }
+    
+    for(const item of list){
+        const decodedName = drive._decodeKey ? drive._decodeKey(item.name) : item.name;
+        
+        let fileType;
+        if (item.type === 'folder') {
+            fileType = 'Папка';
+        } else if (_isBinaryFile(decodedName)) {
+            const mime = _getMimeType(decodedName);
+            if (mime.startsWith('image/')) {
+                fileType = 'Изображение';
+            } else if (mime === 'application/pdf') {
+                fileType = 'PDF-документ';
+            } else if (mime === 'application/zip') {
+                fileType = 'Архив (.zip)';
+            } else {
+                fileType = 'Бинарный';
+            }
+        } else {
+            const mime = _getMimeType(decodedName);
+            if(mime === 'image/svg+xml') {
+                fileType = 'SVG-изображение (Текст)';
+            } else if(mime === 'text/markdown') {
+                fileType = 'Markdown-документ';
+            } else {
+                fileType = 'Текстовый файл';
+            }
+        }
+
+        const tr=document.createElement("tr");
+        tr.dataset.name=decodedName; 
+        tr.dataset.encodedName=item.name; 
+        tr.dataset.type=item.type;
+        tr.innerHTML=`<td class="checkbox-col"><input type="checkbox" class="select-file"></td><td>${item.type === 'folder' ? '📁 ' : ''}${decodedName}</td><td>${fileType}</td>`; 
+        tr.querySelector(".select-file").onclick=e=>{
+            e.stopPropagation();
+            if(e.target.checked) selectedFiles.add(decodedName); else selectedFiles.delete(decodedName);
+            // Обновляем состояние кнопки "Ссылка"
+            btnViewLink.style.display = selectedFiles.size === 1 ? 'inline-block' : 'none';
+        };
+        tr.ondblclick=async()=>{
+            const fullEncodedPath = currentPath + "/" + item.name;
+            if(item.type==="folder"){ 
+                currentPath=currentPath.replace(/\/$/,"")+"/"+decodedName; 
+                document.getElementById("path").textContent=currentPath; 
+                await refreshList(); 
+            }
+            else await openFile(fullEncodedPath, decodedName); 
+        };
+        tbody.appendChild(tr);
+    }
+}
+// Вспомогательная функция для безопасного Base64-кодирования Unicode
+// (Эту функцию можно вынести за пределы openFile, если она нужна где-то еще)
+const safeBtoa = (str) => {
+    // Кодируем UTF-8 символы с помощью encodeURIComponent, затем "разворачиваем" их в байты для btoa
+    return btoa(unescape(encodeURIComponent(str)));
+};
+
+// Modal open (Viewer)
+async function openFile(encodedPath, decodedName){
+    currentEncodedPath = encodedPath;
+    const node = drive._getNode(drive._resolvePath(encodedPath), true);
+    if (!node) return;
+    
+    document.getElementById("modal-filename").textContent = decodedName; 
+    const body = document.getElementById("modal-body"); 
+    body.innerHTML = "";
+    btnEdit.style.display = 'none'; 
+    
+    const mimeType = _getMimeType(decodedName);
+
+    if (mimeType.startsWith('image/png')||mimeType.startsWith('image/jpg')||mimeType.startsWith('image/gif')||mimeType.startsWith('image/jpeg')) {
+        // 1. Бинарные изображения (png, jpg, gif)
+        // Предполагаем, что node.value содержит URL-encoded DataURL.
+        const dataUrl = decodeURIComponent(node.value);
+        console.log(node.value);
+        
+        const img = document.createElement("img");
+        img.id = "modal-image";
+        img.src = dataUrl; // Убрано повторное decodeURIComponent
+        body.appendChild(img);
+        
+    } else if (mimeType.startsWith('image/') && !node.binary) { 
+        // 2. SVG (Текст)
+        // Используем safeBtoa для корректной обработки Unicode в SVG тексте
+        const base64Content = safeBtoa(node.value);
+        const dataUrl = `data:${mimeType};base64,${base64Content}`; // Конструкция DataURL
+        
+        const img = document.createElement("img");
+        img.id = "modal-image";
+        img.src = dataUrl;
+        body.appendChild(img);
+        btnEdit.style.display = 'inline-block'; // SVG можно редактировать как текст
+        
+    } else if (decodedName.endsWith(".md")) {
+        // 3. Markdown
+        const renderedDiv = document.createElement("div");
+        renderedDiv.innerHTML = marked.parse(node.value);
+        body.appendChild(renderedDiv);
+        
+        const rawDiv = document.createElement("div");
+        rawDiv.id = "markdown-raw-view";
+        rawDiv.innerHTML = `<h4>Исходный текст:</h4><pre>${node.value}</pre>`;
+        body.appendChild(rawDiv);
+        
+        btnEdit.style.display = 'inline-block';
+    } else if (!node.binary) { 
+        // 4. Текстовые и прочие текстоподобные файлы
+        const pre = document.createElement("pre"); 
+        pre.textContent = node.value; 
+        body.appendChild(pre);
+        
+        btnEdit.style.display = 'inline-block';
+    } else {
+        // 5. Прочие бинарные файлы
+        const a = document.createElement("a"); 
+        a.href = "javascript:void(0)"; 
+        a.textContent = `Бинарный файл (${mimeType}): недоступен для просмотра`; 
+        body.appendChild(a);
+    }
+    
+    fileModal.style.display = "flex";
+}
+
+// --- НОВАЯ ФУНКЦИЯ: ОТКРЫТИЕ ФАЙЛА ПО ССЫЛКЕ (Read-Only) ---
+
+/**
+ * Открывает файл в модальном окне в режиме только для чтения, используя отдельный объект PDrive.
+ * @param {PDrive} pdriveInstance Экземпляр PDrive для целевого пользователя.
+ * @param {Object} node Узел файла.
+ * @param {string} fullDecodedPath Полный декодированный путь к файлу.
+ * @param {string} userName Имя пользователя, которому принадлежит файл.
+ */
+async function openFileInReadOnlyMode(pdriveInstance, node, fullDecodedPath, userName) {
+    document.getElementById("modal-filename").textContent = `[ЧТЕНИЕ] ${fullDecodedPath} (от ${userName})`; 
+    const body = document.getElementById("modal-body"); body.innerHTML = "";
+    btnEdit.style.display = 'none'; // Всегда скрыто для режима чтения по ссылке
+    
+    // Переопределяем mimeType, чтобы он работал с полным путем (например, /folder/file.txt)
+    const decodedName = fullDecodedPath.split('/').pop();
+    const mimeType = _getMimeType(decodedName);
+
+    if (mimeType.startsWith('image/png')||mimeType.startsWith('image/jpg')||mimeType.startsWith('image/gif')||mimeType.startsWith('image/jpeg')) {
+        // 1. Бинарные изображения (png, jpg, gif)
+        const dataUrl = decodeURIComponent(`data:${mimeType};base64,${node.value}`);
+        const img = document.createElement("img");
+        img.id = "modal-image";
+        img.src = decodeURIComponent(dataUrl);
+        body.appendChild(img);
+    } else if(mimeType.startsWith('image/') && !node.binary) { 
+        // 2. SVG (текст)
+        const dataUrl = `data:${mimeType};base64,${btoa(node.value)}`;
+        const img = document.createElement("img");
+        img.id = "modal-image";
+        img.src = dataUrl;
+        body.appendChild(img);
+    } else if (decodedName.endsWith(".md")) {
+        // 3. Markdown
+        const renderedDiv = document.createElement("div");
+        renderedDiv.innerHTML = marked.parse(node.value);
+        body.appendChild(renderedDiv);
+        
+        const rawDiv = document.createElement("div");
+        rawDiv.id = "markdown-raw-view";
+        rawDiv.innerHTML = `<h4>Исходный текст:</h4><pre>${node.value}</pre>`;
+        body.appendChild(rawDiv);
+    } else if (!node.binary) { // 4. Текстовые файлы
+        const pre = document.createElement("pre"); 
+        pre.textContent = node.value; 
+        body.appendChild(pre);
+    } else {
+        // 5. Прочие бинарные файлы
+        const p = document.createElement("p");
+        p.textContent = `Бинарный файл (${mimeType}): недоступен для просмотра.`;
+        body.appendChild(p);
+    }
+    
+    fileModal.style.display = "flex";
+}
+
+
+/**
+ * Обрабатывает хэш URL для открытия файла по прямой ссылке.
+ * Ожидаемый формат хэша: #view/[username]/[path/to/file.ext]
+ */
+async function handleViewLink() {
+    const hash = window.location.hash;
+    // Проверяем, что хэш начинается с #view/ и содержит что-то после
+    if (hash.startsWith('#view/')) {
+        const path = hash.substring(6); // path: [username]/[path/to/file.ext]
+        const parts = path.split('/'); 
+
+        if (parts.length < 2) {
+             alert("Неверный формат ссылки для просмотра. Ожидается: #view/[username]/[path/to/file.ext]");
+             return;
+        }
+
+        // Извлекаем имя пользователя
+        const targetUser = parts[0]; 
+        
+        // Извлекаем путь к файлу (все остальное)
+        const filePathDecoded = '/' + parts.slice(1).join('/'); 
+        
+        // Кодируем путь, как это делает основная логика PDrive
+        const filePathEncodedParts = ['']; // Начинаем с корня
+        for (let i = 1; i < parts.length; i++) {
+            filePathEncodedParts.push(_encodeKey(parts[i]));
+        }
+        const filePathEncoded = filePathEncodedParts.join('/'); // /folder_encoded/file_encoded.txt
+        
+        // Инициализируем временный PDrive для доступа к файлам другого пользователя
+        document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Загрузка файла по ссылке...</td></tr>';
+
+        try {
+            const viewDrive = new PDrive(targetUser);
+            viewDrive._encodeKey = _encodeKey;
+            viewDrive._decodeKey = _decodeKey;
+            // Убедимся, что инициализация прошла успешно (БД существует)
+            await viewDrive.init(); 
+
+            // Получаем узел, используя _resolvePath на ЗАКОДИРОВАННОМ пути
+            const pathSegments = viewDrive._resolvePath(filePathEncoded);
+            const fileNode = viewDrive._getNode(pathSegments, false);
+
+            if (fileNode && fileNode.type === 'file') {
+                // Открываем в режиме чтения
+                await openFileInReadOnlyMode(viewDrive, fileNode, filePathDecoded, targetUser);
+            } else {
+                alert(`Ошибка: Файл '${filePathDecoded}' пользователя '${targetUser}' не найден или является папкой.`);
+            }
+        } catch (e) {
+            alert(`Ошибка при открытии файла: ${e.message}. Возможно, пользователь '${targetUser}' не существует или нет доступа.`);
+        }
+    }
+}
+
+
+document.getElementById("modal-close").onclick=()=>fileModal.style.display="none";
+
+// Открытие редактора
+btnEdit.onclick = () => {
+    fileModal.style.display = 'none';
+    editFile(currentEncodedPath);
+};
+
+// --- EDITOR LOGIC ---
+async function editFile(encodedPath) {
+    const node = drive._getNode(drive._resolvePath(encodedPath), false);
+    // Разрешаем редактировать текстовые файлы И SVG (которые хранятся как текст)
+    const decodedName = drive._decodeKey(encodedPath.split('/').pop());
+    const isSvg = _getMimeType(decodedName) === 'image/svg+xml';
+    
+    if (!node || (node.binary && !isSvg)) { alert("Ошибка: Невозможно редактировать этот файл."); return; }
+    
+    document.getElementById("editor-filename").textContent = decodedName;
+    editorTextarea.value = node.value;
+    editorModal.style.display = 'flex';
+}
+
+document.getElementById("editor-modal-close").onclick = () => editorModal.style.display = "none";
+document.getElementById("btn-editor-cancel").onclick = () => editorModal.style.display = "none";
+
+document.getElementById("btn-editor-save").onclick = async () => {
+    const newContent = editorTextarea.value;
+    editorModal.style.display = "none";
+    
+    try {
+        // При сохранении текстового файла (или SVG, который обрабатывается как текст)
+        // isBinary остается false
+        await drive.writeFile(currentEncodedPath, newContent, false); 
+        await refreshList();
+        alert("Файл успешно сохранен!");
+    } catch (e) {
+        alert("Ошибка сохранения: " + e.message);
+    }
+};
+
+
+// --- NEW MODAL LOGIC (Creation) ---
+let modalAction = null;
+
+function openNewModal(title, actionType) {
+    newMenu.style.display = "none";
+    document.getElementById("new-modal-title").textContent = title;
+    document.getElementById("new-modal-name").value = "";
+    document.getElementById("new-modal-name").focus();
+    modalAction = actionType;
+    newModal.style.display = "flex";
+}
+
+document.getElementById("new-modal-close").onclick = () => newModal.style.display = "none";
+document.getElementById("btn-modal-cancel").onclick = () => newModal.style.display = "none";
+
+document.getElementById("btn-modal-create").onclick = async () => {
+    const nameInput = document.getElementById("new-modal-name");
+    const name = nameInput.value.trim();
+    if (!name) { alert("Имя не может быть пустым."); return; }
+
+    newModal.style.display = "none";
+    
+    let finalName = name;
+    
+    if (modalAction === 'text' && !name.endsWith(".txt")) {
+        finalName += ".txt";
+    } else if (modalAction === 'markdown' && !name.endsWith(".md")) {
+        finalName += ".md";
+    }
+
+    const encodedName = drive._encodeKey(finalName); 
+    const fullEncodedPath = currentPath + "/" + encodedName;
+    
+    try {
+        if (modalAction === 'folder') {
+            await drive.mkdir(fullEncodedPath);
+        } else if (modalAction === 'text' || modalAction === 'markdown') {
+            // При создании нового файла он всегда текстовый (binary=false)
+            let initialContent = (modalAction === 'markdown') ? `# ${finalName.replace(/\.md$/i, '')}` : "";
+            await drive.writeFile(fullEncodedPath, initialContent, false);
+        }
+        await refreshList();
+    } catch (e) {
+        alert("Ошибка создания: " + e.message);
+    }
+};
+
+// --- BUTTON HANDLERS ---
+document.getElementById("btn-new").onclick=()=>{
+    newMenu.style.display = newMenu.style.display === "block" ? "none" : "block";
+};
+
+document.addEventListener('click', (event) => {
+    if (!document.getElementById("btn-new").contains(event.target) && !newMenu.contains(event.target) && !newModal.contains(event.target) && !editorModal.contains(event.target) && !fileModal.contains(event.target)) {
+        newMenu.style.display = 'none';
+    }
+});
+
+document.getElementById("btn-up").onclick=async()=>{ 
+    if(currentPath==="/") return; 
+    const parts=currentPath.split("/").filter(p=>p); 
+    parts.pop(); 
+    currentPath="/"+parts.join("/"); 
+    document.getElementById("path").textContent=currentPath; 
+    await refreshList(); 
+};
+
+// New folder opens modal
+document.getElementById("btn-new-folder").onclick=async()=>{ 
+    openNewModal("Новая папка", "folder");
+};
+
+// --- НОВАЯ КНОПКА: Ссылка для просмотра ---
+btnViewLink.onclick = () => {
+    if (selectedFiles.size !== 1) return;
+    
+    // Получаем имя выбранного файла
+    const fileName = selectedFiles.values().next().value;
+    
+    // Формируем полный путь
+    const fullPath = currentPath === "/" ? `/${fileName}` : `${currentPath}/${fileName}`;
+    
+    // Формируем ссылку в формате: #view/[username]/[path/to/file.ext]
+    const link = `${window.location.origin}${window.location.pathname}#view/${user}${fullPath}`;
+
+    // Копируем ссылку в буфер обмена
+    navigator.clipboard.writeText(link).then(() => {
+        alert(`Ссылка для просмотра (${fileName}) скопирована в буфер обмена:\n${link}`);
+    }).catch(err => {
+        console.error('Ошибка копирования ссылки: ', err);
+        alert(`Не удалось скопировать ссылку. Ссылка:\n${link}`);
+    });
+};
+
+
+// !!! ИСПРАВЛЕННАЯ ЛОГИКА ЗАГРУЗКИ ФАЙЛОВ !!!
+document.getElementById("btn-upload").onclick=async()=>{
+    newMenu.style.display = "none";
+    const fileInput=document.createElement("input"); 
+    fileInput.type="file";
+    fileInput.onchange=async()=>{ 
+        const file=fileInput.files[0]; 
+        const reader=new FileReader(); 
+        const isBinary = _isBinaryFile(file.name); // Используем новую функцию
+
+        document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Загрузка файла... Не закрывайте окно!</td></tr>';
+
+        reader.onload=async()=>{ 
+            let data;
+            
+
+                data = reader.result; 
+
+
+            const encodedFileName = drive._encodeKey(file.name); 
+            
+            try {
+                await drive.writeFile(currentPath+"/"+encodedFileName, data, isBinary); 
+                await refreshList(); 
+            } catch (e) {
+                alert("Ошибка сохранения в PDrive: " + e.message);
+                await refreshList();
+            }
+        }; 
+        
+        // Читаем файл в соответствии с его типом
+        if (!isBinary) {
+            reader.readAsText(file);
+        } else {
+            reader.readAsDataURL(file); // Читаем как Base64
+        }
+    };
+    fileInput.click();
+};
+
+// Upload folder from menu (simplified, remains alert)
+document.getElementById("btn-upload-folder").onclick=async()=>{
+    newMenu.style.display = "none";
+    alert("Функционал 'Загрузить папку' пока не реализован.");
+};
+
+// Create new Text File opens modal
+document.getElementById("btn-new-text").onclick=async()=>{
+    openNewModal("Новый текстовый файл", "text");
+};
+
+// Create new Markdown File opens modal
+document.getElementById("btn-new-markdown").onclick=async()=>{
+    openNewModal("Новый Markdown файл", "markdown");
+};
+
+document.getElementById("btn-delete").onclick=async()=>{
+    if(!selectedFiles.size){ alert("Выберите элементы"); return; }
+    if(!confirm("Удалить выбранные элементы?")) return;
+    
+    for(const name of selectedFiles) {
+        const encodedName = drive._encodeKey(name);
+        await drive.delete(currentPath+"/"+encodedName);
+    }
+    selectedFiles.clear(); 
+    await refreshList();
+};
+
+
+// --- ЛОГИКА СКАЧИВАНИЯ ФАЙЛОВ ---
+// Рекурсивная функция для создания ZIP-архива
+async function addNodeToZip(zip, node, nodeFullPath) {
+    // nodeFullPath: полный PDrive-путь, содержит ЗАКОДИРОВАННЫЕ имена
+    
+    // 1. Построение пути внутри ZIP-архива
+    const pathParts = nodeFullPath.split('/').filter(p => p);
+    const decodedPathParts = pathParts.map(drive._decodeKey);
+    // Путь элемента внутри ZIP-архива
+    const fullZipPath = decodedPathParts.join('/'); 
+    
+    if (node.type === "file") {
+        let content;
+        if (node.binary) {
+            // Если это бинарный файл, node.value - это чистая Base64 строка
+            try {
+                const binary = atob(node.value); // Декодируем Base64
+                const array = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+                content = array;
+            } catch (e) {
+                console.error("Base64 decoding failed for file:", node.name, e);
+                content = new Uint8Array(0); 
+            }
+        } else {
+            // Для текстовых файлов (включая SVG), node.value - это чистый текст
+            content = node.value;
+        }
+        zip.file(fullZipPath, content);
+    } else if (node.type === "folder") {
+        zip.folder(fullZipPath + "/"); 
+        
+        try {
+            const children = await drive.listDir(nodeFullPath); 
+            
+            for (const child of children) {
+                const childNodeFullPath = nodeFullPath + "/" + child.name;
+                const childNode = drive._getNode(drive._resolvePath(childNodeFullPath), false);
+                
+                if (childNode) {
+                    await addNodeToZip(zip, childNode, childNodeFullPath); 
+                }
+            }
+        } catch(e) {
+            console.error("Error listing directory for zip:", nodeFullPath, e);
+        }
+    }
+}
+
+document.getElementById("btn-download").onclick = async () => {
+    if (!selectedFiles.size) { 
+        alert("Выберите элементы"); 
+        return; 
+    }
+
+    document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Подготовка к скачиванию... Не закрывайте окно!</td></tr>';
+
+    const zip = new JSZip();
+    let rootPath = currentPath === "/" ? "" : currentPath; // Для правильной структуры ZIP
+
+    for (const name of selectedFiles) {
+        const encodedName = drive._encodeKey(name);
+        const fullPath = currentPath + "/" + encodedName; // Полный PDrive путь элемента (ЗАКОДИРОВАННЫЙ)
+        
+        // NOTE: Используем fullPath, который включает текущий каталог
+        const node = drive._getNode(drive._resolvePath(fullPath), false); 
+        
+        if (!node) continue;
+        
+        await addNodeToZip(zip, node, fullPath); 
+    }
+
+    const blob = await zip.generateAsync({ type: "blob" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "archive.zip";
+    a.click();
+
+    await refreshList(); // Обновляем список после скачивания
+};
+
+document.getElementById("btn-theme").onclick=()=>{
+    const isDark = document.body.classList.contains("dark");
+    document.body.classList.toggle("dark", !isDark); 
+    newMenu.classList.toggle("dark", !isDark);
+    newModalContent.classList.toggle("dark", !isDark);
+    editorModalContent.classList.toggle("dark", !isDark);
+
+    document.querySelectorAll(".toolbar,th,tr,button").forEach(e => e.classList.toggle("dark", !isDark)); 
+    setCookie("theme", isDark ? "light" : "dark");
+};
+
+document.getElementById("select-all").onclick=(e)=>{ 
+    document.querySelectorAll(".select-file").forEach(cb=>{ 
+        cb.checked=e.target.checked; 
+        const name = cb.closest("tr").dataset.name;
+        if(e.target.checked) selectedFiles.add(name); else selectedFiles.delete(name); 
+    }); 
+    // Обновляем состояние кнопки "Ссылка"
+    btnViewLink.style.display = selectedFiles.size === 1 ? 'inline-block' : 'none';
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+</html>

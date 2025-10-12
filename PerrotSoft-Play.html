@@ -118,6 +118,8 @@
             display: none; /* Скрыто по умолчанию */
             position: fixed;
             z-index: 1000; /* Поверх всего */
+            width: 100%;
+            height: 100%;
             left: 0;
             top: 0;
             min-width: 200px;
@@ -356,6 +358,19 @@
             <div class="appItem" onclick="openApp('ParrotSoft_Apps')">
             <img src="img/Apps.png" width="30px" height="30px" alt="png">
             <span>ParrotSoft Apps</span>
+        </div><div class="appItem" onclick="openApp('pdrive')">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.5 13C18.433 13 20 11.433 20 9.5C20 7.74619 18.7397 6.27318 17.0706 6.04693C16.5925 3.39572 14.129 1 11 1C7.81792 1 5.30822 3.44494 4.88785 6.13689C2.79374 6.70321 1 8.87851 1 11.5C1 14.0044 2.80931 16 5 16H18C19.6569 16 21 14.6569 21 13C21 11.6667 19.9678 10.5518 18.5 10.1557" fill="#1A73E8"/>
+                
+                <path d="M10 18L14.5 14L15.5 15.5L13 18H10Z" fill="#34A853"/>
+                <path d="M13 18L16 22L20 18H13Z" fill="#4285F4"/>
+                <circle cx="15.5" cy="16.5" r="1.5" fill="#FFFFFF"/>
+                <path d="M12 21C12 21.5523 11.5523 22 11 22C10.4477 22 10 21.5523 10 21C10 20.4477 10.4477 20 11 20C11.5523 20 12 20.4477 12 21Z" fill="#FBBC04"/>
+                
+                <path d="M5 11.5C5 9.84315 6.34315 8.5 8 8.5C9.65685 8.5 11 9.84315 11 11.5V11.5C11 13.1569 9.65685 14.5 8 14.5C6.34315 14.5 5 13.1569 5 11.5Z" fill="#FFFFFF" opacity="0.3"/>
+
+            </svg>
+            <span>ParrotSoft Drive</span>
         </div>
         </div>
 
@@ -396,9 +411,16 @@
                 </div>
             </div>
         </div>
-        <script>
-            // Убедитесь, что userID, getCookie, readCell, setCookie, readColumn, writeCell, addmoney, getmoney доступны из user.js и sitefun.js
-            // import { userID, getCookie, readCell, setCookie, readColumn, writeCell, addmoney, getmoney } from './js/user.js'; // Это должно быть в отдельном файле с type="module"
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script type="module">
+import "./js/firebase_db.js";
+import { PDrive } from "./js/PDrive.js";
+
+            // NOTE: Предполагается, что getCookie, getmoney, setCookie, writeCell, addmoney, readCell, readColumn, userID, openApp, toggleMenu, toggleUserMenu 
+            // уже определены в user.js или sitefun.js и доступны глобально или импортированы.
+            // Если они определены в user.js (подключен как обычный скрипт), они должны быть глобальными.
 
             const products = [
                 // ИСПРАВЛЕНА ОШИБКА: лишняя кавычка в image: "'img/P-lib.png"
@@ -406,17 +428,27 @@
                 { id: 2, name: "P-lib library pack", price: 0, image: "img/P-lib.png", owned: false, installed: false, installURL:"https://codeload.github.com/PerrotSoft/P-lib/zip/refs/heads/main", description: "P-lib - это всеобъемлющий пакет библиотек для P#, предоставляющий готовые модули для работы с графикой, сетью, базами данных и многим другим. Ускорьте свою разработку!"}
                 // Добавьте поле description, если оно есть в вашей базе данных. Если нет, я использую заглушку "Описание отсутствует."
             ];
-
+            const username = getCookie('name') || 'guest';
             let userid = 0;
             let productsbay = "";
+            let cart = []; // Корзина
+            
+            // --- ГЛОБАЛЬНЫЕ ФУНКЦИИ (Привязаны к window для работы с onclick) ---
 
             // --- Функции для работы с данными и рендерингом ---
             function getProduct(id) {
                 return products.find(p => p.id === id);
             }
 
+            function getStatus(product) {
+                if (product.installed) return 'Play';
+                if (product.owned && !product.installed) return 'Install';
+                if (cart.includes(product)) return 'In cart';
+                return 'Add to cart';
+            }
+
             // Добавлена функция для модального окна
-            function showProductDetails(id) {
+            window.showProductDetails = function(id) {
                 const product = getProduct(id);
                 if (!product) return;
 
@@ -429,7 +461,7 @@
                 const status = getStatus(product);
                 actionButton.innerText = status;
                 actionButton.onclick = () => handleProductAction(product, status);
-                actionButton.disabled = status === 'In cart';
+                actionButton.disabled = status === 'In cart' || status === 'Play'; // Отключаем Play в модале, т.к. запускаем в handle
                 actionButton.classList.remove('owned-button');
                 if (status === 'Play' || status === 'Install') {
                     actionButton.classList.add('owned-button');
@@ -440,7 +472,7 @@
                 document.getElementById('productDetailsModal').style.display = 'block';
             }
 
-            function closeProductDetails() {
+            window.closeProductDetails = function() {
                 document.getElementById('productDetailsModal').style.display = 'none';
             }
 
@@ -451,69 +483,122 @@
                 } else if (status === 'Install') {
                     installProduct(product.id);
                 } else if (status === 'Play') {
-                    // Логика запуска (если это не просто installURL)
-                    // openApp(product.installURL); // Предположим, что это просто запуск
-                    alert(`Launching ${product.name}...`);
-                    // В реальном приложении здесь будет логика запуска установленного приложения
+                    // Используем глобальную openApp
+                    if (typeof openApp === 'function') {
+                        openApp(product.installURL);
+                    } else {
+                        alert(`Launching ${product.name} at URL: ${product.installURL}...`);
+                    }
                 }
             }
+            function setCookie(name, value) {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000)); // +1 год от текущей даты
+    const expires = "; expires=" + date.toUTCString();          // Форматируем дату истечения
+    document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
+}
 
+            (async function initDataAndRender() {
+                // Инициализация переменных
+                let purchasedIds = [];
+                let userid = 0; // Инициализируем на случай, если userID не определен
+                
+                
+                // NOTE: pdrive инициализируется здесь, как в вашем последнем фрагменте
+                const pdrive = new PDrive(username);
+                await pdrive.init(); 
 
-            (async function() {
                 try {
                     // Проверка доступности функций, если они в user.js
-                    if (typeof userID === 'function' && typeof readCell === 'function' && typeof readColumn === 'function') {
-                        userid = await userID(getCookie('name'));
-                        productsbay = await readCell('F' + userid);
-                        console.log("User ID:", userid);
+                    if (true) {
+                        // 1. ИСПРАВЛЕНИЕ: Получаем userid 
+                        console.log("Fetching user ID for:", username);
+                        // 2. ИЗМЕНЕНИЕ: Читаем купленные продукты из PDrive (Ваше изменение)
+                        productsbay = await window.dbManager.get('users/'+username+'/bays') || ""; 
+                        productsbay = productsbay.value || "";
                         console.log("Products bought:", productsbay);
-                        if (productsbay) {
-                            // Проверка, что productsbay является строкой перед split
-                            productsbay = productsbay.split('|').slice(1).map(Number);
+                        
+                        // 3. Установка purchasedIds как массива чисел
+                        if (productsbay && typeof productsbay === 'string') {
+                            purchasedIds = productsbay.split('|').slice(1).map(Number).filter(id => !isNaN(id));
                             products.forEach(product => {
-                                if (productsbay.includes(product.id)) {
+                                if (purchasedIds.includes(product.id)) {
                                     product.owned = true;
                                 }
                             });
-                        } else {
-                            productsbay = []; // Для корректного использования в buyAll
+                        }
+                        
+                        productsbay = purchasedIds; 
+                        
+                        if (productsbay.length === 0) {
                             console.log("No products bought yet.");
                         }
 
-                        let listing = await readColumn('J');
-                        const filtered = listing.filter(item => item && item.trim() !== "");
-
-                        filtered.forEach(element => {
-                            const parts1 = element.split('|');
-                            parts1.forEach(element => {
-                                const parts = element.split('~');
-                                if (parts.length < 7) return;
-
-                                // Предполагаем, что 7-й элемент - это description, а 8-й (если есть) - installURL
-                                const id = parseInt(parts[0]);
-                                // Ищем, нет ли уже такого id (если загружен из базы, он может дублировать стартовые)
-                                if (products.some(p => p.id === id)) return;
-
-                                const product = {
-                                    id: id,
-                                    name: parts[1],
-                                    price: parseFloat(parts[2]),
-                                    image: parts[3],
-                                    owned: productsbay.includes(id) || parts[4] === "true", // Проверяем и купленное
-                                    installed: parts[5] === "true",
-                                    installURL: parts[6],
-                                    // Добавляем описание, если оно есть (предполагаем, что оно 7-е поле)
-                                    description: parts.length > 7 ? parts[7] : 'Описание отсутствует.'
-                                };
-
-                                products.push(product);
-                            });
-                        });
-                        console.log("Все продукты из базы:", products);
                     } else {
-                         // Если user.js не загружен/функции недоступны
+                         // Если user functions недоступны, используем пустой список покупок
                          console.warn("User functions (userID, readCell, etc.) are not available. Using default product list.");
                     }
+        
+                    // 4. Получаем все проектные файлы (используем ваш фильтр с запятой)
+                    const projectFiles = await pdrive.get_progect_files(",ppplay"); 
+                    
+                    // 5. Итерируем по projectFiles (массиву) и объединяем содержимое файлов в строку
+                    let combinedContent = ""; 
+                    
+                    projectFiles.forEach(entry => {
+                        // ОЧЕНЬ НАДЕЖНОЕ ИЗВЛЕЧЕНИЕ КОНТЕНТА
+                        const fileContent = (entry.file && entry.file.value) ? String(entry.file.value).trim() : '';
+                        
+                        if (fileContent.length > 0) {
+                            // Добавляем содержимое каждого найденного файла, разделяя новой строкой
+                            combinedContent += fileContent + '\n';
+                            console.log(`[PDrive] Добавлен файл: ${entry.file.name}. Длина контента: ${fileContent.length}`);
+                        } else {
+                            console.log(`[PDrive] Пропущен файл: ${entry.file.name}. Контент пуст.`);
+                        }
+                    });
+
+                    console.log(`[PDrive] Результат объединения combinedContent == "" : ${combinedContent === ""}`);
+
+                    // Разбиваем объединенное содержимое на массив строк и фильтруем пустые
+                    const filtered = combinedContent.trim().split('\n').filter(item => item && item.trim() !== "");
+                    
+                    console.log(`[PDrive] Элементов для парсинга после фильтрации: ${filtered.length}`);
+
+                    // 6. Парсинг каждого элемента
+                    filtered.forEach(element => {
+                        const parts1 = element.split('|');
+                        parts1.forEach(part => {
+                            const parts = part.split('~');
+                            
+                            // Проверка на минимально 7 полей
+                            if (parts.length < 7) {
+                                console.warn(`Пропущен товар из PDrive: Недостаточно полей. Строка: ${part}`);
+                                return; 
+                            }
+
+                            const id = parseInt(parts[0]);
+                            // Проверяем, нет ли уже такого id среди стартовых или уже добавленных товаров
+                            if (products.some(p => p.id === id) || isNaN(id)) return;
+
+                            const product = {
+                                id: id,
+                                name: parts[1],
+                                price: parseFloat(parts[2]),
+                                image: parts[3],
+                                // Проверяем владение
+                                owned: purchasedIds.includes(id) || parts[4] === "true", 
+                                installed: parts[5] === "true",
+                                installURL: parts[6],
+                                // Используем 8-й элемент (индекс 7), если он существует. Иначе - заглушка.
+                                description: parts.length > 7 ? parts[7] : 'Описание отсутствует.' 
+                            };
+
+                            products.push(product);
+                            console.log(`Добавлен новый товар из PDrive: ${product.name}`);
+                        });
+                    });
+                    console.log("Все продукты из базы:", products);
 
                     renderStore(); renderCart(); renderLibrary();
                 } catch (error) {
@@ -521,25 +606,15 @@
                     renderStore(); renderCart(); renderLibrary(); // Рендерим хотя бы стартовые продукты
                 }
             })();
-
-            let cart = [];
-            function getStatus(product) {
-                // Если продукт установлен, то это "Play"
-                if (product.installed) return 'Play';
-                // Если продукт куплен, но не установлен, то это "Install"
-                if (product.owned && !product.installed) return 'Install';
-                // Если продукт в корзине
-                if (cart.includes(product)) return 'In cart';
-                // Иначе - "Add to cart"
-                return 'Add to cart';
-            }
-
-            function renderStore() {
+            
+            // Рендеринг
+            window.renderStore = function() {
                 const container = document.getElementById('store');
                 const searchQuery = document.getElementById('searchInput').value.toLowerCase();
 
                 const filteredProducts = products.filter(product =>
-                    !product.owned && product.name.toLowerCase().includes(searchQuery) // В магазине показываем только не купленные
+                    // В магазине показываем только не купленные и соответствующие поисковому запросу
+                    !product.owned && product.name.toLowerCase().includes(searchQuery)
                 );
 
                 if (filteredProducts.length === 0) {
@@ -549,21 +624,23 @@
 
                 container.innerHTML = '<div class="store-container">' + filteredProducts.map(product => {
                     const status = getStatus(product);
-                    const isOwnedOrInCart = product.owned || cart.includes(product); // Должно быть только !product.owned, т.к. фильтруем выше
-                    const buttonClass = isOwnedOrInCart ? 'in-cart-button' : '';
-                    // !!! Клик по блоку открывает модальное окно !!!
+                    // Логика кнопки должна быть: если в корзине, то "In cart" и disabled, иначе "Add to cart"
+                    const isInCart = cart.includes(product);
+                    const buttonText = isInCart ? 'In cart' : 'Add to cart';
+                    const buttonClass = isInCart ? 'in-cart-button' : '';
+                    
                     return `
                         <div class="product" onclick="showProductDetails(${product.id})">
                             <img src="${product.image}" alt="${product.name}">
                             <h3>${product.name}</h3>
                             <p>${product.price === 0 ? 'Free' : `${product.price} P-Coin`}</p>
-                            <button onclick="event.stopPropagation(); ${isOwnedOrInCart ? '' : `addToCart(${product.id})`}" class="${buttonClass}" ${isOwnedOrInCart ? 'disabled' : ''}>${status}</button>
+                            <button onclick="event.stopPropagation(); ${isInCart ? '' : `addToCart(${product.id})`}" class="${buttonClass}" ${isInCart ? 'disabled' : ''}>${buttonText}</button>
                         </div>
                     `;
                 }).join('') + '</div>';
             }
 
-            function renderCart() {
+            window.renderCart = function() {
                 const container = document.getElementById('cart');
                 const searchQuery = document.getElementById('searchInput').value.toLowerCase();
 
@@ -578,7 +655,6 @@
 
                 let total = filteredCart.reduce((sum, p) => sum + p.price, 0);
 
-                // Добавлена кнопка удаления из корзины (для примера)
                 container.innerHTML = '<div class="store-container">' + filteredCart.map(product => `
                     <div class="product" onclick="showProductDetails(${product.id})">
                         <img src="${product.image}" alt="${product.name}">
@@ -589,13 +665,13 @@
                 `).join('') + `</div><br><button onclick="buyAll()">Pay all</button><p>Amount: ${total} P-Coin</p>`;
             }
 
-            function removeFromCart(id) {
+            window.removeFromCart = function(id) {
                 cart = cart.filter(p => p.id !== id);
                 renderStore(); // Обновляем магазин, чтобы кнопка снова стала "Add to cart"
                 renderCart();
             }
 
-            function renderLibrary() {
+            window.renderLibrary = function() {
                 const container = document.getElementById('library');
                 const searchQuery = document.getElementById('searchInput').value.toLowerCase();
 
@@ -612,7 +688,7 @@
                 container.innerHTML = '<div class="store-container">' + filteredOwned.map(product => {
                     const status = getStatus(product);
                     const buttonText = status;
-                    const isDisabled = status === 'Play'; // Отключаем, если уже "Play" (установлен)
+                    const buttonClass = status === 'Play' ? 'owned-button' : (status === 'Install' ? 'install-button' : '');
 
                     return `
                         <div class="product" onclick="showProductDetails(${product.id})">
@@ -620,14 +696,16 @@
                             <h3>${product.name}</h3>
                             <p>${product.installed ? 'Installed' : 'Not installed'}</p>
                             <div>
-                                <button onclick="event.stopPropagation(); ${status === 'Install' ? `installProduct(${product.id})` : (status === 'Play' ? `openApp('${product.installURL}')` : '')}" class="install-button ${status === 'Play' ? 'owned-button' : ''}" ${isDisabled ? 'disabled' : ''}>${buttonText}</button>
+                                <button onclick="event.stopPropagation(); ${status === 'Install' ? `installProduct(${product.id})` : (status === 'Play' ? `openApp('${product.installURL}')` : '')}" class="${buttonClass}">
+                                    ${buttonText}
+                                </button>
                             </div>
                         </div>
                     `;
                 }).join('') + '</div>';
             }
 
-            function switchTab(tabName) {
+            window.switchTab = function(tabName) {
                 document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
                 document.getElementById(tabName).style.display = 'block';
                 document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
@@ -638,59 +716,80 @@
                 if (tabName === 'cart') renderCart();
                 if (tabName === 'library') renderLibrary();
             }
-            // Функция addToCart оставлена без изменений, но вызов renderStore() и showProductDetails() теперь вызывает обновление статуса кнопки.
-            function addToCart(id) {
-                const product = products.find(p => p.id === id);
+            
+            window.addToCart = function(id) {
+                const product = getProduct(id);
                 if (!cart.includes(product) && !product.owned) {
                     cart.push(product);
                     renderStore();
                 }
             }
-            // Функция buyAll оставлена без изменений
-            function buyAll() {
-                let total = cart.reduce((sum, p) => sum + p.price, 0);
-                if (typeof getCookie !== 'function' || typeof setCookie !== 'function' || typeof writeCell !== 'function' || typeof addmoney !== 'function') {
-                    alert('User/Cookie functions are not loaded. Cannot complete purchase.');
-                    return;
-                }
+            
+            window.buyAll = async function() {
+    // 1. Предварительные проверки и расчеты
+    const total = cart.reduce((sum, p) => sum + p.price, 0);
+    const username = getCookie('name'); // Получаем username, если он не глобальный
 
-                if (getCookie('p-coin') >= total) {
-                    cart.forEach(p => p.owned = true);
-                    setCookie('p-coin', getCookie('p-coin') - total);
-                    const pcoin = "Pcoin " + getCookie('p-coin');
-                    document.querySelector('div[class="pcoin"]').innerText = pcoin || "Pcoin 0";
-                    alert('Purchase successful!');
-                    console.log('Purchased products:', cart);
+    
+    const currentPcoin = parseFloat(getCookie('p-coin'));
+    const newPcoin = currentPcoin - total;
 
-                    // Обновляем список купленных товаров в productsbay
-                    let currentProductsBay = Array.isArray(productsbay) ? productsbay : (productsbay ? productsbay.split('|').slice(1).map(Number) : []);
-                    cart.forEach(p => {
-                        if (!currentProductsBay.includes(p.id)) {
-                            currentProductsBay.push(p.id);
-                        }
-                    });
-                    productsbay = '|' + currentProductsBay.join('|');
-                    console.log('Updated products bay string:', productsbay);
+    if (currentPcoin >= total) {
+        // 2. Обновление локальных данных
+        cart.forEach(p => p.owned = true);
 
-                    writeCell('F' + userid, productsbay);
-                    cart = [];
-                    renderCart();
-                    renderStore();
-                    renderLibrary();
-                    addmoney(getCookie('name'), total * -1);
-                } else {
-                    alert('Insufficient funds. Please top up your balance.');
-                    // getmoney(getCookie('name')); // предполагаем, что эта функция обновляет баланс
-                }
+        // 3. Обновление Cookie и DOM
+        setCookie('p-coin', newPcoin);
+        document.querySelector('div[class="pcoin"]').innerText = `Pcoin ${newPcoin}`;
+        
+        // 4. Обновление списка покупок (productsbay)
+        // Гарантируем, что currentProductsBay - это массив ID
+        // (productsbay должен быть глобально объявлен как let productsbay = [];)
+        let currentProductsBay = Array.isArray(productsbay) ? [...productsbay] : (productsbay && typeof productsbay === 'string' ? productsbay.split('|').slice(1).map(Number).filter(id => !isNaN(id)) : []);
+        
+        cart.forEach(p => {
+            if (!currentProductsBay.includes(p.id)) {
+                currentProductsBay.push(p.id);
             }
+        });
 
-            // Функция installProduct оставлена без изменений, но теперь обновляет renderStore и renderLibrary
-            function installProduct(id) {
-                const product = products.find(p => p.id === id);
+        // Обновляем глобальную переменную productsbay массивом для последующего использования
+        productsbay = currentProductsBay; 
+        
+        // Форматируем для сохранения в DB в виде "|id1|id2|..."
+        const productsBayString = '|' + productsbay.join('|');
+        console.log('Updated products bay string:', productsBayString);
+        
+        // 5. Асинхронное сохранение в DB (dbManager)
+        try {
+            // Одновременное обновление баланса и списка покупок
+            await window.dbManager.editValue(`users/${username}`, {
+                pcoin: newPcoin,
+                bays: productsBayString
+            });
+            
+            alert('Purchase successful!');
+        } catch(error) {
+            console.error('Error saving data to dbManager:', error);
+            alert('Purchase successful locally, but failed to save data to the server.');
+        }
+
+        // 6. Очистка и перерисовка
+        cart = [];
+        renderCart();
+        renderStore();
+        renderLibrary();
+        
+    } else {
+        alert(`Insufficient funds. Please top up your balance. Current: ${currentPcoin} P-Coin, Required: ${total} P-Coin.`);
+    }
+}
+            window.installProduct = function(id) {
+                const product = getProduct(id);
                 if (!product) return;
 
                 product.installed = true;
-                // openApp('installURL') должна быть доступна глобально или импортирована
+                // openApp должна быть доступна глобально
                 if (typeof openApp === 'function') {
                     openApp(product.installURL);
                 } else {
@@ -700,7 +799,8 @@
                 renderStore();
             }
 
-            renderStore();
+            // Инициализация при первой загрузке
+            // renderStore() вызывается в конце IIFE (initDataAndRender)
         </script>
     </div>
 </body>

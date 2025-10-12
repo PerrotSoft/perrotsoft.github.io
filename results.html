@@ -250,6 +250,19 @@
         <div class="appItem" onclick="openApp('ParrotSoft_Apps')">
             <img src="img/Apps.png" width="30px" height="30px" alt="png">
             <span>ParrotSoft Apps</span>
+        </div><div class="appItem" onclick="openApp('pdrive')">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.5 13C18.433 13 20 11.433 20 9.5C20 7.74619 18.7397 6.27318 17.0706 6.04693C16.5925 3.39572 14.129 1 11 1C7.81792 1 5.30822 3.44494 4.88785 6.13689C2.79374 6.70321 1 8.87851 1 11.5C1 14.0044 2.80931 16 5 16H18C19.6569 16 21 14.6569 21 13C21 11.6667 19.9678 10.5518 18.5 10.1557" fill="#1A73E8"/>
+                
+                <path d="M10 18L14.5 14L15.5 15.5L13 18H10Z" fill="#34A853"/>
+                <path d="M13 18L16 22L20 18H13Z" fill="#4285F4"/>
+                <circle cx="15.5" cy="16.5" r="1.5" fill="#FFFFFF"/>
+                <path d="M12 21C12 21.5523 11.5523 22 11 22C10.4477 22 10 21.5523 10 21C10 20.4477 10.4477 20 11 20C11.5523 20 12 20.4477 12 21Z" fill="#FBBC04"/>
+                
+                <path d="M5 11.5C5 9.84315 6.34315 8.5 8 8.5C9.65685 8.5 11 9.84315 11 11.5V11.5C11 13.1569 9.65685 14.5 8 14.5C6.34315 14.5 5 13.1569 5 11.5Z" fill="#FFFFFF" opacity="0.3"/>
+
+            </svg>
+            <span>ParrotSoft Drive</span>
         </div>
     </div>
 
@@ -258,9 +271,14 @@
         <div id="results">
             </div>
     </div>
-    
-    <script>
-        const knownSites = [
+   
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script type="module">
+import "./js/firebase_db.js";
+import { PDrive } from "./js/PDrive.js";
+      const knownSites = [
             { title: "PerrotSoft", url: "https://perrotsoft.github.io", description: "Homepage of PerrotSoft." },
             { title: "YouTube", url: "https://youtube.com", description: "Video platform." },
             { title: "Instagram", url: "https://instagram.com", description: "Social network." },
@@ -272,7 +290,7 @@
             { title: "TikTok", url: "https://tiktok.com", description: "Short videos." },
             { title: "Google", url: "https://www.google.com", description: "Search engine." },
             { title: "Wikipedia", url: "https://www.wikipedia.org", description: "Free encyclopedia." },
-        ];
+        ]; 
 
         const urlParams = new URLSearchParams(window.location.search);
         const query = urlParams.get('query')?.trim() || '';
@@ -284,34 +302,61 @@
         }
 
         const knownUrls = new Set(knownSites.map(site => site.url));
+(async function loadSites() {
+    try {
+        const username = getCookie('name') || 'guest';
+        
+        // 1. Инициализируем PDrive для текущего пользователя
+        const pdrive = new PDrive(username);
+        await pdrive.init(); 
 
-        // Загрузка и расширение списка сайтов
-        (async function loadSites() {
-            try {
-                // Предполагается, что readColumn('L') доступна
-                // if (typeof readColumn === 'undefined') return; 
-                // const listing = await readColumn('L') || []; 
-                
-                // Временно комментируем, пока readColumn не определена
-                const listing = []; 
-
-                listing.forEach(row => {
-                    const parts = row.split('|');
-                    parts.forEach(part => {
-                        const [title, url, description] = part.split('~');
-                        if (title && url && description && !knownUrls.has(url)) {
-                            knownSites.push({ title, url, description });
-                            knownUrls.add(url);
-                        }
-                    });
-                });
-
-                if (query) performSearch();
-            } catch (error) {
-                console.error("Ошибка при загрузке сайтов:", error);
+        // 2. Получаем все проектные файлы (массив объектов, содержащих расширение ".ppsearch")
+        // projectFiles: [{ user: "...", file: { name: "...", value: "..." } }, ...]
+        // ✅ ИСПРАВЛЕНИЕ ОШИБКИ: Заменено ",ppsearch" на ".ppsearch"
+        const projectFiles = await pdrive.get_progect_files(",ppsearch");
+        
+        // 3. Итерируем по всем найденным файлам и объединяем их содержимое
+        let combinedFileContent = "";
+        
+        projectFiles.forEach(entry => {
+            // Убеждаемся, что entry.file.value существует и является строкой
+            if (entry.file && typeof entry.file.value === 'string') {
+                // Добавляем содержимое каждого найденного файла, разделяя новой строкой
+                combinedFileContent += entry.file.value + '\n';
+                console.log(`Добавлен файл проекта от пользователя ${entry.user}: ${entry.file.name}`);
             }
-        })();
+        });
+        
+        // Разбиваем объединенное содержимое на строки и фильтруем пустые
+        const listing = combinedFileContent.split('\n').filter(Boolean);
+        
+        console.log("Объединенное содержимое проектов для парсинга:", listing.length > 0 ? listing.slice(0, 5) : "Нет данных"); // Показываем только первые 5
 
+        // Парсинг строк
+        listing.forEach(row => {
+            // Формат: title~url~description|title~url~description
+            const parts = row.split('|');
+            parts.forEach(part => {
+                const [title, url, description] = part.split('~');
+                
+                // ✅ ИЗМЕНЕНИЕ ДЛЯ ТЕСТИРОВАНИЯ: Удалена проверка !knownUrls.has(url), чтобы
+                // позволить добавлять сайты с одинаковым URL (например, google.com), 
+                // но разными заголовками (fill212, fill) для отладки.
+                if (title && url && description) {
+                    knownSites.push({ title, url, description });
+                    //knownUrls.add(url); // Не добавляем, чтобы не блокировать следующие
+                }
+            });
+        });
+
+        if (query) performSearch();
+    } catch (error) {
+        console.error("Ошибка при загрузке сайтов из всех проектов:", error);
+        // Если произошла ошибка загрузки, все равно выполняем поиск по базовому списку
+        if (query) performSearch(); 
+    }
+})();
+        // Функция поиска
         // Функция поиска
         function performSearch() {
             const resultsDiv = document.getElementById('results');
@@ -355,9 +400,8 @@
         function openApp(app) { 
             console.log(`Attempting to open app: ${app}`);
             // Ваша логика открытия приложения
+            // Например: window.location.href = app;
         }
-        
-        
     </script>
 </body>
 </html>

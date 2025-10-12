@@ -164,7 +164,10 @@
         }
     </style>
 </head>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+    <script src="js/firebase_db.js"></script>
 <body>
     <div class="container">
     <div class="header">Registration and Login</div>
@@ -190,10 +193,9 @@
     </div>
    
     <div class="alert-box" id="alert-box"></div>
-    <script str="user.js"></script>
+    
     <script>
-    let url = "https://script.google.com/macros/s/AKfycbzlFq55y45oMeOs0WrGSuFaBOaBA5EZNTAo_3FRmx-WWVh6Hd9AKFQi9HAYYLJfp5OAIQ/exec?action=";
-    // Switch between registration and login
+    
     document.getElementById('tab-register').addEventListener('click', function() {
     document.getElementById('register-form').classList.add('active');
     document.getElementById('login-form').classList.remove('active');
@@ -207,93 +209,124 @@
     document.getElementById('tab-login').classList.add('active');
     document.getElementById('tab-register').classList.remove('active');
     });
-   
+   function setCookie(name, value) {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000)); // +1 год от текущей даты
+    const expires = "; expires=" + date.toUTCString();          // Форматируем дату истечения
+    document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
+}
+
+function generateApiKey(length = 100, options = {}) {
+  const {
+    prefix = "api_",          // префикс перед ключом
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-", // безопасные символы
+  } = options;
+
+  // вычисляем нужную длину случайной части
+  const chars = alphabet.length;
+  const randomLength = Math.max(1, length - prefix.length);
+
+  let key = prefix;
+
+  // выбираем источник случайных чисел (crypto)
+  let randomValues;
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    // браузер
+    randomValues = new Uint8Array(randomLength);
+    crypto.getRandomValues(randomValues);
+  } else {
+    // Node.js
+    try {
+      const nodeCrypto = require("crypto");
+      randomValues = nodeCrypto.randomBytes(randomLength);
+    } catch (e) {
+      // fallback — менее безопасный
+      randomValues = new Uint8Array(randomLength);
+      for (let i = 0; i < randomLength; i++) randomValues[i] = Math.random() * 256;
+    }
+  }
+
+  // формируем символы
+  for (let i = 0; i < randomLength; i++) {
+    key += alphabet[randomValues[i] % chars];
+  }
+
+  return key;
+}
+
+// 🔹 Примеры
+
     // Function for registration
-    function register() {
-    const name = document.getElementById('register-name').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-   
-    if (!name || !email || !password) {
-   showAlert("Please fill in all fields.", "error");
-   return;
-   }
-   
-   const url1 = url+`regist&name=${name}&gmail=${email}&pasworld=${password}`;
-   fetch(url1)
-   .then(response => response.json())
-   .then(data => {
-   if (data.status =="registration successful") {
-   document.cookie = `name=${name};`;
-   document.cookie = `email=${email};`;
-   document.cookie = `pcoin=0;`;
-   } else {
-   showAlert("A user with this login already exists.", "error");
-   }
-   })
-   .catch(error => {
-   showAlert("Registration error. Try again later.", "error");
-   });
-   showAlert("Registration successful.", "success");
+    async function register() {
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+    
+        if (!name || !email || !password) {
+            showAlert("Please fill in all fields.", "error");
+            return;
+        }
+        const value = {
+            name: name,
+            password: password,
+            email: email,
+            pcoin: "0",
+            icon: "https://cdn-icons-png.flaticon.com/128/17807/17807725.png",
+            PDrive:{
+            root: {
+                children: {
+                ParrotSoft_Progeckts: {
+                    type: "folder"
+                }
+                },
+                type: "folder"
+            },
+            size: 100
+            }
+        };
+        try{
+            await window.dbManager.create("users", name, value);
+            showAlert("Registration successful.", "success");
+            setCookie("name", name);
+            setCookie("email", decodeURIComponent(email));
+            setCookie("p-coin", "0");
+        }catch(e){
+            showAlert("Registration error. Try again later."+e, "error");
+        }
+        console.log(value);
    }
    
    // Login function
-   function login() {
-   const name = document.getElementById('login-name').value;
-   const password = document.getElementById('login-password').value;
-   
-   if (!name || !password) {
-   showAlert("Please fill in all fields.", "error");
-   return;
-   }
-   
-   const url1 = url+`login&name=${name}&pasworld=${password}`;
-   
-   fetch(url1)
-   .then(response => response.json())
-   .then(data => {
-   if (data.status === "login successful") {
-    let email = ""; // Declares an empty string
-    let id = 0; // Declares an empty string
-fetch(url + `searchUser&cellAddress=${name}`)
-    .then(response => response.json())
-    .then(data => {
-        id = data.value; // Assigns the value to id
-        return fetch(url + `readCell&cellAddress=$B` + data.value);
-    })
-    .then(response => response.json())
-    .then(data => {
-        email = data.value;
-        let pcoin = getdatabsase(id, "D"); // Fetches the value of cell C
-        pcoin.then(value => {
-            document.cookie = `p-coin=${value};`;
-        });
-        let icon = getdatabsase(id, "E"); // Fetches the value of cell C
-        icon.then(value => {
-            document.cookie = `icon=${value};`;
-        });
-        // Now set the cookies inside the correct scope
-        document.cookie = `name=${name};`;
-        document.cookie = `email=${email};`;
-        showAlert("Login successful.", "success");
-    })
-    .catch(error => console.error("Error fetching data:", error));
-
-    showAlert(document.cookie, "success");
-   
-   } else {
-   showAlert("Incorrect username or password.", "error");
-   }
-   })
-   .catch(error => {
-   showAlert("Login error. Try again later.", "error");
-   });
-   }
-   function getCookie(name) {
-   const value = `; ${document.cookie}`;    
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+async function login() {
+    const name = document.getElementById('login-name').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+    
+    if (!name || !password) {
+        showAlert("Please fill in all fields.", "error");
+        return;
     }
+    try {
+        const data = await getKeyData("users/" + name);
+        console.log(data);
+        if (data) {
+            if (password !== data.value.password) {
+                showAlert("Incorrect password.", "error");
+                return;
+            }
+            showAlert("Login successful.", "success");
+            setCookie("name", name);
+            setCookie("email", decodeURIComponent(data.value.email));
+            setCookie("p-coin",data.value.pcoin);
+            setCookie("icon", data.value.icon);
+            } else {
+            showAlert("User not found.", "error");
+            return;
+        }
+    } catch (e) {
+        showAlert("Login error. Try again later. " + e, "error");
+    }
+}
+
     async function getdatabsase(id, name) {
     try {
         let response = await fetch(url + `readCell&cellAddress=$${name}${id}`);
