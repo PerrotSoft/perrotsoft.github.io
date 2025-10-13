@@ -537,25 +537,40 @@
     // 1. ИМПОРТЫ МОДУЛЕЙ
     // ***************************************************************
     import "./js/firebase_db.js"; 
+    // PDrive теперь доступен в этой области видимости
     import { PDrive } from "./js/PDrive.js"; 
-    
-    // Если ваши файлы с логикой тоже модули, импортируйте их здесь.
-    // Убедитесь, что пути правильные:
-    // import * as PP_Search from "./js/ppsearch.js"; 
-    // import * as PP_Play from "./js/ppplay.js"; 
-    // import * as PP_Datapedia from "./js/ppdatapedia.js"; 
 
     // ----------------------------------------------------------------------------------
-    // 2. ГЛОБАЛИЗАЦИЯ ФУНКЦИЙ
-    // 
-    // ЭТО ИСПРАВЛЯЕТ ВЫЗОВЫ ONCLICK ИЗ HTML (Dvelopent.html:420 и т.д.)
+    // 2. КОНСТАНТЫ И ГЛОБАЛЬНЫЕ ДАННЫЕ
     // ----------------------------------------------------------------------------------
+
+    let userName = getCookie('name') || 'guest';
+    // Директория для хранения индивидуальных файлов проектов
+    const PROJECTS_DIR = `/dev-projects/${userName}/`; 
+
+    // Карта расширений файлов для каждого типа проекта
+    const PROJECT_EXTENSIONS = {
+        'search': ',ppsearch',
+        'datapedia': ',ppdatapedia',
+        'gameApp': ',ppplay' 
+    };
+
+    let allUserData = {
+        search: [],
+        datapedia: [],
+        gameApp: []
+    };
+    
+    // ----------------------------------------------------------------------------------
+    // 3. ГЛОБАЛИЗАЦИЯ ФУНКЦИЙ (ОБЯЗАТЕЛЬНО ДЛЯ ONCLICK)
+    // ----------------------------------------------------------------------------------
+    // Это делает функции доступными из HTML-атрибутов onclick="..."
     window.confirmChanges = async (projectType) => confirmChanges(projectType);
     window.showProjects = async (filterType) => showProjects(filterType);
     window.deleteProject = async (projectIdentifier, projectType) => deleteProject(projectIdentifier, projectType);
     window.editProject = async (projectIdentifier, projectType) => editProject(projectIdentifier, projectType);
     window.saveProjectChanges = async (projectType) => saveProjectChanges(projectType);
-    
+
     // Глобализация функций UI
     window.toggleUserMenu = function() {
         const userMenu = document.getElementById('userMenu');
@@ -576,127 +591,432 @@
         }
         nav.classList.toggle('active');
     }
-    
+
     window.openApp = function(url) { console.log("Opening app:", url); window.location.href = url; }
     window.toggleMenu = function() {
         const menu = document.getElementById('menuContainer');
         menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
-
     // -----------------------------------------------------
-    // 3. БЛОК ЛОГИКИ PDrive (ВСЕ ФУНКЦИИ, КОТОРЫЕ ИСПОЛЬЗУЮТ PDrive)
+    // 4. ЛОГИКА PDrive И ФАЙЛОВ
     // -----------------------------------------------------
 
-    let allUserData = {
-        search: [],
-        datapedia: [],
-        gameApp: []
-    };
-    
-    let userName = getCookie('name') || 'guest';
-    const PROJECTS_FILE_PATH = `/dev-projects/${userName}-projects.json`; 
+    // Вспомогательная функция для парсинга данных из содержимого файла
+    function parseProjectContent(content, type, filename) {
+        if (!content) return null;
 
+        const projectStrings = content.split('|').filter(s => s.trim() !== '');
+        const projectString = projectStrings[0] || content; 
+        
+        const parts = projectString.split('~');
+        let project = { 
+            type: type, 
+            filename: filename, 
+            id: projectString 
+        };
+        
+        switch (type) {
+            case 'search':
+                if (parts.length >= 3) {
+                    project.name = parts[0].trim();
+                    project.url = parts[1].trim();
+                    project.data = parts[2].trim();
+                    project.id = filename; 
+                }
+                break;
+            case 'datapedia':
+                if (parts.length >= 3) {
+                    project.name = parts[0].trim();
+                    project.img = parts[1].trim();
+                    project.code = parts[2].trim();
+                    project.id = filename;
+                }
+                break;
+            case 'gameApp':
+                if (parts.length >= 7) {
+                    project.id = parseInt(parts[0]);
+                    project.name = parts[1].trim();
+                    project.price = parseFloat(parts[2]);
+                    project.image = parts[3].trim();
+                    project.owned = parts[4] === "true";
+                    project.installed = parts[5] === "true";
+                    project.installURL = parts[6].trim();
+                } else if (parts.length >= 4) {
+                    // Обработка старого формата
+                    project.id = filename; 
+                    project.name = parts[0].trim();
+                    project.price = parseFloat(parts[1]);
+                    project.image = parts[2].trim();
+                    project.installURL = parts[3].trim(); 
+                    project.owned = false; 
+                    project.installed = false; 
+                }
+                break;
+        }
+        return project.name ? project : null; 
+    }
 
-    // 1. Асинхронное чтение файла проектов
+    // 1. Асинхронное чтение файлов проектов (читает все индивидуальные файлы)
     async function readProjectsFile() {
         try {
-            // PDrive теперь доступен, так как находится в области видимости модуля!
-            const pdrive = new PDrive(userName); 
-
-            const fileContent = await pdrive.readFile(PROJECTS_FILE_PATH);
-            
-            if (fileContent) {
-                const data = JSON.parse(fileContent);
-                
-                const parseProjectData = (dataString, type) => {
-                    if (!dataString || typeof dataString !== 'string') return [];
-                    return dataString.split('|').filter(s => s.trim() !== '').map(projectString => {
-                        const parts = projectString.split('~');
-                        let project = { originalString: projectString, type: type };
-                        
-                        switch (type) {
-                            case 'search':
-                                if (parts.length >= 3) {
-                                    project.id = projectString;
-                                    project.name = parts[0].trim();
-                                    project.url = parts[1].trim();
-                                    project.data = parts[2].trim();
-                                }
-                                break;
-                            case 'datapedia':
-                                if (parts.length >= 3) {
-                                    project.id = projectString;
-                                    project.name = parts[0].trim();
-                                    project.img = parts[1].trim();
-                                    project.code = parts[2].trim();
-                                }
-                                break;
-                            case 'gameApp':
-                                if (parts.length >= 7) {
-                                    project.id = parseInt(parts[0]);
-                                    project.name = parts[1].trim();
-                                    project.price = parseFloat(parts[2]);
-                                    project.image = parts[3].trim();
-                                    project.owned = parts[4] === "true";
-                                    project.installed = parts[5] === "true";
-                                    project.installURL = parts[6].trim();
-                                } else if (parts.length >= 4) {
-                                    // Старый формат, где ID будет отсутствовать
-                                    project.id = projectString; // Временный ID для старых записей
-                                    project.name = parts[0].trim();
-                                    project.price = parseFloat(parts[1]);
-                                    project.image = parts[2].trim();
-                                    project.installURL = parts[3].trim(); 
-                                    project.owned = false; 
-                                    project.installed = false; 
-                                }
-                                break;
-                        }
-                        return (type === 'gameApp' && project.id === undefined) ? null : project; 
-                    }).filter(p => p !== null); 
-                };
-                
-                allUserData.search = parseProjectData(data.search, 'search');
-                allUserData.datapedia = parseProjectData(data.datapedia, 'datapedia');
-                allUserData.gameApp = parseProjectData(data.gameApp, 'gameApp');
-                
-                console.log("Projects loaded from PDrive:", allUserData);
-            }
-        } catch (error) {
-            // Эта ошибка теперь не будет ReferenceError, а, возможно, ошибкой чтения файла
-            console.warn("Could not read projects file, creating new structure if necessary:", error); 
-        }
-    }
-
-
-    // 2. Асинхронная запись файла проектов
-    async function writeProjectsFile() {
-        try {
             const pdrive = new PDrive(userName);
+            await pdrive.init();
+            allUserData.search = [];
+            allUserData.datapedia = [];
+            allUserData.gameApp = [];
 
-            const dataToSave = {
-                search: allUserData.search.map(p => `${p.name}~${p.url}~${p.data}`).join('|'),
-                datapedia: allUserData.datapedia.map(p => `${p.name}~${p.img}~${p.code}`).join('|'),
-                gameApp: allUserData.gameApp.map(p => `${p.id}~${p.name}~${p.price}~${p.image}~${p.owned ? 'true' : 'false'}~${p.installed ? 'true' : 'false'}~${p.installURL}`).join('|')
-            };
+            const fileList = await pdrive.listFiles(PROJECTS_DIR);
+            
+            if (fileList && Array.isArray(fileList)) {
+                
+                for (const filename of fileList) {
+                    let projectType = null;
+                    if (filename.endsWith(PROJECT_EXTENSIONS.search)) {
+                        projectType = 'search';
+                    } else if (filename.endsWith(PROJECT_EXTENSIONS.datapedia)) {
+                        projectType = 'datapedia';
+                    } else if (filename.endsWith(PROJECT_EXTENSIONS.gameApp)) {
+                        projectType = 'gameApp';
+                    }
 
-            const jsonContent = JSON.stringify(dataToSave, null, 2);
-            await pdrive.writeFile(PROJECTS_FILE_PATH, jsonContent);
-            console.log("Projects saved to PDrive successfully.");
+                    if (projectType) {
+                        try {
+                            const fullPath = PROJECTS_DIR + filename;
+                            const content = await pdrive.readFile(fullPath);
+                            const project = parseProjectContent(content, projectType, filename);
+                            
+                            if (project) {
+                                allUserData[projectType].push(project);
+                            }
+                        } catch (e) {
+                            console.error(`Error reading or parsing file ${filename}:`, e);
+                        }
+                    }
+                }
+            }
+            console.log("Projects loaded from PDrive (individual files):", allUserData);
         } catch (error) {
-            console.error("Error saving projects to PDrive:", error);
-            alert("Failed to save projects to file system. Please try again.");
-            throw error;
+            console.warn("Could not list projects directory or init PDrive:", error);
         }
     }
 
-    // [Остальная часть логики: confirmChanges, showProjects, deleteProject, editProject, saveProjectChanges, а также функции applyTheme, getCookie, updateSettingsList, showSettingsSection, updateUserInfo и инициализационный самовызывающийся блок (async function() { ... })] 
-    // Вся эта логика должна быть включена ЗДЕСЬ, в ЕДИНОМ блоке <script type="module">
+
+    // 2. Асинхронная запись/обновление индивидуального файла проекта
+    async function writeProjectFile(project) {
+        if (!project.filename || !project.type) {
+            throw new Error("Project object is missing filename or type for writing.");
+        }
+        
+        const pdrive = new PDrive(userName);
+        await pdrive.init();
+        const fullPath = PROJECTS_DIR + project.filename;
+
+        let contentToWrite = "";
+
+        if (project.type === 'gameApp') {
+            contentToWrite = `${project.id}~${project.name}~${project.price}~${project.image}~${project.owned ? 'true' : 'false'}~${project.installed ? 'true' : 'false'}~${project.installURL}`;
+        } else if (project.type === 'search') {
+            contentToWrite = `${project.name}~${project.url}~${project.data}`;
+        } else if (project.type === 'datapedia') {
+            contentToWrite = `${project.name}~${project.img}~${project.code}`;
+        }
+
+        await pdrive.writeFile(fullPath, contentToWrite);
+        console.log(`Project ${project.filename} saved successfully.`);
+    }
+
+    // 3. Универсальная функция для добавления проекта
+    async function confirmChanges(projectType) {
+        let modalId, fieldsSelector, newEntryParts = [];
+
+        switch (projectType) {
+            case 'search':
+                modalId = 'modal';
+                fieldsSelector = '#modal-fields input';
+                break;
+            case 'datapedia':
+                modalId = 'modal1';
+                fieldsSelector = '#modal1-fields input';
+                break;
+            case 'gameApp':
+                modalId = 'modal2';
+                fieldsSelector = '#modal2-fields input';
+                break;
+            default:
+                console.error("Unknown project type:", projectType);
+                return;
+        }
+
+        const modal = document.getElementById(modalId);
+        const fields = document.querySelectorAll(fieldsSelector);
+        
+        let allFieldsFilled = true;
+        fields.forEach(field => {
+            if (field.value.trim() === '') {
+                allFieldsFilled = false;
+            }
+            newEntryParts.push(field.value.trim());
+        });
+
+        if (!allFieldsFilled) {
+            alert('All fields are required!');
+            return;
+        }
+
+        let newProject = { type: projectType };
+        let uniqueId = Date.now(); 
+        newProject.filename = `${projectType}-${uniqueId}${PROJECT_EXTENSIONS[projectType]}`;
+
+        if (projectType === 'gameApp') {
+            newProject.id = uniqueId;
+            newProject.name = newEntryParts[0];
+            newProject.price = parseFloat(newEntryParts[1]);
+            newProject.image = newEntryParts[2];
+            newProject.installURL = newEntryParts[3];
+            newProject.owned = false;
+            newProject.installed = false;
+            
+        } else if (projectType === 'search') {
+            newProject.name = newEntryParts[0];
+            newProject.url = newEntryParts[1];
+            newProject.data = newEntryParts[2];
+            newProject.id = newProject.filename;
+
+        } else if (projectType === 'datapedia') {
+            newProject.name = newEntryParts[0];
+            newProject.img = newEntryParts[1];
+            newProject.code = newEntryParts[2];
+            newProject.id = newProject.filename;
+        }
+        
+        allUserData[projectType].push(newProject);
+
+        try {
+            await writeProjectFile(newProject); 
+            console.log(`Changes confirmed (${projectType}):`, newProject);
+            modal.style.display = 'none';
+            alert('Project added successfully!');
+            fields.forEach(field => field.value = '');
+        } catch (error) {
+            console.error("Failed to write individual project file:", error);
+            alert("Failed to save project. Please check the console.");
+        }
+    }
     
-    // --- ВАЖНО: Весь код из предыдущего ответа должен быть здесь ---
+    // 4. Отображение проектов
+    async function showProjects(filterType = 'all') {
+        const projectsListDiv = document.getElementById('projects-list');
+        projectsListDiv.innerHTML = '';
+
+        document.querySelectorAll('.project-filter button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const filterButton = document.getElementById(`filter-${filterType}`);
+        if (filterButton) {
+            filterButton.classList.add('active');
+        } else {
+            document.getElementById('filter-all').classList.add('active');
+        }
+
+        await readProjectsFile(); 
+        
+        let filteredProjects = allUserData.search.concat(allUserData.datapedia, allUserData.gameApp);
+
+        if (filterType !== 'all') {
+            filteredProjects = filteredProjects.filter(p => p.type === filterType);
+        }
+
+        if (filteredProjects.length === 0) {
+            projectsListDiv.innerHTML = `<p>No ${filterType !== 'all' ? filterType : ''} projects found.</p>`;
+        } else {
+            filteredProjects.forEach(project => {
+                const projectDiv = document.createElement('div');
+                projectDiv.classList.add('project-item');
+
+                let detailsHtml = '';
+                // Идентификатор для функций edit/delete - это filename
+                let identifier = project.filename; 
+
+                switch (project.type) {
+                    case 'search':
+                        detailsHtml = `
+                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Search)</span></h4>
+                            <p>URL: <a href="${project.url}" target="_blank">${project.url}</a></p>
+                            <p>Data: ${project.data}</p>
+                            <p style="font-size: 0.7em;">File: ${project.filename}</p>
+                        `;
+                        break;
+                    case 'datapedia':
+                        detailsHtml = `
+                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Datapedia Article)</span></h4>
+                            <p>Image: <a href="${project.img}" target="_blank">${project.img}</a></p>
+                            <p>Code: ${project.code}</p>
+                            <p style="font-size: 0.7em;">File: ${project.filename}</p>
+                        `;
+                        break;
+                    case 'gameApp':
+                        detailsHtml = `
+                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Game/App)</span></h4>
+                            <p>ID: ${project.id}</p>
+                            <p>Price: ${project.price}</p>
+                            <p>Image: <a href="${project.image}" target="_blank">${project.image}</a></p>
+                            <p>Install URL: <a href="${project.installURL}" target="_blank">${project.installURL}</a></p>
+                            <p>Status: Owned: ${project.owned ? 'Yes' : 'No'}, Installed: ${project.installed ? 'Yes' : 'No'}</p>
+                            <p style="font-size: 0.7em;">File: ${project.filename}</p>
+                        `;
+                        break;
+                }
+
+                const escapedIdentifier = String(identifier).replace(/'/g, "\\'");
+                
+                projectDiv.innerHTML = `
+                    ${detailsHtml}
+                    <div class="actions">
+                        <button onclick="editProject('${escapedIdentifier}', '${project.type}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteProject('${escapedIdentifier}', '${project.type}')">Delete</button>
+                    </div>
+                `;
+                projectsListDiv.appendChild(projectDiv);
+            });
+        }
+        document.getElementById('modal3').style.display = 'flex';
+    }
+
+
+    // 5. Универсальная функция для удаления проекта
+    async function deleteProject(projectFilename, projectType) {
+        if (!confirm(`Are you sure you want to delete the file ${projectFilename} for ${projectType} project?`)) {
+            return;
+        }
+
+        const pdrive = new PDrive(userName);
+        await pdrive.init();
+
+        try {
+            await pdrive.deleteFile(PROJECTS_DIR + projectFilename);
+            alert(`${projectType} project file deleted successfully!`);
+            showProjects(projectType); 
+        } catch (error) {
+            console.error("Error deleting file:", error);
+            alert(`Failed to delete file ${projectFilename}. Error: ${error.message}`);
+        }
+    }
+
+    // 6. Универсальная функция для открытия модального окна редактирования
+    async function editProject(projectFilename, projectType) {
+        await readProjectsFile(); 
+
+        let modalId, projectToEdit;
+        
+        projectToEdit = allUserData[projectType].find(p => p.filename === projectFilename);
+        
+        if (projectToEdit) {
+            if (projectType === 'gameApp') {
+                modalId = 'editGameAppModal';
+                // Скрытое поле для хранения имени файла
+                document.getElementById('editGameAppFilename').value = projectToEdit.filename; 
+                document.getElementById('editGameAppOriginalId').value = projectToEdit.id;
+                document.getElementById('editGameAppName').value = projectToEdit.name;
+                document.getElementById('editGameAppPrice').value = projectToEdit.price;
+                document.getElementById('editGameAppImage').value = projectToEdit.image;
+                document.getElementById('editGameAppInstallURL').value = projectToEdit.installURL;
+            } else if (projectType === 'search') {
+                modalId = 'editSearchModal';
+                document.getElementById('editSearchFilename').value = projectToEdit.filename; 
+                document.getElementById('editSearchName').value = projectToEdit.name;
+                document.getElementById('editSearchUrl').value = projectToEdit.url;
+                document.getElementById('editSearchData').value = projectToEdit.data;
+            } else if (projectType === 'datapedia') {
+                modalId = 'editDatapediaModal';
+                document.getElementById('editDatapediaFilename').value = projectToEdit.filename; 
+                document.getElementById('editDatapediaName').value = projectToEdit.name;
+                document.getElementById('editDatapediaImg').value = projectToEdit.img;
+                document.getElementById('editDatapediaCode').value = projectToEdit.code;
+            }
+            document.getElementById(modalId).style.display = 'flex';
+        } else {
+            alert(`Project file ${projectFilename} not found for editing.`);
+        }
+        document.getElementById('modal3').style.display = 'none';
+    }
+
+
+    // 7. Универсальная функция для сохранения изменений проекта
+    async function saveProjectChanges(projectType) {
+        let projectFilename, currentDataKey, modalId;
+        let projectToUpdate;
+
+        if (projectType === 'gameApp') {
+            projectFilename = document.getElementById('editGameAppFilename').value.trim();
+            currentDataKey = 'gameApp';
+            modalId = 'editGameAppModal';
+        } else if (projectType === 'search') {
+            projectFilename = document.getElementById('editSearchFilename').value.trim();
+            currentDataKey = 'search';
+            modalId = 'editSearchModal';
+        } else if (projectType === 'datapedia') {
+            projectFilename = document.getElementById('editDatapediaFilename').value.trim();
+            currentDataKey = 'datapedia';
+            modalId = 'editDatapediaModal';
+        } else {
+            return;
+        }
+        
+        await readProjectsFile(); 
+        
+        const projectIndex = allUserData[currentDataKey].findIndex(p => p.filename === projectFilename);
+        if (projectIndex !== -1) {
+            projectToUpdate = allUserData[currentDataKey][projectIndex];
+        } else {
+            alert(`Error: Project file ${projectFilename} not found in memory during save.`);
+            return;
+        }
+
+        if (projectType === 'gameApp') {
+            projectToUpdate.name = document.getElementById('editGameAppName').value.trim();
+            projectToUpdate.price = parseFloat(document.getElementById('editGameAppPrice').value.trim());
+            projectToUpdate.image = document.getElementById('editGameAppImage').value.trim();
+            projectToUpdate.installURL = document.getElementById('editGameAppInstallURL').value.trim();
+            if (!projectToUpdate.name || isNaN(projectToUpdate.price) || !projectToUpdate.image || !projectToUpdate.installURL) {
+                alert('All fields are required and Price must be a number!');
+                return;
+            }
+        } else if (projectType === 'search') {
+            projectToUpdate.name = document.getElementById('editSearchName').value.trim();
+            projectToUpdate.url = document.getElementById('editSearchUrl').value.trim();
+            projectToUpdate.data = document.getElementById('editSearchData').value.trim();
+            if (!projectToUpdate.name || !projectToUpdate.url || !projectToUpdate.data) {
+                alert('All fields are required!');
+                return;
+            }
+        } else if (projectType === 'datapedia') {
+            projectToUpdate.name = document.getElementById('editDatapediaName').value.trim();
+            projectToUpdate.img = document.getElementById('editDatapediaImg').value.trim();
+            projectToUpdate.code = document.getElementById('editDatapediaCode').value.trim();
+            if (!projectToUpdate.name || !projectToUpdate.img || !projectToUpdate.code) {
+                alert('All fields are required!');
+                return;
+            }
+        }
+        
+        try {
+            // Сохранение обновленного объекта в тот же файл
+            await writeProjectFile(projectToUpdate); 
+            alert(`${projectType} project updated successfully!`);
+            document.getElementById(modalId).style.display = 'none';
+            showProjects(projectType); 
+        } catch (error) {
+            console.error("Failed to save project changes:", error);
+            alert(`Failed to save changes to file ${projectFilename}.`);
+        }
+    }
+
+    // -----------------------------------------------------
+    // 5. ЛОГИКА UI, ТЕМЫ И НАВИГАЦИЯ
+    // -----------------------------------------------------
     
-    // --- Theme Styles и Утилиты ---
+    // --- Theme Data ---
     const themeStyles = {
         'dark': {
             'body-bg': '#1f1d1d', 'text-color': '#FFFFFF',
@@ -726,7 +1046,83 @@
             'app-item-bg': '#D7D7D7', 'app-item-hover': '#C0C0C0'
         }
     };
+    
+    // --- Settings Data ---
+    const settingsSections = {
+        'Overview': {
+            title: 'Overview & Quick Actions',
+            html: `
+                <div class="settings-container">
+                    <h2>Developer Tools and Shortcuts</h2>
+                    <p>Use the buttons below to quickly add new projects or manage existing ones.</p>
+                    
+                    <div class="dev-action-buttons">
+                        <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
+                        <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
+                        <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
+                        <button class="button" onclick="showProjects('all'); document.getElementById('modal3').style.display='flex'">View/Manage My Projects</button>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px; border-bottom: 1px solid #444C56; padding-bottom: 10px;">Quick Launch</h3>
+                    
+                    <div class="appItem-content" onclick="openApp('ParrotSoftIDE.html')">
+                        <img src="img/ParrotIDE_mini.png" alt="ParrotIDE Icon">
+                        <span>ParrotSoftIDE</span>
+                    </div>
+                </div>
+            `
+        },
+        'NewContent': {
+            title: 'Add New Content',
+            html: `
+                <div class="settings-container">
+                    <h2>Add Content Wizards</h2>
+                    <p>Launch specific creation wizards using the links below:</p>
+                    <div style="margin-top: 20px;">
+                        <button class="button" onclick="document.getElementById('modal').style.display='flex'">Add Search Engine</button>
+                        <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Create Datapedia Article</button>
+                        <button class="button" onclick="document.getElementById('modal2').style.display='flex'">Publish Game or App</button>
+                    </div>
+                </div>
+            `
+        },
+    };
+    const navClusters = [
+        {
+            title: 'ACCOUNT',
+            id: 'account',
+            items: [
+                { id: 'Styling', title: 'Account Styling', type: 'link', url: 'accunt.html' },
+                { id: 'Theme', title: 'Design Theme', type: 'link', url: 'accunt.html' }, 
+                { id: 'Security', title: 'Password and Security', type: 'link', url: 'accunt.html' },
+                { id: 'Deletion', title: 'Delete Account', type: 'link', url: 'accunt.html' }, 
+            ]
+        },
+        {
+            title: 'FINANCES',
+            id: 'financial',
+            items: [
+                { id: 'PcoinWallet', title: 'P-coin Wallet', type: 'link', url: 'Pcoin.html' },
+            ]
+        },{
+            title: 'DEVELOPMENT MENU',
+            id: 'development',
+            items: [
+                { id: 'Overview', title: 'Overview & Actions', type: 'section' },
+                { id: 'NewContent', title: 'New Content Wizards', type: 'section' },
+            ]
+        },
+        {
+            title: 'MANAGEMENT',
+            id: 'management',
+            items: [
+                { id: 'manageProjects', title: 'Manage Projects', type: 'section', action: "showProjects('all'); document.getElementById('modal3').style.display='flex'" },
+                { id: 'ParrotSoftIDE', title: 'ParrotSoftIDE', type: 'link', url: 'ParrotSoftIDE.html' },
+            ]
+        }
+    ];
 
+    // --- Utility Functions ---
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -811,80 +1207,6 @@
             .toggleButton { color: ${theme['top-panel-color']} !important; }
         `;
     }
-    
-    const settingsSections = {
-        'Overview': {
-            title: 'Overview & Quick Actions',
-            html: `
-                <div class="settings-container">
-                    <h2>Developer Tools and Shortcuts</h2>
-                    <p>Use the buttons below to quickly add new projects or manage existing ones.</p>
-                    
-                    <div class="dev-action-buttons">
-                        <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
-                        <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
-                        <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
-                        <button class="button" onclick="showProjects('all'); document.getElementById('modal3').style.display='flex'">View/Manage My Projects</button>
-                    </div>
-                    
-                    <h3 style="margin-top: 30px; border-bottom: 1px solid #444C56; padding-bottom: 10px;">Quick Launch</h3>
-                    
-                    <div class="appItem-content" onclick="openApp('ParrotSoftIDE.html')">
-                        <img src="img/ParrotIDE_mini.png" alt="ParrotIDE Icon">
-                        <span>ParrotSoftIDE</span>
-                    </div>
-                </div>
-            `
-        },
-        'NewContent': {
-            title: 'Add New Content',
-            html: `
-                <div class="settings-container">
-                    <h2>Add Content Wizards</h2>
-                    <p>Launch specific creation wizards using the links below:</p>
-                    <div style="margin-top: 20px;">
-                        <button class="button" onclick="document.getElementById('modal').style.display='flex'">Add Search Engine</button>
-                        <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Create Datapedia Article</button>
-                        <button class="button" onclick="document.getElementById('modal2').style.display='flex'">Publish Game or App</button>
-                    </div>
-                </div>
-            `
-        },
-    };
-    const navClusters = [
-        {
-            title: 'ACCOUNT',
-            id: 'account',
-            items: [
-                { id: 'Styling', title: 'Account Styling', type: 'link', url: 'accunt.html' },
-                { id: 'Theme', title: 'Design Theme', type: 'link', url: 'accunt.html' }, 
-                { id: 'Security', title: 'Password and Security', type: 'link', url: 'accunt.html' },
-                { id: 'Deletion', title: 'Delete Account', type: 'link', url: 'accunt.html' }, 
-            ]
-        },
-        {
-            title: 'FINANCES',
-            id: 'financial',
-            items: [
-                { id: 'PcoinWallet', title: 'P-coin Wallet', type: 'link', url: 'Pcoin.html' },
-            ]
-        },{
-            title: 'DEVELOPMENT MENU',
-            id: 'development',
-            items: [
-                { id: 'Overview', title: 'Overview & Actions', type: 'section' },
-                { id: 'NewContent', title: 'New Content Wizards', type: 'section' },
-            ]
-        },
-        {
-            title: 'MANAGEMENT',
-            id: 'management',
-            items: [
-                { id: 'manageProjects', title: 'Manage Projects', type: 'section', action: "showProjects('all'); document.getElementById('modal3').style.display='flex'" },
-                { id: 'ParrotSoftIDE', title: 'ParrotSoftIDE', type: 'link', url: 'ParrotSoftIDE.html' },
-            ]
-        }
-    ];
 
     function updateSettingsList() {
         const nav = document.getElementById('settingsNav');
@@ -962,331 +1284,17 @@
             nav.classList.remove('active');
         }
     });
-    
-    // 3. Универсальная функция для добавления проекта
-    async function confirmChanges(projectType) {
-        let modalId, fieldsSelector, newEntryParts = [];
-
-        switch (projectType) {
-            case 'search':
-                modalId = 'modal';
-                fieldsSelector = '#modal-fields input';
-                break;
-            case 'datapedia':
-                modalId = 'modal1';
-                fieldsSelector = '#modal1-fields input';
-                break;
-            case 'gameApp':
-                modalId = 'modal2';
-                fieldsSelector = '#modal2-fields input';
-                break;
-            default:
-                console.error("Unknown project type:", projectType);
-                return;
-        }
-
-        const modal = document.getElementById(modalId);
-        const fields = document.querySelectorAll(fieldsSelector);
-        
-        let allFieldsFilled = true;
-        fields.forEach(field => {
-            if (field.value.trim() === '') {
-                allFieldsFilled = false;
-            }
-            newEntryParts.push(field.value.trim());
-        });
-
-        if (!allFieldsFilled) {
-            alert('All fields are required!');
-            return;
-        }
-
-        let newProject = { type: projectType };
-
-        if (projectType === 'gameApp') {
-            newProject.id = Date.now();
-            newProject.name = newEntryParts[0];
-            newProject.price = parseFloat(newEntryParts[1]);
-            newProject.image = newEntryParts[2];
-            newProject.installURL = newEntryParts[3];
-            newProject.owned = false;
-            newProject.installed = false;
-            newProject.originalString = `${newProject.id}~${newProject.name}~${newProject.price}~${newProject.image}~${newProject.owned ? 'true' : 'false'}~${newProject.installed ? 'true' : 'false'}~${newProject.installURL}`;
-            
-        } else if (projectType === 'search') {
-            newProject.name = newEntryParts[0];
-            newProject.url = newEntryParts[1];
-            newProject.data = newEntryParts[2];
-            newProject.originalString = `${newProject.name}~${newEntryParts[1]}~${newEntryParts[2]}`;
-            newProject.id = newProject.originalString;
-
-        } else if (projectType === 'datapedia') {
-            newProject.name = newEntryParts[0];
-            newProject.img = newEntryParts[1];
-            newProject.code = newEntryParts[2];
-            newProject.originalString = `${newProject.name}~${newEntryParts[1]}~${newEntryParts[2]}`;
-            newProject.id = newProject.originalString;
-        }
-        
-        allUserData[projectType].push(newProject);
-
-        try {
-            await writeProjectsFile();
-            console.log(`Changes confirmed (${projectType}):`, newProject);
-            modal.style.display = 'none';
-            alert('Project added successfully!');
-            fields.forEach(field => field.value = '');
-        } catch (error) {
-            // writeProjectsFile уже выводит ошибку
-        }
-    }
-    
-    // 4. Адаптируем showProjects
-    async function showProjects(filterType = 'all') {
-        const projectsListDiv = document.getElementById('projects-list');
-        projectsListDiv.innerHTML = '';
-
-        document.querySelectorAll('.project-filter button').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        const filterButton = document.getElementById(`filter-${filterType}`);
-        if (filterButton) {
-            filterButton.classList.add('active');
-        } else {
-            document.getElementById('filter-all').classList.add('active');
-        }
-
-        await readProjectsFile(); 
-        
-        let filteredProjects = allUserData.search.concat(allUserData.datapedia, allUserData.gameApp);
-
-        if (filterType !== 'all') {
-            filteredProjects = filteredProjects.filter(p => p.type === filterType);
-        }
-
-        if (filteredProjects.length === 0) {
-            projectsListDiv.innerHTML = `<p>No ${filterType !== 'all' ? filterType : ''} projects found.</p>`;
-        } else {
-            filteredProjects.forEach(project => {
-                const projectDiv = document.createElement('div');
-                projectDiv.classList.add('project-item');
-
-                let detailsHtml = '';
-                let identifier = project.id; 
-
-                switch (project.type) {
-                    case 'search':
-                        detailsHtml = `
-                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Search)</span></h4>
-                            <p>URL: <a href="${project.url}" target="_blank">${project.url}</a></p>
-                            <p>Data: ${project.data}</p>
-                        `;
-                        break;
-                    case 'datapedia':
-                        detailsHtml = `
-                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Datapedia Article)</span></h4>
-                            <p>Image: <a href="${project.img}" target="_blank">${project.img}</a></p>
-                            <p>Code: ${project.code}</p>
-                        `;
-                        break;
-                    case 'gameApp':
-                        detailsHtml = `
-                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Game/App)</span></h4>
-                            <p>ID: ${project.id}</p>
-                            <p>Price: ${project.price}</p>
-                            <p>Image: <a href="${project.image}" target="_blank">${project.image}</a></p>
-                            <p>Install URL: <a href="${project.installURL}" target="_blank">${project.installURL}</a></p>
-                            <p>Status: Owned: ${project.owned ? 'Yes' : 'No'}, Installed: ${project.installed ? 'Yes' : 'No'}</p>
-                        `;
-                        break;
-                }
-
-                const escapedIdentifier = String(identifier).replace(/'/g, "\\'");
-                
-                projectDiv.innerHTML = `
-                    ${detailsHtml}
-                    <div class="actions">
-                        <button onclick="editProject('${escapedIdentifier}', '${project.type}')">Edit</button>
-                        <button class="delete-btn" onclick="deleteProject('${escapedIdentifier}', '${project.type}')">Delete</button>
-                    </div>
-                `;
-                projectsListDiv.appendChild(projectDiv);
-            });
-        }
-        document.getElementById('modal3').style.display = 'flex';
-    }
 
 
-    // 5. Универсальная функция для удаления проекта
-    async function deleteProject(projectIdentifier, projectType) {
-        if (!confirm(`Are you sure you want to delete this ${projectType} project?`)) {
-            return;
-        }
+    // -----------------------------------------------------
+    // 6. ИНИЦИАЛИЗАЦИЯ
+    // -----------------------------------------------------
 
-        await readProjectsFile();
-
-        const initialLength = allUserData[projectType].length;
-
-        if (projectType === 'gameApp') {
-            const idToDelete = parseInt(projectIdentifier);
-            allUserData.gameApp = allUserData.gameApp.filter(p => p.id !== idToDelete);
-        } else {
-            allUserData[projectType] = allUserData[projectType].filter(p => p.id !== projectIdentifier);
-        }
-        
-        if (allUserData[projectType].length < initialLength) {
-            try {
-                await writeProjectsFile();
-                alert(`${projectType} project deleted successfully!`);
-                showProjects(projectType);
-            } catch (error) {
-            }
-        } else {
-            alert(`Project not found for deletion.`);
-        }
-    }
-
-    // 6. Универсальная функция для открытия модального окна редактирования
-    async function editProject(projectIdentifier, projectType) {
-        await readProjectsFile();
-
-        let modalId, projectToEdit;
-        const identifierValue = (projectType === 'gameApp') ? parseInt(projectIdentifier) : projectIdentifier; 
-
-        if (projectType === 'gameApp') {
-            projectToEdit = allUserData.gameApp.find(p => p.id === identifierValue);
-            modalId = 'editGameAppModal';
-        } else {
-            projectToEdit = allUserData[projectType].find(p => p.id === identifierValue);
-            modalId = `edit${projectType.charAt(0).toUpperCase() + projectType.slice(1)}Modal`;
-        }
-        
-        if (projectToEdit) {
-            if (projectType === 'gameApp') {
-                document.getElementById('editGameAppOriginalId').value = projectToEdit.id;
-                document.getElementById('editGameAppName').value = projectToEdit.name;
-                document.getElementById('editGameAppPrice').value = projectToEdit.price;
-                document.getElementById('editGameAppImage').value = projectToEdit.image;
-                document.getElementById('editGameAppInstallURL').value = projectToEdit.installURL;
-            } else if (projectType === 'search') {
-                document.getElementById('editSearchOriginalString').value = projectToEdit.id;
-                document.getElementById('editSearchName').value = projectToEdit.name;
-                document.getElementById('editSearchUrl').value = projectToEdit.url;
-                document.getElementById('editSearchData').value = projectToEdit.data;
-            } else if (projectType === 'datapedia') {
-                document.getElementById('editDatapediaOriginalString').value = projectToEdit.id;
-                document.getElementById('editDatapediaName').value = projectToEdit.name;
-                document.getElementById('editDatapediaImg').value = projectToEdit.img;
-                document.getElementById('editDatapediaCode').value = projectToEdit.code;
-            }
-            document.getElementById(modalId).style.display = 'flex';
-        } else {
-            alert(`Project not found for editing.`);
-        }
-        document.getElementById('modal3').style.display = 'none';
-    }
-
-
-    // 7. Универсальная функция для сохранения изменений проекта
-    async function saveProjectChanges(projectType) {
-        let identifier, currentDataKey, modalId;
-
-        switch (projectType) {
-            case 'search':
-                identifier = document.getElementById('editSearchOriginalString').value.trim();
-                currentDataKey = 'search';
-                modalId = 'editSearchModal';
-                break;
-            case 'datapedia':
-                identifier = document.getElementById('editDatapediaOriginalString').value.trim();
-                currentDataKey = 'datapedia';
-                modalId = 'editDatapediaModal';
-                break;
-            case 'gameApp':
-                identifier = parseInt(document.getElementById('editGameAppOriginalId').value.trim());
-                currentDataKey = 'gameApp';
-                modalId = 'editGameAppModal';
-                break;
-            default:
-                return;
-        }
-        
-        await readProjectsFile();
-
-        const projectIndex = allUserData[currentDataKey].findIndex(p => p.id === identifier);
-
-
-        if (projectIndex !== -1) {
-            let projectToUpdate = allUserData[currentDataKey][projectIndex];
-            
-            if (projectType === 'gameApp') {
-                const newName = document.getElementById('editGameAppName').value.trim();
-                const newPrice = document.getElementById('editGameAppPrice').value.trim();
-                const newImage = document.getElementById('editGameAppImage').value.trim();
-                const newInstallURL = document.getElementById('editGameAppInstallURL').value.trim();
-
-                if (!newName || !newPrice || !newImage || !newInstallURL) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                projectToUpdate.name = newName;
-                projectToUpdate.price = parseFloat(newPrice);
-                projectToUpdate.image = newImage;
-                projectToUpdate.installURL = newInstallURL;
-                
-            } else if (projectType === 'search') {
-                const newName = document.getElementById('editSearchName').value.trim();
-                const newUrl = document.getElementById('editSearchUrl').value.trim();
-                const newData = document.getElementById('editSearchData').value.trim();
-
-                if (!newName || !newUrl || !newData) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                projectToUpdate.name = newName;
-                projectToUpdate.url = newUrl;
-                projectToUpdate.data = newData;
-                projectToUpdate.id = `${newName}~${newUrl}~${newData}`;
-                projectToUpdate.originalString = projectToUpdate.id;
-
-            } else if (projectType === 'datapedia') {
-                const newName = document.getElementById('editDatapediaName').value.trim();
-                const newImg = document.getElementById('editDatapediaImg').value.trim();
-                const newCode = document.getElementById('editDatapediaCode').value.trim();
-
-                if (!newName || !newImg || !newCode) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                projectToUpdate.name = newName;
-                projectToUpdate.img = newImg;
-                projectToUpdate.code = newCode;
-                projectToUpdate.id = `${newName}~${newImg}~${newCode}`;
-                projectToUpdate.originalString = projectToUpdate.id;
-            }
-            
-            allUserData[currentDataKey][projectIndex] = projectToUpdate;
-
-            try {
-                await writeProjectsFile();
-                alert(`${projectType} project updated successfully!`);
-                document.getElementById(modalId).style.display = 'none';
-                showProjects(projectType);
-            } catch (error) {
-            }
-        } else {
-            alert(`Error: Project not found during save.`);
-        }
-    }
-
-
-    // 4. ИНИЦИАЛИЗАЦИЯ
     (async function() {
+        // Инициализируем данные, читая все файлы
         await readProjectsFile();
 
+        // --- Инициализация UI ---
         updateUserInfo(); 
         const savedTheme = getCookie('theme') || 'dark';
         applyTheme(savedTheme);
