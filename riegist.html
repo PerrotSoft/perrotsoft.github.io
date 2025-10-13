@@ -215,7 +215,14 @@
     const expires = "; expires=" + date.toUTCString();          // Форматируем дату истечения
     document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
 }
-
+async function hashMessage(message) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+} 
 function generateApiKey(length = 100, options = {}) {
   const {
     prefix = "api_",          // префикс перед ключом
@@ -260,7 +267,7 @@ function generateApiKey(length = 100, options = {}) {
     async function register() {
         const name = document.getElementById('register-name').value;
         const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
+        const password = await hashMessage(document.getElementById('register-password').value);
     
         if (!name || !email || !password) {
             showAlert("Please fill in all fields.", "error");
@@ -299,7 +306,7 @@ function generateApiKey(length = 100, options = {}) {
    // Login function
 async function login() {
     const name = document.getElementById('login-name').value.trim();
-    const password = document.getElementById('login-password').value.trim();
+    const password = await hashMessage(document.getElementById('login-password').value.trim());
     
     if (!name || !password) {
         showAlert("Please fill in all fields.", "error");

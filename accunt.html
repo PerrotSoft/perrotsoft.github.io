@@ -249,13 +249,16 @@
     </div>
     </div>
     </div>
-    <script>
-        let uid;
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script type="module">
+    import "./js/firebase_db.js";
         let currentField = 'Styling'; 
         const name = getCookie('name');
-        const email = getCookie('email');
+        const email = decodeURIComponent(getCookie('email'));
         const pcoin = "Pcoin " + (getCookie('p-coin') || '0');
-        const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+        const icon = decodeURIComponent(getCookie('icon')) || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
 
         // --- Styles table for themes ---
         const themeStyles = {
@@ -389,7 +392,7 @@
                         <input type="text" id="iconUrlInput" class="ggg" placeholder="New icon URL" oninput="document.getElementById('iconPreview').src = this.value || '${icon}'" value="${icon}">
 
                         <label>OR File Upload (Convert to Base64)</label>
-                        <input type="file" id="iconFileInput" accept="image/*" onchange="fileToBase64(this, 'iconUrlInput', 'iconPreview')">
+                        <input type="file" id="iconFileInput" accept="image/*" onchange="decodeURIComponent(fileToBase64(this, 'iconUrlInput', 'iconPreview'))">
 
                         <div style="margin-top: 20px;">
                             <button class="button" onclick="confirmChange('Styling')">Save Styling</button>
@@ -494,13 +497,6 @@
             // Apply theme from Cookie first
             const savedTheme = getCookie('theme') || 'dark';
             applyTheme(savedTheme);
-
-            try {
-                uid = await userID(getCookie('name'));
-                console.log("User ID:", uid);
-            } catch (e) {
-                console.error("Error fetching UID or user.js not loaded:", e);
-            }
             updateSettingsList(); 
             showSettingsSection('Styling'); // Show styling by default
         })();
@@ -604,7 +600,7 @@
             userMenu.style.display = (userMenu.style.display === 'block') ? 'none' : 'block';
         }
 
-        function toggleNavMenu() {
+        async function toggleNavMenu() {
             const nav = document.getElementById('settingsNav');
             const isUserMenuOpen = document.getElementById('userMenu').style.display === 'block';
             if (isUserMenuOpen) {
@@ -614,12 +610,7 @@
         }
 
         // --- Main save logic ---
-        async function confirmChange(field) {
-            if (uid === null || isNaN(uid) || uid < 0) {
-                alert('Error: User is not authorized or UID is invalid.');
-                return;
-            }
-
+        window.confirmChange = async function(field) {
             if (field === 'Styling') {
                 const newLogin = document.getElementById('loginInput').value;
                 const newDescription="";const ff = document.getElementById('descriptionInput');
@@ -633,15 +624,10 @@
 
                 // Update Login
                 if (newLogin && newLogin !== getCookie('name')) {
-                    const currentLoginCheck = await userID(getCookie('name'));
-                    if(currentLoginCheck === uid){ 
                         setCookie('name', newLogin);
-                        writeCell('A' + uid, newLogin);
+                        await window.dbManager.editValue(`users/${getCookie('name')}`, { name: newLogin });
                         alertMessage += " - Login successfully changed.\n";
                         changed = true;
-                    } else {
-                        alertMessage += " - Error changing login.\n";
-                    }
                 } else if (newLogin === getCookie('name')) {
                      alertMessage += " - Login did not change.\n";
                 }
@@ -649,7 +635,7 @@
                 // Update Icon
                 if (newIcon && newIcon !== getCookie('icon')) {
                     setCookie('icon', newIcon);
-                    writeCell('E' + uid, newIcon);
+                    await window.dbManager.editValue(`users/${getCookie('name')}`, { icon: newIcon });
                     document.querySelector('img.user-icn').src = newIcon;
                     alertMessage += " - Icon successfully changed.\n";
                     changed = true;
@@ -669,7 +655,7 @@
                 const hash = await hashMessage(text);
                 
                 if (hash != null) {
-                    writeCell('C' + uid, hash);
+                    await window.dbManager.editValue(`users/${getCookie('name')}`, { password: hash });
                     alert('Password successfully changed');
                     document.getElementById('passwordInput').value = '';
                 } else {
@@ -682,10 +668,37 @@
                 const hash = await hashMessage(text);
                 
                 if (hash != null) {
-                    const storedHash = await readCell('C' + uid); 
-                    if(storedHash === hash){
-                        writeCell('A' + uid, '');
-                        alert("Account deleted");
+                                    // 1. Fetch password data
+                    const userPath = `users/${getCookie('name')}`;
+                    let fetchedData;
+
+                    try {
+                        fetchedData = await window.dbManager.get(userPath);
+                    } catch (error) {
+                        console.error("Error fetching user data:", error);
+                        alert("Error: Could not retrieve user data. Check console for details.");
+                        return;
+                    }
+
+                    // 2. Check the password
+                    // Use .password instead of .value if fetchedData is the user object
+                    const storedPassword = fetchedData && fetchedData.value ? fetchedData.value.password : null;
+
+                    if (storedPassword === hash) {
+                        try {
+                            // 3. Delete the account
+                            await window.dbManager.delete(userPath);
+                            alert("Account deleted successfully.");
+                            
+                            // 4. Log out or redirect the user (Crucial step after deletion)
+                            // Assuming clearUserSession is a global function or you handle cookies/local storage here
+                            // clearUserSession(); 
+                            // window.location.href = 'index.html'; 
+
+                        } catch (error) {
+                            console.error("Error deleting account:", error);
+                            alert("Error: Failed to delete the account in the database.");
+                        }
                     } else {
                         alert("Error: Incorrect password.");
                     }

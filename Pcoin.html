@@ -314,14 +314,51 @@
                 <p>Please select a section from the left menu to manage your account.</p>
             </div>
         </div>
-    
-    <script>
-        let uid;
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script type="module">
+import "./js/firebase_db.js";
         let currentField = 'PcoinWallet'; 
         const name = getCookie('name');
         const email = getCookie('email');
         const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+        window.processPayment = function(amount) {
+            let paymentUrl = `https://www.paypal.com/donate/?business=FC595CMZJVDEJ&amount=${amount}`;
+            window.open(paymentUrl, '_blank');
+            // Give 3 seconds for payment window to open and user to potentially pay
+            setTimeout(async () => {
+                let int = parseInt(getCookie('p-coin')) || 0; 
+                let add = amount * 100; // Original logic: $1 = 100 P-coin
 
+                int += add;
+
+                console.log("New P-coin balance:", int);
+
+                setCookie('p-coin', int);
+                
+                // Assuming addmoney is available from user.js/sitefun.js
+                try {
+                    // Одновременное обновление баланса и списка покупок
+                    await window.dbManager.editValue(`users/${getCookie('name')}`, { pcoin: int });
+                    
+                    alert('Purchase successful!');
+                } catch(error) {
+                    console.error('Error saving data to dbManager:', error);
+                    alert('Purchase successful locally, but failed to save data to the server.');
+                }
+                
+                const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+                const name = getCookie('name');
+                const email = getCookie('email');
+                const pcoin = "Pcoin " + getCookie('p-coin');
+                document.querySelector('div[class="name"]').innerText = name || "No Name";
+                document.querySelector('div[class="email"]').innerText = email || "No Email";
+                document.querySelector('div[class="pcoin"]').innerText = pcoin || "Pcoin 0";
+                document.querySelector('img[class="user-icn"]').src = icon;
+                alert(`Successfully added ${add} P-coin. Your new balance is ${int}.`);
+            }, 3000);
+        }
         // --- Styles table for themes (Retained from original accunt.html) ---
         const themeStyles = {
             'dark': {
@@ -422,47 +459,7 @@
                 setCookie('theme', themeName, 30); 
             }
         }
-        
-        // --- ADDED PCOIN PAYMENT LOGIC ---
-        // Helper function for load from Pcoin original logic
-    
 
-        // Extracted and adapted processPayment function
-        function processPayment(amount) {
-            let paymentUrl = `https://www.paypal.com/donate/?business=FC595CMZJVDEJ&amount=${amount}`;
-            window.open(paymentUrl, '_blank');
-            // Give 3 seconds for payment window to open and user to potentially pay
-            setTimeout(async () => {
-                let int = parseInt(getCookie('p-coin')) || 0; 
-                let add = amount * 100; // Original logic: $1 = 100 P-coin
-
-                int += add;
-
-                console.log("New P-coin balance:", int);
-
-                setCookie('p-coin', int);
-                
-                // Assuming addmoney is available from user.js/sitefun.js
-                if (typeof addmoney === 'function') {
-                    await addmoney(getCookie('name'), add); 
-                } else {
-                     console.warn("addmoney function not found. Balance only updated locally in cookie.");
-                }
-                
-                const icon = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
-    const name = getCookie('name');
-const email = getCookie('email');
-const pcoin = "Pcoin " + getCookie('p-coin');
-    document.querySelector('div[class="name"]').innerText = name || "No Name";
-    document.querySelector('div[class="email"]').innerText = email || "No Email";
-    document.querySelector('div[class="pcoin"]').innerText = pcoin || "Pcoin 0";
-    document.querySelector('img[class="user-icn"]').src = icon;
-                alert(`Successfully added ${add} P-coin. Your new balance is ${int}.`);
-            }, 3000);
-        }
-        // ---------------------------------
-
-        // --- Content settings by cluster ---
         const settingsSections = {
             
             'Security': {
@@ -476,7 +473,7 @@ const pcoin = "Pcoin " + getCookie('p-coin');
                         <input type="password" id="passwordInput" class="ggg" placeholder="Enter new password">
                         
                         <div style="display: flex; gap: 10px; margin-top: 20px;">
-                            <button class="button" onclick="confirmChange('Password')" style="flex-grow: 1; background-color: #0366D6; font-size: 16px; min-width: auto;">Change Password</button>
+                            
                             <button class="button" onclick="alert('The password recovery button is not active yet. You need to wait.')" style="flex-grow: 1; background-color: #555; font-size: 16px; min-width: auto;">Recover Password</button>
                         </div>
                         <div class="note" style="margin-top: 10px;">The Recover Password button is not active yet.</div>
@@ -551,14 +548,6 @@ const pcoin = "Pcoin " + getCookie('p-coin');
             const savedTheme = getCookie('theme') || 'dark';
             applyTheme(savedTheme);
 
-            try {
-                // Assuming userID is an async function in user.js
-                uid = await userID(getCookie('name'));
-                console.log("User ID:", uid);
-            } catch (e) {
-                console.error("Error fetching UID or user.js not loaded:", e);
-                uid = -1; // Set default invalid UID
-            }
             updateSettingsList(); 
             showSettingsSection('PcoinWallet'); // Show styling by default
         })();
@@ -639,15 +628,7 @@ const pcoin = "Pcoin " + getCookie('p-coin');
             };
             reader.readAsDataURL(file);
         }
-        // --- Main save logic (Retained from original accunt.html) ---
-        async function confirmChange(field) {
-            if (uid === null || isNaN(uid) || uid < 0) {
-                alert('Error: User is not authorized or UID is invalid.');
-                return;
-            }
 
-            
-        }
     </script>
 </body>
 </html>

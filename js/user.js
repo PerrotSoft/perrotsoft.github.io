@@ -1,4 +1,10 @@
 let url = "https://script.google.com/macros/s/AKfycbw8CBDh5G5eIFfTuPLUMGZze2KUGfR2lMyszdcsmKZ87F0W_09R9Mb-IW-nW00jV1Q1HQ/exec?action=";
+function setCookie(name, value) {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000*5000)); // 1 год
+    const expires = "; expires=" + date.toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
+}
 
 // Функция для чтения данных из ячейки
 async function readCell(cellAddress) {

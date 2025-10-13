@@ -527,884 +527,777 @@
             </div>
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-    <script>
-        // --- Theme Styles (Скопировано из accunt.html) ---
-        const themeStyles = {
-            'dark': {
-                'body-bg': '#1f1d1d', 'text-color': '#FFFFFF',
-                'top-panel-bg': '#191919', 'top-panel-color': '#FFFFFF',
-                'nav-bg': '#2b2c2e', 'nav-text': '#FFFFFF',
-                'nav-hover': '#444C56', 'nav-active-bg': '#3C444B',
-                'cluster-title': '#FFFFFF', 'input-color': '#DDDDDD',
-                'main-content-h2': '#FFFFFF', 'link-accent': '#0366D6', 
-                'app-item-bg': '#2b2c2e', 'app-item-hover': '#3C444B'
-            },
-            'white': {
-                'body-bg': '#FFFFFF', 'text-color': '#333333',
-                'top-panel-bg': '#FFFFFF', 'top-panel-color': '#333333',
-                'nav-bg': '#FFFFFF', 'nav-text': '#333333',
-                'nav-hover': '#F0F0F0', 'nav-active-bg': '#E0E0E0',
-                'cluster-title': '#888888', 'input-color': '#333',
-                'main-content-h2': '#000', 'link-accent': '#007bff', 
-                'app-item-bg': '#FFFFFF', 'app-item-hover': '#E0E0E0'
-            },
-            'gray': {
-                'body-bg': '#CCCCCC', 'text-color': '#111111',
-                'top-panel-bg': '#3C444B', 'top-panel-color': '#EBEBEB',
-                'nav-bg': '#555C66', 'nav-text': '#EBEBEB',
-                'nav-hover': '#6E7985', 'nav-active-bg': '#505760',
-                'cluster-title': '#C0C8D0', 'input-color': '#333',
-                'main-content-h2': '#222', 'link-accent': '#00BFFF', 
-                'app-item-bg': '#D7D7D7', 'app-item-hover': '#C0C0C0'
-            }
-        };
-
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-            return null;
-        }
-
-        // --- Логика применения темы (Скопировано из accunt.html) ---
-        function applyTheme(themeName) {
-            const theme = themeStyles[themeName];
-            if (!theme) return;
-
-            document.body.style.backgroundColor = theme['body-bg'];
-            document.body.style.color = theme['text-color'];
-            
-            const topPanel = document.querySelector('.top-panel');
-            if (topPanel) {
-                topPanel.style.backgroundColor = theme['top-panel-bg'];
-                topPanel.style.color = theme['top-panel-color'];
-            }
-            
-            let styleSheet = document.getElementById('theme-style');
-            if (!styleSheet) {
-                styleSheet = document.createElement('style');
-                styleSheet.id = 'theme-style';
-                document.head.appendChild(styleSheet);
-            }
-            styleSheet.textContent = `
-                /* Dynamic Theme Overrides for ${themeName} */
-                .main-content h1, .main-content h2, .settings-container label { color: ${theme['input-color']} !important; }
-                .main-content h1 { border-bottom-color: ${theme['nav-hover']} !important; }
-                .main-content { background-color: ${theme['body-bg']} !important; }
-
-                /* Навигация */
-                #settingsNav { background-color: ${theme['nav-bg']} !important; }
-                nav a { color: ${theme['nav-text']} !important; border-left-color: transparent !important; }
-                nav a:hover { background-color: ${theme['nav-hover']} !important; color: ${theme['top-panel-color']} !important; }
-                nav a.active { background-color: ${theme['nav-active-bg']} !important; border-left-color: ${theme['link-accent']} !important; color: ${theme['top-panel-color']} !important; }
-                .cluster-separator { background-color: ${theme['nav-hover']} !important; }
-                .cluster-title { color: ${theme['cluster-title']} !important; }
-                
-                /* Поля ввода и кнопки в контенте */
-                .settings-container input[type="text"] {
-                    background-color: ${theme['body-bg']} !important;
-                    color: ${theme['text-color']} !important;
-                    border-color: ${theme['cluster-title']} !important;
-                }
-                .settings-container input[type="text"]:focus {
-                    border-color: ${theme['link-accent']} !important;
-                    box-shadow: 0 0 0 3px ${theme['link-accent']}4D !important;
-                }
-                .dev-action-buttons .button {
-                    background-color: ${theme['link-accent']} !important;
-                    color: #FFFFFF !important;
-                }
-                .dev-action-buttons .button:nth-child(4) { /* View/Manage My Projects */
-                    background-color: ${theme['nav-hover']} !important;
-                }
-
-                /* App item in content area */
-                .appItem-content {
-                    background-color: ${theme['app-item-bg']} !important; 
-                    border-color: ${theme['nav-hover']} !important; 
-                    color: ${theme['text-color']} !important;
-                }
-                .appItem-content:hover {
-                    background-color: ${theme['app-item-hover']} !important;
-                }
-                
-                /* Модальные окна */
-                .modal-content { background: ${theme['nav-bg']} !important; border-color: ${theme['nav-hover']} !important; color: ${theme['text-color']} !important; }
-                .modal input { background: ${theme['body-bg']} !important; color: ${theme['text-color']} !important; border-color: ${theme['nav-hover']} !important; }
-                .project-item { background-color: ${theme['body-bg']} !important; border-color: ${theme['nav-hover']} !important; }
-                .modal-buttons button:last-child { background-color: ${theme['link-accent']} !important; }
-                .project-filter button.active { background-color: ${theme['link-accent']} !important; border-color: ${theme['link-accent']} !important; }
-                
-                /* Меню пользователя */
-                #userMenu { background-color: ${theme['nav-bg']} !important; border-color: ${theme['nav-hover']} !important; }
-                #userMenu button { background-color: ${theme['body-bg']} !important; color: ${theme['text-color']} !important; border: 1px solid ${theme['nav-hover']} !important; }
-                #userMenu button:hover { background-color: ${theme['nav-hover']} !important; color: ${theme['top-panel-color']} !important; }
-                .top-panel div[style*="font-weight: bold;"] { color: ${theme['top-panel-color']} !important; }
-                .user-widget-info .name { color: ${theme['link-accent']} !important; }
-                .toggleButton { color: ${theme['top-panel-color']} !important; }
-            `;
-        }
-        
-        // --- Секции контента для Developer Menu (содержит оригинальные кнопки и ссылки) ---
-        const settingsSections = {
-            'Overview': {
-                title: 'Overview & Quick Actions',
-                html: `
-                    <div class="settings-container">
-                        <h2>Developer Tools and Shortcuts</h2>
-                        <p>Use the buttons below to quickly add new projects or manage existing ones.</p>
-                        
-                        <div class="dev-action-buttons">
-                            <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
-                            <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
-                            <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
-                            <button class="button" onclick="showProjects('all'); document.getElementById('modal3').style.display='flex'">View/Manage My Projects</button>
-                        </div>
-                        
-                        <h3 style="margin-top: 30px; border-bottom: 1px solid #444C56; padding-bottom: 10px;">Quick Launch</h3>
-                        
-                        <div class="appItem-content" onclick="openApp('ParrotSoftIDE.html')">
-                            <img src="img/ParrotIDE_mini.png" alt="ParrotIDE Icon">
-                            <span>ParrotSoftIDE</span>
-                        </div>
-                    </div>
-                `
-            },
-            'NewContent': {
-                title: 'Add New Content',
-                html: `
-                    <div class="settings-container">
-                        <h2>Add Content Wizards</h2>
-                        <p>Launch specific creation wizards using the links below:</p>
-                        <div style="margin-top: 20px;">
-                            <button class="button" onclick="document.getElementById('modal').style.display='flex'">Add Search Engine</button>
-                            <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Create Datapedia Article</button>
-                            <button class="button" onclick="document.getElementById('modal2').style.display='flex'">Publish Game or App</button>
-                        </div>
-                    </div>
-                `
-            },
-        };
-
-        // --- Структура навигационных кластеров (адаптировано из accunt.html) ---
-        const navClusters = [
-            {
-                title: 'ACCOUNT',
-                id: 'account',
-                items: [
-                    { id: 'Styling', title: 'Account Styling', type: 'link', url: 'accunt.html' },
-                    { id: 'Theme', title: 'Design Theme', type: 'link', url: 'accunt.html' }, 
-                    { id: 'Security', title: 'Password and Security', type: 'link', url: 'accunt.html' },
-                    { id: 'Deletion', title: 'Delete Account', type: 'link', url: 'accunt.html' }, 
-                ]
-            },
-            {
-                title: 'FINANCES',
-                id: 'financial',
-                items: [
-                    { id: 'PcoinWallet', title: 'P-coin Wallet', type: 'link', url: 'Pcoin.html' }, // Changed to type: 'section'
-                ]
-            },{
-                title: 'DEVELOPMENT MENU',
-                id: 'development',
-                items: [
-                    { id: 'Overview', title: 'Overview & Actions', type: 'section' },
-                    { id: 'NewContent', title: 'New Content Wizards', type: 'section' },
-                ]
-            },
-            {
-                title: 'MANAGEMENT',
-                id: 'management',
-                items: [
-                    { id: 'manageProjects', title: 'Manage Projects', type: 'section', action: "showProjects('all'); document.getElementById('modal3').style.display='flex'" },
-                    { id: 'ParrotSoftIDE', title: 'ParrotSoftIDE', type: 'link', url: 'ParrotSoftIDE.html' },
-                ]
-            }
-        ];
-
-        // --- Логика навигации и инициализации (Скопировано и адаптировано из accunt.html) ---
-        
-        function updateSettingsList() {
-            const nav = document.getElementById('settingsNav');
-            nav.innerHTML = '';
-            
-            navClusters.forEach((cluster, clusterIndex) => {
-                if (clusterIndex > 0) {
-                     const separator = document.createElement('hr');
-                     separator.className = 'cluster-separator';
-                     nav.appendChild(separator);
-                }
-                
-                const titleDiv = document.createElement('div');
-                titleDiv.className = 'cluster-title';
-                titleDiv.textContent = cluster.title;
-                nav.appendChild(titleDiv);
-
-                cluster.items.forEach(item => {
-                    const link = document.createElement('a');
-                    link.textContent = item.title;
-                    
-                    if (item.type === 'section') {
-                        link.href = '#';
-                        link.setAttribute('data-section', item.id);
-                        link.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            if(item.action) {
-                                eval(item.action); // Выполняем действие для Manage Projects
-                            } else {
-                                showSettingsSection(item.id);
-                            }
-                            if (window.innerWidth <= 768) {
-                                document.getElementById('settingsNav').classList.remove('active');
-                            }
-                        });
-                    } else if (item.type === 'link') {
-                        link.href = item.url;
-                    }
-
-                    nav.appendChild(link);
-                });
-            });
-            applyTheme(getCookie('theme') || 'dark');
-        }
-
-        function showSettingsSection(sectionId) {
-            const mainContent = document.getElementById('mainContent');
-            const navLinks = document.querySelectorAll('#settingsNav a[data-section]');
-
-            navLinks.forEach(link => {
-                link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
-            });
-
-            mainContent.innerHTML = settingsSections[sectionId].html;
-            applyTheme(getCookie('theme') || 'dark');
-        }
-        
-        function toggleUserMenu() {
-            const userMenu = document.getElementById('userMenu');
-            const nav = document.getElementById('settingsNav');
-            const isNavOpen = nav.classList.contains('active');
-            if (isNavOpen && window.innerWidth <= 768) {
-                nav.classList.remove('active');
-            }
-            userMenu.style.display = (userMenu.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function toggleNavMenu() {
-            const nav = document.getElementById('settingsNav');
-            const userMenu = document.getElementById('userMenu');
-            const isUserMenuOpen = userMenu.style.display === 'block';
-            if (isUserMenuOpen) {
-                userMenu.style.display = 'none';
-            }
-            nav.classList.toggle('active');
-        }
-
-        // --- Вспомогательные функции для обновления информации пользователя (из accunt.html) ---
-        function updateUserInfo() {
-            document.getElementById('topUserName').textContent = getCookie('name') || 'Guest';
-            document.getElementById('topUserEmail').textContent = getCookie('email') || 'Not logged in';
-            document.getElementById('topUserPcoin').textContent = "Pcoin " + (getCookie('p-coin') || '0');
-            document.getElementById('topUserIcon').src = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
-        }
-        
-        // --- Дополнительные функции (пустышки), которые должны быть определены в user.js/sitefun.js ---
-        // Эти функции нужны для работы onclick, но их реализация остается в user.js/sitefun.js.
-        // Я объявляю их как заглушки, чтобы не нарушать общую структуру скрипта.
-        function openApp(url) { console.log("Opening app:", url); window.location.href = url; }
-        function confirmChanges(type) { alert(`Confirm changes for: ${type}. Logic is in user.js.`); }
-        function showProjects(filter) { 
-            console.log("Showing projects filtered by:", filter); 
-            // Это должно обновить #projects-list в #modal3
-            const list = document.getElementById('projects-list');
-            if(list) list.innerHTML = `<p>Showing projects for filter: <b>${filter}</b>. (Logic from user.js)</p>`;
-        }
-        function saveProjectChanges(type) { alert(`Saving changes for project: ${type}. Logic is in user.js.`); }
-        
-        // --- Инициализация ---
-        (function() {
-            updateUserInfo(); 
-            const savedTheme = getCookie('theme') || 'dark';
-            applyTheme(savedTheme);
-
-            updateSettingsList(); 
-            showSettingsSection('Overview'); // Показать Overview по умолчанию
-            
-            // Если экран маленький, можно также скрыть меню по умолчанию
-            if (window.innerWidth <= 768) {
-                 document.getElementById('settingsNav').classList.remove('active');
-            }
-        })();
-    </script>
+<script type="module">
     
+    // ***************************************************************
+    // 1. ИМПОРТЫ МОДУЛЕЙ
+    // ***************************************************************
+    import "./js/firebase_db.js"; 
+    import { PDrive } from "./js/PDrive.js"; 
+    
+    // Если ваши файлы с логикой тоже модули, импортируйте их здесь.
+    // Убедитесь, что пути правильные:
+    // import * as PP_Search from "./js/ppsearch.js"; 
+    // import * as PP_Play from "./js/ppplay.js"; 
+    // import * as PP_Datapedia from "./js/ppdatapedia.js"; 
 
-        <script>
-            // Глобальные переменные
-            let userid = 0;
-            let allUserData = {
-                search: "",    // Соответствует 'L' + userid
-                datapedia: "", // Соответствует 'K' + userid
-                gameApp: ""    // Соответствует 'J' + userid
-            };
+    // ----------------------------------------------------------------------------------
+    // 2. ГЛОБАЛИЗАЦИЯ ФУНКЦИЙ
+    // 
+    // ЭТО ИСПРАВЛЯЕТ ВЫЗОВЫ ONCLICK ИЗ HTML (Dvelopent.html:420 и т.д.)
+    // ----------------------------------------------------------------------------------
+    window.confirmChanges = async (projectType) => confirmChanges(projectType);
+    window.showProjects = async (filterType) => showProjects(filterType);
+    window.deleteProject = async (projectIdentifier, projectType) => deleteProject(projectIdentifier, projectType);
+    window.editProject = async (projectIdentifier, projectType) => editProject(projectIdentifier, projectType);
+    window.saveProjectChanges = async (projectType) => saveProjectChanges(projectType);
+    
+    // Глобализация функций UI
+    window.toggleUserMenu = function() {
+        const userMenu = document.getElementById('userMenu');
+        const nav = document.getElementById('settingsNav');
+        const isNavOpen = nav.classList.contains('active');
+        if (isNavOpen && window.innerWidth <= 768) {
+            nav.classList.remove('active');
+        }
+        userMenu.style.display = (userMenu.style.display === 'block') ? 'none' : 'block';
+    }
 
-            // Асинхронная функция для получения данных при загрузке
-            (async function() {
-                try {
-                    userid = await userID(getCookie('name'));
-                    console.log("Fetched UserID:", userid);
+    window.toggleNavMenu = function() {
+        const nav = document.getElementById('settingsNav');
+        const userMenu = document.getElementById('userMenu');
+        const isUserMenuOpen = userMenu.style.display === 'block';
+        if (isUserMenuOpen) {
+            userMenu.style.display = 'none';
+        }
+        nav.classList.toggle('active');
+    }
+    
+    window.openApp = function(url) { console.log("Opening app:", url); window.location.href = url; }
+    window.toggleMenu = function() {
+        const menu = document.getElementById('menuContainer');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
 
-                    // Загружаем все типы данных
-                    allUserData.search = await readCell('L' + userid) || "";
-                    console.log("Fetched Search Data (L):", allUserData.search);
 
-                    allUserData.datapedia = await readCell('K' + userid) || "";
-                    console.log("Fetched Datapedia Data (K):", allUserData.datapedia);
+    // -----------------------------------------------------
+    // 3. БЛОК ЛОГИКИ PDrive (ВСЕ ФУНКЦИИ, КОТОРЫЕ ИСПОЛЬЗУЮТ PDrive)
+    // -----------------------------------------------------
 
-                    allUserData.gameApp = await readCell('J' + userid) || "";
-                    console.log("Fetched Game/App Data (J):", allUserData.gameApp);
+    let allUserData = {
+        search: [],
+        datapedia: [],
+        gameApp: []
+    };
+    
+    let userName = getCookie('name') || 'guest';
+    const PROJECTS_FILE_PATH = `/dev-projects/${userName}-projects.json`; 
 
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                }
-            })();
 
-            // Универсальная функция для добавления проекта
-            async function confirmChanges(projectType) {
-                let modalId, fieldsSelector, targetColumn, currentDataKey, newEntryParts = [];
+    // 1. Асинхронное чтение файла проектов
+    async function readProjectsFile() {
+        try {
+            // PDrive теперь доступен, так как находится в области видимости модуля!
+            const pdrive = new PDrive(userName); 
 
-                switch (projectType) {
-                    case 'search':
-                        modalId = 'modal';
-                        fieldsSelector = '#modal-fields input';
-                        targetColumn = 'L' + userid;
-                        currentDataKey = 'search';
-                        break;
-                    case 'datapedia':
-                        modalId = 'modal1';
-                        fieldsSelector = '#modal1-fields input';
-                        targetColumn = 'K' + userid;
-                        currentDataKey = 'datapedia';
-                        break;
-                    case 'gameApp':
-                        modalId = 'modal2';
-                        fieldsSelector = '#modal2-fields input';
-                        targetColumn = 'J' + userid;
-                        currentDataKey = 'gameApp';
-                        break;
-                    default:
-                        console.error("Unknown project type:", projectType);
-                        return;
-                }
-
-                const modal = document.getElementById(modalId);
-                const fields = document.querySelectorAll(fieldsSelector);
-                
-                // Проверяем, что все поля заполнены
-                let allFieldsFilled = true;
-                fields.forEach(field => {
-                    if (field.value.trim() === '') {
-                        allFieldsFilled = false;
-                    }
-                    newEntryParts.push(field.value.trim());
-                });
-
-                if (!allFieldsFilled) {
-                    alert('All fields are required!');
-                    return;
-                }
-
-                let newEntryString;
-
-                if (projectType === 'gameApp') {
-                    // Для Game/App: id, name, price, image, owned(false), installed(false), installURL
-                    const newGameAppId = Date.now(); // Генерируем уникальный ID
-                    const name = newEntryParts[0];
-                    const price = newEntryParts[1];
-                    const image = newEntryParts[2];
-                    const installURL = newEntryParts[3];
-                    const owned = 'false';    // Автоматически false
-                    const installed = 'false'; // Автоматически false
-                    newEntryString = `${newGameAppId}~${name}~${price}~${image}~${owned}~${installed}~${installURL}`;
-                } else {
-                    // Для Search и Datapedia: без ID
-                    newEntryString = newEntryParts.join('~'); 
-                }
-                
-                let currentData = allUserData[currentDataKey] || "";
-
-                if (currentData && currentData.trim() !== "") {
-                    currentData += "|"; 
-                }
-                let updatedData = currentData + newEntryString;
-
-                try {
-                    await writeCell(targetColumn, updatedData);
-                    console.log(`Changes confirmed (${projectType}):`, updatedData);
-                    allUserData[currentDataKey] = updatedData; // Обновляем глобальную переменную
-                    modal.style.display = 'none';
-                    alert('Project added successfully!');
-                    fields.forEach(field => field.value = ''); // Очистка полей
-                } catch (error) {
-                    console.error(`Error saving ${projectType} project:`, error);
-                    alert(`Failed to save ${projectType} project. Please try again.`);
-                }
-            }
+            const fileContent = await pdrive.readFile(PROJECTS_FILE_PATH);
             
-            // Адаптируем showProjects для отображения всех типов и фильтрации
-            async function showProjects(filterType = 'all') {
-                const projectsListDiv = document.getElementById('projects-list');
-                projectsListDiv.innerHTML = ''; // Очищаем список перед заполнением
-
-                // Снимаем активность со всех кнопок фильтра и добавляем активный класс к выбранной
-                document.querySelectorAll('.project-filter button').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.getElementById(`filter-${filterType}`).classList.add('active');
-
-                console.log(`Starting showProjects() with filter: ${filterType}`);
-                console.log("Current allUserData for display:", allUserData);
-
-                let allParsedProjects = [];
-
-                // Парсим Search проекты (L-колонка: Name~Url~data)
-                if (allUserData.search) {
-                    allUserData.search.split('|').filter(s => s.trim() !== '').forEach((projectString, index) => {
+            if (fileContent) {
+                const data = JSON.parse(fileContent);
+                
+                const parseProjectData = (dataString, type) => {
+                    if (!dataString || typeof dataString !== 'string') return [];
+                    return dataString.split('|').filter(s => s.trim() !== '').map(projectString => {
                         const parts = projectString.split('~');
-                        if (parts.length >= 3) { // Ожидаем 3 части: Name, Url, data
-                            allParsedProjects.push({
-                                // Для Search используем originalString как идентификатор для удаления/редактирования
-                                id: projectString, 
-                                type: 'search',
-                                name: parts[0].trim(),
-                                url: parts[1].trim(),
-                                data: parts[2].trim(),
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        }
-                    });
-                }
-
-                // Парсим Datapedia проекты (K-колонка: Name~img~code)
-                if (allUserData.datapedia) {
-                    allUserData.datapedia.split('|').filter(s => s.trim() !== '').forEach((projectString, index) => {
-                        const parts = projectString.split('~');
-                        if (parts.length >= 3) { // Ожидаем 3 части: Name, img, code
-                            allParsedProjects.push({
-                                // Для Datapedia используем originalString как идентификатор
-                                id: projectString,
-                                type: 'datapedia',
-                                name: parts[0].trim(),
-                                img: parts[1].trim(),
-                                code: parts[2].trim(),
-                                originalString: projectString
-                            });
-                        }
-                    });
-                }
-
-                // Парсим Game/App проекты (J-колонка: id~name~price~image~owned~installed~installURL)
-                if (allUserData.gameApp) {
-                    allUserData.gameApp.split('|').filter(s => s.trim() !== '').forEach((projectString) => {
-                        const parts = projectString.split('~');
-                        // Ожидаем 7 частей для нового формата Game/App
-                        if (parts.length >= 7) { 
-                            allParsedProjects.push({
-                                id: parseInt(parts[0]), // ID
-                                type: 'gameApp',
-                                name: parts[1].trim(),
-                                price: parseFloat(parts[2]),
-                                image: parts[3].trim(), 
-                                owned: parts[4] === "true", // owned
-                                installed: parts[5] === "true", // installed
-                                installURL: parts[6].trim(), // installURL
-                                originalString: projectString // Сохраняем оригинальную строку
-                            });
-                        } else if (parts.length >= 4) { // Обработка старых форматов (без ID, owned, installed, installURL)
-                            // Если старый формат, где был Name~price~image~Url
-                            // ID будет отсутствовать, поэтому используем originalString как fall-back ID для редактирования/удаления
-                            allParsedProjects.push({
-                                id: projectString, // Временный ID для старых записей
-                                type: 'gameApp',
-                                name: parts[0].trim(),
-                                price: parseFloat(parts[1]),
-                                image: parts[2].trim(),
-                                installURL: parts[3].trim(), // Предполагаем, что старый "Url" это "installURL"
-                                owned: false, // По умолчанию для старых
-                                installed: false, // По умолчанию для старых
-                                originalString: projectString
-                            });
-                        }
-                    });
-                }
-
-                console.log("All parsed projects:", allParsedProjects);
-
-                let filteredProjects = allParsedProjects;
-                if (filterType !== 'all') {
-                    filteredProjects = allParsedProjects.filter(p => p.type === filterType);
-                }
-
-                if (filteredProjects.length === 0) {
-                    projectsListDiv.innerHTML = `<p>No ${filterType !== 'all' ? filterType : ''} projects found.</p>`;
-                } else {
-                    filteredProjects.forEach(project => {
-                        const projectDiv = document.createElement('div');
-                        projectDiv.classList.add('project-item');
-
-                        let detailsHtml = '';
-                        let deleteIdentifier; // Идентификатор для удаления
-                        let editIdentifier;   // Идентификатор для редактирования
-
-                        if (project.type === 'gameApp' && typeof project.id === 'number') {
-                            // Для Game/App используем ID для удаления/редактирования
-                            deleteIdentifier = project.id;
-                            editIdentifier = project.id;
-                        } else {
-                            // Для Search и Datapedia используем originalString
-                            deleteIdentifier = project.originalString;
-                            editIdentifier = project.originalString;
-                        }
-
-                        switch (project.type) {
+                        let project = { originalString: projectString, type: type };
+                        
+                        switch (type) {
                             case 'search':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Search)</span></h4>
-                                    <p>URL: <a href="${project.url}" target="_blank">${project.url}</a></p>
-                                    <p>Data: ${project.data}</p>
-                                `;
+                                if (parts.length >= 3) {
+                                    project.id = projectString;
+                                    project.name = parts[0].trim();
+                                    project.url = parts[1].trim();
+                                    project.data = parts[2].trim();
+                                }
                                 break;
                             case 'datapedia':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Datapedia Article)</span></h4>
-                                    <p>Image: <a href="${project.img}" target="_blank">${project.img}</a></p>
-                                    <p>Code: ${project.code}</p>
-                                `;
+                                if (parts.length >= 3) {
+                                    project.id = projectString;
+                                    project.name = parts[0].trim();
+                                    project.img = parts[1].trim();
+                                    project.code = parts[2].trim();
+                                }
                                 break;
                             case 'gameApp':
-                                detailsHtml = `
-                                    <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Game/App)</span></h4>
-                                    <p>ID: ${project.id}</p>
-                                    <p>Price: ${project.price}</p>
-                                    <p>Image: <a href="${project.image}" target="_blank">${project.image}</a></p>
-                                    <p>Install URL: <a href="${project.installURL}" target="_blank">${project.installURL}</a></p>
-                                    <p>Status: Owned: ${project.owned ? 'Yes' : 'No'}, Installed: ${project.installed ? 'Yes' : 'No'}</p>
-                                `;
+                                if (parts.length >= 7) {
+                                    project.id = parseInt(parts[0]);
+                                    project.name = parts[1].trim();
+                                    project.price = parseFloat(parts[2]);
+                                    project.image = parts[3].trim();
+                                    project.owned = parts[4] === "true";
+                                    project.installed = parts[5] === "true";
+                                    project.installURL = parts[6].trim();
+                                } else if (parts.length >= 4) {
+                                    // Старый формат, где ID будет отсутствовать
+                                    project.id = projectString; // Временный ID для старых записей
+                                    project.name = parts[0].trim();
+                                    project.price = parseFloat(parts[1]);
+                                    project.image = parts[2].trim();
+                                    project.installURL = parts[3].trim(); 
+                                    project.owned = false; 
+                                    project.installed = false; 
+                                }
                                 break;
                         }
-
-                        // Важно: передаем идентификатор в виде строки, экранируя кавычки
-                        projectDiv.innerHTML = `
-                            ${detailsHtml}
-                            <div class="actions">
-                                <button onclick="editProject('${String(editIdentifier).replace(/'/g, "\\'")}', '${project.type}')">Edit</button>
-                                <button class="delete-btn" onclick="deleteProject('${String(deleteIdentifier).replace(/'/g, "\\'")}', '${project.type}')">Delete</button>
-                            </div>
-                        `;
-                        projectsListDiv.appendChild(projectDiv);
-                    });
-                }
-                document.getElementById('modal3').style.display = 'flex';
-            }
-
-
-            // Универсальная функция для удаления проекта
-            // Теперь projectIdentifier может быть ID (для Game/App) или полной строкой (для Search/Datapedia)
-            async function deleteProject(projectIdentifier, projectType) {
-                if (!confirm(`Are you sure you want to delete this ${projectType} project?`)) {
-                    return;
-                }
-
-                console.log(`Attempting to delete ${projectType} project with identifier:`, projectIdentifier);
+                        return (type === 'gameApp' && project.id === undefined) ? null : project; 
+                    }).filter(p => p !== null); 
+                };
                 
-                let currentDataKey, targetColumn;
-                switch (projectType) {
-                    case 'search':
-                        currentDataKey = 'search';
-                        targetColumn = 'L' + userid;
-                        break;
-                    case 'datapedia':
-                        currentDataKey = 'datapedia';
-                        targetColumn = 'K' + userid;
-                        break;
-                    case 'gameApp':
-                        currentDataKey = 'gameApp';
-                        targetColumn = 'J' + userid;
-                        break;
-                    default:
-                        console.error("Unknown project type for deletion:", projectType);
-                        return;
-                }
+                allUserData.search = parseProjectData(data.search, 'search');
+                allUserData.datapedia = parseProjectData(data.datapedia, 'datapedia');
+                allUserData.gameApp = parseProjectData(data.gameApp, 'gameApp');
+                
+                console.log("Projects loaded from PDrive:", allUserData);
+            }
+        } catch (error) {
+            // Эта ошибка теперь не будет ReferenceError, а, возможно, ошибкой чтения файла
+            console.warn("Could not read projects file, creating new structure if necessary:", error); 
+        }
+    }
 
-                let projectData = allUserData[currentDataKey] || "";
-                if (!projectData || projectData.trim() === "") {
-                    console.error("No project data of this type to delete from.");
-                    alert("No project data of this type to delete from.");
-                    return;
-                }
 
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                const updatedProjects = [];
+    // 2. Асинхронная запись файла проектов
+    async function writeProjectsFile() {
+        try {
+            const pdrive = new PDrive(userName);
 
-                let found = false;
-                projects.forEach(projectString => {
-                    if (projectType === 'gameApp') {
-                        // Для Game/App сравниваем по ID
-                        const parts = projectString.split('~');
-                        if (parts.length > 0 && parseInt(parts[0]) === parseInt(projectIdentifier)) {
-                            found = true;
-                            console.log(`Deleting Game/App project by ID: ${projectIdentifier}`);
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    } else {
-                        // Для Search/Datapedia сравниваем полные строки
-                        if (projectString === projectIdentifier) { 
-                            found = true;
-                            console.log(`Deleting ${projectType} project: ${projectString}`);
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    }
-                });
+            const dataToSave = {
+                search: allUserData.search.map(p => `${p.name}~${p.url}~${p.data}`).join('|'),
+                datapedia: allUserData.datapedia.map(p => `${p.name}~${p.img}~${p.code}`).join('|'),
+                gameApp: allUserData.gameApp.map(p => `${p.id}~${p.name}~${p.price}~${p.image}~${p.owned ? 'true' : 'false'}~${p.installed ? 'true' : 'false'}~${p.installURL}`).join('|')
+            };
 
-                if (found) {
-                    const newProjectData = updatedProjects.join('|');
-                    try {
-                        await writeCell(targetColumn, newProjectData);
-                        allUserData[currentDataKey] = newProjectData; // Обновляем глобальную переменную
-                        alert(`${projectType} project deleted successfully!`);
-                        showProjects(projectType); // Обновляем список проектов после удаления
-                    } catch (error) {
-                        console.error(`Error deleting ${projectType} project:`, error);
-                        alert(`Failed to delete ${projectType} project. Please try again.`);
-                    }
-                } else {
-                    alert(`Project not found for deletion.`);
-                    console.warn(`Project with identifier "${projectIdentifier}" (Type: ${projectType}) not found for deletion.`);
-                }
+            const jsonContent = JSON.stringify(dataToSave, null, 2);
+            await pdrive.writeFile(PROJECTS_FILE_PATH, jsonContent);
+            console.log("Projects saved to PDrive successfully.");
+        } catch (error) {
+            console.error("Error saving projects to PDrive:", error);
+            alert("Failed to save projects to file system. Please try again.");
+            throw error;
+        }
+    }
+
+    // [Остальная часть логики: confirmChanges, showProjects, deleteProject, editProject, saveProjectChanges, а также функции applyTheme, getCookie, updateSettingsList, showSettingsSection, updateUserInfo и инициализационный самовызывающийся блок (async function() { ... })] 
+    // Вся эта логика должна быть включена ЗДЕСЬ, в ЕДИНОМ блоке <script type="module">
+    
+    // --- ВАЖНО: Весь код из предыдущего ответа должен быть здесь ---
+    
+    // --- Theme Styles и Утилиты ---
+    const themeStyles = {
+        'dark': {
+            'body-bg': '#1f1d1d', 'text-color': '#FFFFFF',
+            'top-panel-bg': '#191919', 'top-panel-color': '#FFFFFF',
+            'nav-bg': '#2b2c2e', 'nav-text': '#FFFFFF',
+            'nav-hover': '#444C56', 'nav-active-bg': '#3C444B',
+            'cluster-title': '#FFFFFF', 'input-color': '#DDDDDD',
+            'main-content-h2': '#FFFFFF', 'link-accent': '#0366D6', 
+            'app-item-bg': '#2b2c2e', 'app-item-hover': '#3C444B'
+        },
+        'white': {
+            'body-bg': '#FFFFFF', 'text-color': '#333333',
+            'top-panel-bg': '#FFFFFF', 'top-panel-color': '#333333',
+            'nav-bg': '#FFFFFF', 'nav-text': '#333333',
+            'nav-hover': '#F0F0F0', 'nav-active-bg': '#E0E0E0',
+            'cluster-title': '#888888', 'input-color': '#333',
+            'main-content-h2': '#000', 'link-accent': '#007bff', 
+            'app-item-bg': '#FFFFFF', 'app-item-hover': '#E0E0E0'
+        },
+        'gray': {
+            'body-bg': '#CCCCCC', 'text-color': '#111111',
+            'top-panel-bg': '#3C444B', 'top-panel-color': '#EBEBEB',
+            'nav-bg': '#555C66', 'nav-text': '#EBEBEB',
+            'nav-hover': '#6E7985', 'nav-active-bg': '#505760',
+            'cluster-title': '#C0C8D0', 'input-color': '#333',
+            'main-content-h2': '#222', 'link-accent': '#00BFFF', 
+            'app-item-bg': '#D7D7D7', 'app-item-hover': '#C0C0C0'
+        }
+    };
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+    
+    function applyTheme(themeName) {
+        const theme = themeStyles[themeName];
+        if (!theme) return;
+
+        document.body.style.backgroundColor = theme['body-bg'];
+        document.body.style.color = theme['text-color'];
+        
+        const topPanel = document.querySelector('.top-panel');
+        if (topPanel) {
+            topPanel.style.backgroundColor = theme['top-panel-bg'];
+            topPanel.style.color = theme['top-panel-color'];
+        }
+        
+        let styleSheet = document.getElementById('theme-style');
+        if (!styleSheet) {
+            styleSheet = document.createElement('style');
+            styleSheet.id = 'theme-style';
+            document.head.appendChild(styleSheet);
+        }
+        styleSheet.textContent = `
+            /* Dynamic Theme Overrides for ${themeName} */
+            .main-content h1, .main-content h2, .settings-container label { color: ${theme['input-color']} !important; }
+            .main-content h1 { border-bottom-color: ${theme['nav-hover']} !important; }
+            .main-content { background-color: ${theme['body-bg']} !important; }
+
+            /* Навигация */
+            #settingsNav { background-color: ${theme['nav-bg']} !important; }
+            nav a { color: ${theme['nav-text']} !important; border-left-color: transparent !important; }
+            nav a:hover { background-color: ${theme['nav-hover']} !important; color: ${theme['top-panel-color']} !important; }
+            nav a.active { background-color: ${theme['nav-active-bg']} !important; border-left-color: ${theme['link-accent']} !important; color: ${theme['top-panel-color']} !important; }
+            .cluster-separator { background-color: ${theme['nav-hover']} !important; }
+            .cluster-title { color: ${theme['cluster-title']} !important; }
+            
+            /* Поля ввода и кнопки в контенте */
+            .settings-container input[type="text"] {
+                background-color: ${theme['body-bg']} !important;
+                color: ${theme['text-color']} !important;
+                border-color: ${theme['cluster-title']} !important;
+            }
+            .settings-container input[type="text"]:focus {
+                border-color: ${theme['link-accent']} !important;
+                box-shadow: 0 0 0 3px ${theme['link-accent']}4D !important;
+            }
+            .dev-action-buttons .button {
+                background-color: ${theme['link-accent']} !important;
+                color: #FFFFFF !important;
+            }
+            .dev-action-buttons .button:nth-child(4) { 
+                background-color: ${theme['nav-hover']} !important;
             }
 
-            // Универсальная функция для открытия модального окна редактирования
-            // projectIdentifier может быть ID (для Game/App) или полной строкой (для Search/Datapedia)
-            async function editProject(projectIdentifier, projectType) {
-                console.log(`Attempting to edit ${projectType} project with identifier:`, projectIdentifier);
-
-                let currentDataKey, modalId;
-                switch (projectType) {
-                    case 'search':
-                        currentDataKey = 'search';
-                        modalId = 'editSearchModal';
-                        break;
-                    case 'datapedia':
-                        currentDataKey = 'datapedia';
-                        modalId = 'editDatapediaModal';
-                        break;
-                    case 'gameApp':
-                        currentDataKey = 'gameApp';
-                        modalId = 'editGameAppModal';
-                        break;
-                    default:
-                        console.error("Unknown project type for editing:", projectType);
-                        return;
-                }
-
-                let projectData = allUserData[currentDataKey] || "";
-                if (!projectData || projectData.trim() === "") {
-                    alert("No project data of this type to edit.");
-                    return;
-                }
-
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                let projectToEditParts = null;
-                let originalProjectStringFound = ''; // Для хранения оригинальной строки
-
-                for (const projectString of projects) {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        if (parts.length > 0 && parseInt(parts[0]) === parseInt(projectIdentifier)) {
-                            projectToEditParts = parts;
-                            originalProjectStringFound = projectString;
-                            break;
-                        }
-                    } else {
-                        if (projectString === projectIdentifier) {
-                            projectToEditParts = projectString.split('~');
-                            originalProjectStringFound = projectString;
-                            break;
-                        }
-                    }
-                }
-
-                if (projectToEditParts) {
-                    if (projectType === 'gameApp') {
-                        document.getElementById('editGameAppOriginalId').value = projectIdentifier; // Сохраняем ID
-                        document.getElementById('editGameAppName').value = projectToEditParts[1] || '';
-                        document.getElementById('editGameAppPrice').value = projectToEditParts[2] || '';
-                        document.getElementById('editGameAppImage').value = projectToEditParts[3] || '';
-                        document.getElementById('editGameAppInstallURL').value = projectToEditParts[6] || '';
-                        // owned и installed не редактируются из этой панели
-                    } else {
-                        // Для Search и Datapedia используем originalString
-                        document.getElementById(`${modalId.replace('Modal', '')}OriginalString`).value = originalProjectStringFound;
-                        switch (projectType) {
-                            case 'search':
-                                document.getElementById('editSearchName').value = projectToEditParts[0] || '';
-                                document.getElementById('editSearchUrl').value = projectToEditParts[1] || '';
-                                document.getElementById('editSearchData').value = projectToEditParts[2] || '';
-                                break;
-                            case 'datapedia':
-                                document.getElementById('editDatapediaName').value = projectToEditParts[0] || '';
-                                document.getElementById('editDatapediaImg').value = projectToEditParts[1] || '';
-                                document.getElementById('editDatapediaCode').value = projectToEditParts[2] || '';
-                                break;
-                        }
-                    }
-                    document.getElementById(modalId).style.display = 'flex';
-                } else {
-                    alert(`Project not found for editing.`);
-                    console.warn(`Project with identifier "${projectIdentifier}" (Type: ${projectType}) not found for editing.`);
-                }
+            /* App item in content area */
+            .appItem-content {
+                background-color: ${theme['app-item-bg']} !important; 
+                border-color: ${theme['nav-hover']} !important; 
+                color: ${theme['text-color']} !important;
             }
+            .appItem-content:hover {
+                background-color: ${theme['app-item-hover']} !important;
+            }
+            
+            /* Модальные окна */
+            .modal-content { background: ${theme['nav-bg']} !important; border-color: ${theme['nav-hover']} !important; color: ${theme['text-color']} !important; }
+            .modal input { background: ${theme['body-bg']} !important; color: ${theme['text-color']} !important; border-color: ${theme['nav-hover']} !important; }
+            .project-item { background-color: ${theme['body-bg']} !important; border-color: ${theme['nav-hover']} !important; }
+            .modal-buttons button:last-child { background-color: ${theme['link-accent']} !important; }
+            .project-filter button.active { background-color: ${theme['link-accent']} !important; border-color: ${theme['link-accent']} !important; }
+            
+            /* Меню пользователя */
+            #userMenu { background-color: ${theme['nav-bg']} !important; border-color: ${theme['nav-hover']} !important; }
+            #userMenu button { background-color: ${theme['body-bg']} !important; color: ${theme['text-color']} !important; border: 1px solid ${theme['nav-hover']} !important; }
+            #userMenu button:hover { background-color: ${theme['nav-hover']} !important; color: ${theme['top-panel-color']} !important; }
+            .top-panel div[style*="font-weight: bold;"] { color: ${theme['top-panel-color']} !important; }
+            .user-widget-info .name { color: ${theme['link-accent']} !important; }
+            .toggleButton { color: ${theme['top-panel-color']} !important; }
+        `;
+    }
+    
+    const settingsSections = {
+        'Overview': {
+            title: 'Overview & Quick Actions',
+            html: `
+                <div class="settings-container">
+                    <h2>Developer Tools and Shortcuts</h2>
+                    <p>Use the buttons below to quickly add new projects or manage existing ones.</p>
+                    
+                    <div class="dev-action-buttons">
+                        <button class="button" onclick="document.getElementById('modal').style.display='flex'">add Search</button>
+                        <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Add article to datapedia</button>
+                        <button class="button" onclick="document.getElementById('modal2').style.display='flex'">add a game or app to Parrot Play</button>
+                        <button class="button" onclick="showProjects('all'); document.getElementById('modal3').style.display='flex'">View/Manage My Projects</button>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px; border-bottom: 1px solid #444C56; padding-bottom: 10px;">Quick Launch</h3>
+                    
+                    <div class="appItem-content" onclick="openApp('ParrotSoftIDE.html')">
+                        <img src="img/ParrotIDE_mini.png" alt="ParrotIDE Icon">
+                        <span>ParrotSoftIDE</span>
+                    </div>
+                </div>
+            `
+        },
+        'NewContent': {
+            title: 'Add New Content',
+            html: `
+                <div class="settings-container">
+                    <h2>Add Content Wizards</h2>
+                    <p>Launch specific creation wizards using the links below:</p>
+                    <div style="margin-top: 20px;">
+                        <button class="button" onclick="document.getElementById('modal').style.display='flex'">Add Search Engine</button>
+                        <button class="button" onclick="document.getElementById('modal1').style.display='flex'">Create Datapedia Article</button>
+                        <button class="button" onclick="document.getElementById('modal2').style.display='flex'">Publish Game or App</button>
+                    </div>
+                </div>
+            `
+        },
+    };
+    const navClusters = [
+        {
+            title: 'ACCOUNT',
+            id: 'account',
+            items: [
+                { id: 'Styling', title: 'Account Styling', type: 'link', url: 'accunt.html' },
+                { id: 'Theme', title: 'Design Theme', type: 'link', url: 'accunt.html' }, 
+                { id: 'Security', title: 'Password and Security', type: 'link', url: 'accunt.html' },
+                { id: 'Deletion', title: 'Delete Account', type: 'link', url: 'accunt.html' }, 
+            ]
+        },
+        {
+            title: 'FINANCES',
+            id: 'financial',
+            items: [
+                { id: 'PcoinWallet', title: 'P-coin Wallet', type: 'link', url: 'Pcoin.html' },
+            ]
+        },{
+            title: 'DEVELOPMENT MENU',
+            id: 'development',
+            items: [
+                { id: 'Overview', title: 'Overview & Actions', type: 'section' },
+                { id: 'NewContent', title: 'New Content Wizards', type: 'section' },
+            ]
+        },
+        {
+            title: 'MANAGEMENT',
+            id: 'management',
+            items: [
+                { id: 'manageProjects', title: 'Manage Projects', type: 'section', action: "showProjects('all'); document.getElementById('modal3').style.display='flex'" },
+                { id: 'ParrotSoftIDE', title: 'ParrotSoftIDE', type: 'link', url: 'ParrotSoftIDE.html' },
+            ]
+        }
+    ];
 
+    function updateSettingsList() {
+        const nav = document.getElementById('settingsNav');
+        nav.innerHTML = '';
+        
+        navClusters.forEach((cluster, clusterIndex) => {
+            if (clusterIndex > 0) {
+                 const separator = document.createElement('hr');
+                 separator.className = 'cluster-separator';
+                 nav.appendChild(separator);
+            }
+            
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'cluster-title';
+            titleDiv.textContent = cluster.title;
+            nav.appendChild(titleDiv);
 
-            // Универсальная функция для сохранения изменений проекта
-            async function saveProjectChanges(projectType) {
-                let identifier, newValues = [], currentDataKey, targetColumn, modalId;
-
-                switch (projectType) {
-                    case 'search':
-                        identifier = document.getElementById('editSearchOriginalString').value.trim(); // Это originalString
-                        newValues = [
-                            document.getElementById('editSearchName').value.trim(),
-                            document.getElementById('editSearchUrl').value.trim(),
-                            document.getElementById('editSearchData').value.trim()
-                        ];
-                        currentDataKey = 'search';
-                        targetColumn = 'L' + userid;
-                        modalId = 'editSearchModal';
-                        break;
-                    case 'datapedia':
-                        identifier = document.getElementById('editDatapediaOriginalString').value.trim(); // Это originalString
-                        newValues = [
-                            document.getElementById('editDatapediaName').value.trim(),
-                            document.getElementById('editDatapediaImg').value.trim(),
-                            document.getElementById('editDatapediaCode').value.trim()
-                        ];
-                        currentDataKey = 'datapedia';
-                        targetColumn = 'K' + userid;
-                        modalId = 'editDatapediaModal';
-                        break;
-                    case 'gameApp':
-                        identifier = document.getElementById('editGameAppOriginalId').value.trim(); // Это ID проекта
-                        newValues = [
-                            document.getElementById('editGameAppName').value.trim(),
-                            document.getElementById('editGameAppPrice').value.trim(),
-                            document.getElementById('editGameAppImage').value.trim(),
-                            document.getElementById('editGameAppInstallURL').value.trim()
-                        ];
-                        currentDataKey = 'gameApp';
-                        targetColumn = 'J' + userid;
-                        modalId = 'editGameAppModal';
-                        break;
-                    default:
-                        console.error("Unknown project type for saving changes:", projectType);
-                        return;
+            cluster.items.forEach(item => {
+                const link = document.createElement('a');
+                link.textContent = item.title;
+                
+                if (item.type === 'section') {
+                    link.href = '#';
+                    link.setAttribute('data-section', item.id);
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if(item.action) {
+                            window.eval(item.action); 
+                        } else {
+                            showSettingsSection(item.id);
+                        }
+                        if (window.innerWidth <= 768) {
+                            document.getElementById('settingsNav').classList.remove('active');
+                        }
+                    });
+                } else if (item.type === 'link') {
+                    link.href = item.url;
                 }
 
-                // Проверка, что все поля заполнены
-                if (newValues.some(val => val === '')) {
+                nav.appendChild(link);
+            });
+        });
+        applyTheme(getCookie('theme') || 'dark');
+    }
+
+    function showSettingsSection(sectionId) {
+        const mainContent = document.getElementById('mainContent');
+        const navLinks = document.querySelectorAll('#settingsNav a[data-section]');
+
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+        });
+
+        mainContent.innerHTML = settingsSections[sectionId].html;
+        applyTheme(getCookie('theme') || 'dark');
+    }
+    
+    function updateUserInfo() {
+        document.getElementById('topUserName').textContent = getCookie('name') || 'Guest';
+        document.getElementById('topUserEmail').textContent = getCookie('email') || 'Not logged in';
+        document.getElementById('topUserPcoin').textContent = "Pcoin " + (getCookie('p-coin') || '0');
+        document.getElementById('topUserIcon').src = getCookie('icon') || "https://cdn-icons-png.flaticon.com/128/17807/17807725.png";
+    }
+
+    document.addEventListener('click', function(event) {
+        const userMenu = document.getElementById('userMenu');
+        const userWidget = document.querySelector('.user-widget');
+        const nav = document.getElementById('settingsNav');
+
+        if (userMenu && userWidget && !userWidget.contains(event.target) && !userMenu.contains(event.target)) {
+            userMenu.style.display = 'none';
+        }
+
+        if (window.innerWidth <= 768 && nav && nav.classList.contains('active') && !nav.contains(event.target) && !document.querySelector('.toggleButton').contains(event.target)) {
+            nav.classList.remove('active');
+        }
+    });
+    
+    // 3. Универсальная функция для добавления проекта
+    async function confirmChanges(projectType) {
+        let modalId, fieldsSelector, newEntryParts = [];
+
+        switch (projectType) {
+            case 'search':
+                modalId = 'modal';
+                fieldsSelector = '#modal-fields input';
+                break;
+            case 'datapedia':
+                modalId = 'modal1';
+                fieldsSelector = '#modal1-fields input';
+                break;
+            case 'gameApp':
+                modalId = 'modal2';
+                fieldsSelector = '#modal2-fields input';
+                break;
+            default:
+                console.error("Unknown project type:", projectType);
+                return;
+        }
+
+        const modal = document.getElementById(modalId);
+        const fields = document.querySelectorAll(fieldsSelector);
+        
+        let allFieldsFilled = true;
+        fields.forEach(field => {
+            if (field.value.trim() === '') {
+                allFieldsFilled = false;
+            }
+            newEntryParts.push(field.value.trim());
+        });
+
+        if (!allFieldsFilled) {
+            alert('All fields are required!');
+            return;
+        }
+
+        let newProject = { type: projectType };
+
+        if (projectType === 'gameApp') {
+            newProject.id = Date.now();
+            newProject.name = newEntryParts[0];
+            newProject.price = parseFloat(newEntryParts[1]);
+            newProject.image = newEntryParts[2];
+            newProject.installURL = newEntryParts[3];
+            newProject.owned = false;
+            newProject.installed = false;
+            newProject.originalString = `${newProject.id}~${newProject.name}~${newProject.price}~${newProject.image}~${newProject.owned ? 'true' : 'false'}~${newProject.installed ? 'true' : 'false'}~${newProject.installURL}`;
+            
+        } else if (projectType === 'search') {
+            newProject.name = newEntryParts[0];
+            newProject.url = newEntryParts[1];
+            newProject.data = newEntryParts[2];
+            newProject.originalString = `${newProject.name}~${newEntryParts[1]}~${newEntryParts[2]}`;
+            newProject.id = newProject.originalString;
+
+        } else if (projectType === 'datapedia') {
+            newProject.name = newEntryParts[0];
+            newProject.img = newEntryParts[1];
+            newProject.code = newEntryParts[2];
+            newProject.originalString = `${newProject.name}~${newEntryParts[1]}~${newEntryParts[2]}`;
+            newProject.id = newProject.originalString;
+        }
+        
+        allUserData[projectType].push(newProject);
+
+        try {
+            await writeProjectsFile();
+            console.log(`Changes confirmed (${projectType}):`, newProject);
+            modal.style.display = 'none';
+            alert('Project added successfully!');
+            fields.forEach(field => field.value = '');
+        } catch (error) {
+            // writeProjectsFile уже выводит ошибку
+        }
+    }
+    
+    // 4. Адаптируем showProjects
+    async function showProjects(filterType = 'all') {
+        const projectsListDiv = document.getElementById('projects-list');
+        projectsListDiv.innerHTML = '';
+
+        document.querySelectorAll('.project-filter button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const filterButton = document.getElementById(`filter-${filterType}`);
+        if (filterButton) {
+            filterButton.classList.add('active');
+        } else {
+            document.getElementById('filter-all').classList.add('active');
+        }
+
+        await readProjectsFile(); 
+        
+        let filteredProjects = allUserData.search.concat(allUserData.datapedia, allUserData.gameApp);
+
+        if (filterType !== 'all') {
+            filteredProjects = filteredProjects.filter(p => p.type === filterType);
+        }
+
+        if (filteredProjects.length === 0) {
+            projectsListDiv.innerHTML = `<p>No ${filterType !== 'all' ? filterType : ''} projects found.</p>`;
+        } else {
+            filteredProjects.forEach(project => {
+                const projectDiv = document.createElement('div');
+                projectDiv.classList.add('project-item');
+
+                let detailsHtml = '';
+                let identifier = project.id; 
+
+                switch (project.type) {
+                    case 'search':
+                        detailsHtml = `
+                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Search)</span></h4>
+                            <p>URL: <a href="${project.url}" target="_blank">${project.url}</a></p>
+                            <p>Data: ${project.data}</p>
+                        `;
+                        break;
+                    case 'datapedia':
+                        detailsHtml = `
+                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Datapedia Article)</span></h4>
+                            <p>Image: <a href="${project.img}" target="_blank">${project.img}</a></p>
+                            <p>Code: ${project.code}</p>
+                        `;
+                        break;
+                    case 'gameApp':
+                        detailsHtml = `
+                            <h4>${project.name} <span style="font-size: 0.8em; color: #888;">(Game/App)</span></h4>
+                            <p>ID: ${project.id}</p>
+                            <p>Price: ${project.price}</p>
+                            <p>Image: <a href="${project.image}" target="_blank">${project.image}</a></p>
+                            <p>Install URL: <a href="${project.installURL}" target="_blank">${project.installURL}</a></p>
+                            <p>Status: Owned: ${project.owned ? 'Yes' : 'No'}, Installed: ${project.installed ? 'Yes' : 'No'}</p>
+                        `;
+                        break;
+                }
+
+                const escapedIdentifier = String(identifier).replace(/'/g, "\\'");
+                
+                projectDiv.innerHTML = `
+                    ${detailsHtml}
+                    <div class="actions">
+                        <button onclick="editProject('${escapedIdentifier}', '${project.type}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteProject('${escapedIdentifier}', '${project.type}')">Delete</button>
+                    </div>
+                `;
+                projectsListDiv.appendChild(projectDiv);
+            });
+        }
+        document.getElementById('modal3').style.display = 'flex';
+    }
+
+
+    // 5. Универсальная функция для удаления проекта
+    async function deleteProject(projectIdentifier, projectType) {
+        if (!confirm(`Are you sure you want to delete this ${projectType} project?`)) {
+            return;
+        }
+
+        await readProjectsFile();
+
+        const initialLength = allUserData[projectType].length;
+
+        if (projectType === 'gameApp') {
+            const idToDelete = parseInt(projectIdentifier);
+            allUserData.gameApp = allUserData.gameApp.filter(p => p.id !== idToDelete);
+        } else {
+            allUserData[projectType] = allUserData[projectType].filter(p => p.id !== projectIdentifier);
+        }
+        
+        if (allUserData[projectType].length < initialLength) {
+            try {
+                await writeProjectsFile();
+                alert(`${projectType} project deleted successfully!`);
+                showProjects(projectType);
+            } catch (error) {
+            }
+        } else {
+            alert(`Project not found for deletion.`);
+        }
+    }
+
+    // 6. Универсальная функция для открытия модального окна редактирования
+    async function editProject(projectIdentifier, projectType) {
+        await readProjectsFile();
+
+        let modalId, projectToEdit;
+        const identifierValue = (projectType === 'gameApp') ? parseInt(projectIdentifier) : projectIdentifier; 
+
+        if (projectType === 'gameApp') {
+            projectToEdit = allUserData.gameApp.find(p => p.id === identifierValue);
+            modalId = 'editGameAppModal';
+        } else {
+            projectToEdit = allUserData[projectType].find(p => p.id === identifierValue);
+            modalId = `edit${projectType.charAt(0).toUpperCase() + projectType.slice(1)}Modal`;
+        }
+        
+        if (projectToEdit) {
+            if (projectType === 'gameApp') {
+                document.getElementById('editGameAppOriginalId').value = projectToEdit.id;
+                document.getElementById('editGameAppName').value = projectToEdit.name;
+                document.getElementById('editGameAppPrice').value = projectToEdit.price;
+                document.getElementById('editGameAppImage').value = projectToEdit.image;
+                document.getElementById('editGameAppInstallURL').value = projectToEdit.installURL;
+            } else if (projectType === 'search') {
+                document.getElementById('editSearchOriginalString').value = projectToEdit.id;
+                document.getElementById('editSearchName').value = projectToEdit.name;
+                document.getElementById('editSearchUrl').value = projectToEdit.url;
+                document.getElementById('editSearchData').value = projectToEdit.data;
+            } else if (projectType === 'datapedia') {
+                document.getElementById('editDatapediaOriginalString').value = projectToEdit.id;
+                document.getElementById('editDatapediaName').value = projectToEdit.name;
+                document.getElementById('editDatapediaImg').value = projectToEdit.img;
+                document.getElementById('editDatapediaCode').value = projectToEdit.code;
+            }
+            document.getElementById(modalId).style.display = 'flex';
+        } else {
+            alert(`Project not found for editing.`);
+        }
+        document.getElementById('modal3').style.display = 'none';
+    }
+
+
+    // 7. Универсальная функция для сохранения изменений проекта
+    async function saveProjectChanges(projectType) {
+        let identifier, currentDataKey, modalId;
+
+        switch (projectType) {
+            case 'search':
+                identifier = document.getElementById('editSearchOriginalString').value.trim();
+                currentDataKey = 'search';
+                modalId = 'editSearchModal';
+                break;
+            case 'datapedia':
+                identifier = document.getElementById('editDatapediaOriginalString').value.trim();
+                currentDataKey = 'datapedia';
+                modalId = 'editDatapediaModal';
+                break;
+            case 'gameApp':
+                identifier = parseInt(document.getElementById('editGameAppOriginalId').value.trim());
+                currentDataKey = 'gameApp';
+                modalId = 'editGameAppModal';
+                break;
+            default:
+                return;
+        }
+        
+        await readProjectsFile();
+
+        const projectIndex = allUserData[currentDataKey].findIndex(p => p.id === identifier);
+
+
+        if (projectIndex !== -1) {
+            let projectToUpdate = allUserData[currentDataKey][projectIndex];
+            
+            if (projectType === 'gameApp') {
+                const newName = document.getElementById('editGameAppName').value.trim();
+                const newPrice = document.getElementById('editGameAppPrice').value.trim();
+                const newImage = document.getElementById('editGameAppImage').value.trim();
+                const newInstallURL = document.getElementById('editGameAppInstallURL').value.trim();
+
+                if (!newName || !newPrice || !newImage || !newInstallURL) {
                     alert('All fields are required!');
                     return;
                 }
 
-                console.log(`Attempting to save changes for ${projectType} project (Identifier):`, identifier);
+                projectToUpdate.name = newName;
+                projectToUpdate.price = parseFloat(newPrice);
+                projectToUpdate.image = newImage;
+                projectToUpdate.installURL = newInstallURL;
                 
-                let projectData = allUserData[currentDataKey] || "";
-                const projects = projectData.split('|').filter(s => s.trim() !== '');
-                const updatedProjects = [];
+            } else if (projectType === 'search') {
+                const newName = document.getElementById('editSearchName').value.trim();
+                const newUrl = document.getElementById('editSearchUrl').value.trim();
+                const newData = document.getElementById('editSearchData').value.trim();
 
-                let found = false;
-                for (const projectString of projects) {
-                    if (projectType === 'gameApp') {
-                        const parts = projectString.split('~');
-                        if (parts.length > 0 && parseInt(parts[0]) === parseInt(identifier)) {
-                            // Сохраняем старые owned и installed значения
-                            const owned = parts[4] || 'false'; 
-                            const installed = parts[5] || 'false';
-                            const newGameAppString = `${identifier}~${newValues[0]}~${newValues[1]}~${newValues[2]}~${owned}~${installed}~${newValues[3]}`; // newValues[3] это installURL
-                            updatedProjects.push(newGameAppString);
-                            found = true;
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    } else {
-                        // Для Search и Datapedia сравниваем по полной строке
-                        if (projectString === identifier) {
-                            const newString = newValues.join('~');
-                            updatedProjects.push(newString);
-                            found = true;
-                        } else {
-                            updatedProjects.push(projectString);
-                        }
-                    }
+                if (!newName || !newUrl || !newData) {
+                    alert('All fields are required!');
+                    return;
                 }
 
-                if (found) {
-                    const newProjectData = updatedProjects.join('|');
-                    try {
-                        await writeCell(targetColumn, newProjectData);
-                        allUserData[currentDataKey] = newProjectData; // Обновляем глобальную переменную
-                        alert(`${projectType} project updated successfully!`);
-                        document.getElementById(modalId).style.display = 'none';
-                        showProjects(projectType); // Обновляем список проектов
-                    } catch (error) {
-                        console.error(`Error saving ${projectType} project changes:`, error);
-                        alert(`Failed to save ${projectType} project changes. Please try again.`);
-                    }
-                } else {
-                    alert(`Error: Project not found during save.`);
-                    console.error(`Error: Project with identifier "${identifier}" (Type: ${projectType}) not found during save.`);
+                projectToUpdate.name = newName;
+                projectToUpdate.url = newUrl;
+                projectToUpdate.data = newData;
+                projectToUpdate.id = `${newName}~${newUrl}~${newData}`;
+                projectToUpdate.originalString = projectToUpdate.id;
+
+            } else if (projectType === 'datapedia') {
+                const newName = document.getElementById('editDatapediaName').value.trim();
+                const newImg = document.getElementById('editDatapediaImg').value.trim();
+                const newCode = document.getElementById('editDatapediaCode').value.trim();
+
+                if (!newName || !newImg || !newCode) {
+                    alert('All fields are required!');
+                    return;
                 }
+
+                projectToUpdate.name = newName;
+                projectToUpdate.img = newImg;
+                projectToUpdate.code = newCode;
+                projectToUpdate.id = `${newName}~${newImg}~${newCode}`;
+                projectToUpdate.originalString = projectToUpdate.id;
             }
+            
+            allUserData[currentDataKey][projectIndex] = projectToUpdate;
 
-            // Функции для управления боковым меню и пользовательским виджетом (оставляем как есть)
-            function toggleMenu() {
-                const menu = document.getElementById('menuContainer');
-                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            try {
+                await writeProjectsFile();
+                alert(`${projectType} project updated successfully!`);
+                document.getElementById(modalId).style.display = 'none';
+                showProjects(projectType);
+            } catch (error) {
             }
+        } else {
+            alert(`Error: Project not found during save.`);
+        }
+    }
 
-            function openApp(url) {
-                if (url.startsWith('http')) {
-                    window.open(url, '_blank');
-                } else {
-                    window.location.href = url;
-                }
-            }
 
-            function toggleUserMenu() {
-                const userMenu = document.getElementById('userMenu');
-                userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
-            }
+    // 4. ИНИЦИАЛИЗАЦИЯ
+    (async function() {
+        await readProjectsFile();
 
-            // Дополнительно: Добавим обработчик для закрытия меню по клику вне его
-            document.addEventListener('click', function(event) {
-                const userMenu = document.getElementById('userMenu');
-                const userWidget = document.querySelector('.user-widget');
-                const toggleButton = document.querySelector('.toggleButton');
-                const menuContainer = document.getElementById('menuContainer');
+        updateUserInfo(); 
+        const savedTheme = getCookie('theme') || 'dark';
+        applyTheme(savedTheme);
 
-                // Закрытие userMenu
-                if (userMenu && userWidget && !userWidget.contains(event.target) && !userMenu.contains(event.target)) {
-                    userMenu.style.display = 'none';
-                }
-
-                // Закрытие menuContainer
-                if (menuContainer && toggleButton && !toggleButton.contains(event.target) && !menuContainer.contains(event.target)) {
-                    menuContainer.style.display = 'none';
-                }
-            });
-
-        </script>
+        updateSettingsList(); 
+        showSettingsSection('Overview');
+        
+        if (window.innerWidth <= 768) {
+             document.getElementById('settingsNav').classList.remove('active');
+        }
+    })();
+</script>
 </body>
 </html>
