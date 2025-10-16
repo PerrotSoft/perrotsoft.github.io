@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>PDrive — Виртуальный диск</title>
@@ -8,8 +8,11 @@
     <script src="js/sitefun.js" type="module"></script>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style1.css">
+
 <style>
-body { margin:0; font-family:'Roboto',sans-serif; background:#f1f3f4; color:#202124; transition: background 0.3s, color 0.3s; }
+body { margin:0; font-family:'Roboto',sans-serif; background:#f1f3f4; color:#202124; transition: background 0.3s, color 0.3s;/* НОВАЯ СТРОКА: Улучшает реакцию на сенсорный ввод */
+    touch-action: manipulation; }
 body.dark { background:#202124; color:#e8eaed; }
 header { background:#1a73e8; color:white; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom-left-radius:12px; border-bottom-right-radius:12px; position: fixed; width: 100%; top: 0; z-index: 900; box-sizing: border-box; }
 #user { font-size:14px; opacity:0.9; }
@@ -227,10 +230,11 @@ input[type=checkbox] { transform:scale(1.2); }
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 10px 16px;
+    padding: 8px 8px;
+    border-radius: 8px;
+    box-shadow: none;
     text-align: left;
     background: none;
-    border-radius: 0;
 }
 #new-menu button:hover {
     background: #e8eaed;
@@ -244,77 +248,79 @@ input[type=checkbox] { transform:scale(1.2); }
     width: 24px;
     text-align: center;
 }
-
-/* ------------------- */
-/* MOBILE STYLES */
-/* ------------------- */
 @media (max-width: 768px) {
-    /* Main Content Padding (to clear fixed header/toolbar) */
+    /* 1. Общее позиционирование */
+    /* Учитываем header (50px) + toolbar (примерно 50px) + небольшой отступ */
     body {
-        padding-top: calc(12px + 12px + 16px + 60px); /* header padding + toolbar padding + toolbar height + a bit of space */
+        padding-top: 108px; 
     }
-
-    /* Header adjustments */
+    
+    /* 2. Header (Шапка) */
     header {
-        padding: 10px 16px;
-        top: 0;
-        border-radius: 0;
-        /* Убираем лишний отступ для лого, так как меню слева */
-        justify-content: space-between; 
+        padding: 0 16px;
+        height: 50px;
     }
     header > div {
-        margin-left: 0 !important; /* Удаляем margin-left 60px */
+        margin-left: 0 !important; 
     }
-
-    /* Toolbar: Make it compact and scrollable for actions */
+    
+    /* 3. Toolbar (Панель инструментов) */
     .toolbar {
         padding: 8px 16px;
         gap: 8px;
-        overflow-x: auto; /* Горизонтальная прокрутка для кнопок */
-        white-space: nowrap; /* Запрет переноса кнопок */
+        overflow-x: auto; /* Горизонтальная прокрутка для всех кнопок */
+        white-space: nowrap; 
         justify-content: flex-start;
-        top: 52px; /* Под фиксированным header (примерно 52px) */
-    }
-    .toolbar > div:last-child {
-        flex-grow: 0; /* Убираем flex-grow для пустого div */
-    }
-    
-    /* Hide some elements in the toolbar to save space, keeping only icons */
-    #btn-up span, #btn-view-link span, #btn-delete span, #btn-download span, #btn-theme span {
-        display: none; /* Скрываем текст, оставляем только иконки */
-    }
-    .toolbar button {
-        padding: 8px 12px; /* Делаем кнопки меньше */
+        top: 50px; /* Сразу под header */
+        height: 50px; /* Фиксированная высота */
+        box-sizing: border-box;
     }
     
-    /* Make the 'New' button more compact */
+    /* Скрываем текст, оставляем только иконки */
+    .toolbar button:not(#btn-new) {
+        padding: 8px 12px; 
+    }
+    .toolbar button:not(#btn-new) > :not(.plus-icon, svg, img, [class*="-icon"]) {
+         display: none; 
+    }
+    
+    /* Кнопка 'New': делаем компактной */
     #btn-new {
-        padding: 8px 16px; 
+        padding: 8px 12px; 
+        min-width: 40px; 
+        font-size: 0; /* Скрываем текст */
+        order: -1; /* Ставим первой в ряду */
     }
-
-    /* Path and File list padding */
+    #btn-new .plus-icon {
+        font-size: 18px; 
+        margin-right: 0;
+    }
+    
+    /* Убираем растягивающий элемент */
+    .toolbar > div[style*="flex-grow"] {
+        display: none; 
+    }
+    
+    /* 4. Путь и Список файлов */
     .path, #files {
         padding-left: 16px;
         padding-right: 16px;
     }
-    .path {
-        margin: 12px 0; /* Убираем горизонтальные margin */
-    }
     
-    /* Table: Make it scrollable and/or hide less critical columns */
+    /* Таблица: Убедимся, что она прокручивается */
     #files {
         overflow-x: auto;
     }
     table {
-        min-width: 500px; /* Обеспечиваем минимальную ширину для прокрутки */
-        box-shadow: none; /* Убираем тень */
+        min-width: 500px; /* Минимальная ширина для прокрутки */
+        box-shadow: none; 
     }
     th, td {
         padding: 10px 8px;
         font-size: 14px;
     }
     
-    /* Modals: Full screen on mobile */
+    /* 5. Модальные окна: На весь экран */
     #file-modal .content, #new-modal .content, #editor-modal .content { 
         max-width: 100vw; 
         max-height: 100vh;
@@ -326,17 +332,11 @@ input[type=checkbox] { transform:scale(1.2); }
         box-sizing: border-box;
     }
     
-    /* New Menu position fix */
+    /* 6. Позиция меню "New" */
     #new-menu {
-        top: 90px; /* Adjust to sit below the scrolled toolbar */
+        top: 108px; /* Под toolbar */
         left: 16px;
         min-width: 80vw;
-    }
-
-    /* Editor height */
-    #editor-modal textarea {
-        height: 70vh;
-        min-height: 200px;
     }
 }
 </style>
@@ -430,78 +430,54 @@ input[type=checkbox] { transform:scale(1.2); }
 </header>
 
 <div class="toolbar" id="toolbar">
-<button id="btn-new">
-    <span class="plus-icon">+</span> Новый
-</button>
-<div id="new-menu">
-    <button id="btn-new-folder"><span class="icon">📁</span> Новая папка</button>
-    <button id="btn-upload"><span class="icon">⬆️</span> Загрузить файл</button>
-    <button id="btn-upload-folder"><span class="icon">📁⬆️</span> Загрузить папку</button>
-    <hr style="margin: 8px 0; border: none; border-top: 1px solid #e0e0e0; border-color: #e0e0e0;">
-    <button id="btn-new-text"><span class="icon">📄</span> Текстовый файл (.txt)</button>
-    <button id="btn-new-markdown"><span class="icon">📝</span> Markdown файл (.md)</button>
-</div>
+    <button id="btn-new">
+        <span class="plus-icon">+</span> New
+    </button><div id="new-menu"> <button id="btn-new-folder"><span class="icon">📁</span> New Folder</button><button id="btn-upload"><span class="icon">⬆️</span><span>🗃️</span> Upload file</button>
+        <hr style="margin: 8px 0; border: none; border-top: 1px solid #e0e0e0; border-color: #e0e0e0;"><button id="btn-new-text"><span class="icon">📄</span>Text file (.txt)</button><button id="btn-new-markdown"><span class="icon">📝</span>Markdown file (.md)</button><button id="btn-castom-text"><span class="icon">📄</span>New My File</button>
+    </div>
 
-<div style="flex-grow:1;"></div> 
-<button id="btn-up">⬆️ Назад</button>
-<button id="btn-view-link" style="display:none;">🔗 Ссылка</button>
-<button id="btn-delete">🗑️ Удалить</button>
-<button id="btn-download">⬇️ Скачать</button>
-<button id="btn-theme">🌓 Тема</button>
-</div>
+    <div style="flex-grow:1;"></div>
+    <button id="btn-up">⬆️ Up</button> <button id="btn-view-link" style="display:none;">🔗 Link</button> <button id="btn-delete">🗑️ Delete</button> <button id="btn-download">⬇️ Download</button> <button id="btn-theme">🌓 Theme</button> </div>
 
 <div class="path" id="path">/</div>
 
 <div id="files">
-<table>
-<thead>
-<tr>
-<th class="checkbox-col"><input type="checkbox" id="select-all"></th>
-<th>Имя</th>
-<th>Тип</th>
-</tr>
-</thead>
-<tbody id="file-list"><tr><td colspan="3">Загрузка...</td></tr></tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th class="checkbox-col"><input type="checkbox" id="select-all"></th>
+                <th>Name</th> <th>Type</th> </tr>
+        </thead>
+        <tbody id="file-list"><tr><td colspan="3">Loading...</td></tr></tbody> </table>
 </div>
 
 <div id="file-modal">
-  <div class="content">
-    <span class="close" id="modal-close">✖</span>
-    <div id="modal-actions-bar">
-        <button id="btn-edit" style="display:none;">✏️ Редактировать</button>
-    </div>
-    <h3 id="modal-filename"></h3>
-    <div id="modal-body"></div>
-  </div>
+    <div class="content">
+        <span class="close" id="modal-close">✖</span>
+        <div id="modal-actions-bar">
+            <button id="btn-edit" style="display:none;">✏️ Edit</button> </div>
+        <h3 id="modal-filename"></h3>
+        <div id="modal-body"></div>
+    </div>
 </div>
 
 <div id="new-modal">
-  <div class="content">
-    <span class="close" id="new-modal-close">✖</span>
-    <h3 id="new-modal-title"></h3>
-    <label for="new-modal-name">Имя:</label>
-    <input type="text" id="new-modal-name" placeholder="Введите имя">
-    <div class="modal-actions">
-        <button id="btn-modal-cancel">Отмена</button>
-        <button id="btn-modal-create">Создать</button>
-    </div>
-  </div>
+    <div class="content">
+        <span class="close" id="new-modal-close">✖</span>
+        <h3 id="new-modal-title"></h3>
+        <label for="new-modal-name">Name:</label> <input type="text" id="new-modal-name" placeholder="Enter name"> <div class="modal-actions">
+            <button id="btn-modal-cancel">Cancel</button> <button id="btn-modal-create">Create</button> </div>
+    </div>
 </div>
 
 <div id="editor-modal">
-  <div class="content">
-    <span class="close" id="editor-modal-close">✖</span>
-    <h3 id="editor-filename">Редактирование</h3>
-    <textarea id="editor-textarea"></textarea>
-    <div class="modal-actions">
-        <button id="btn-editor-cancel">Отмена</button>
-        <button id="btn-editor-save">Сохранить</button>
-    </div>
-  </div>
+    <div class="content">
+        <span class="close" id="editor-modal-close">✖</span>
+        <h3 id="editor-filename">Editing</h3> <textarea id="editor-textarea"></textarea>
+        <div class="modal-actions">
+            <button id="btn-editor-cancel">Cancel</button> <button id="btn-editor-save">Save</button> </div>
+    </div>
 </div>
-
-        </div>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -549,8 +525,8 @@ function _getMimeType(filename) {
 }
 
 /**
- * Определяет, является ли файл бинарным согласно явному списку.
- * Все остальные файлы считаются текстовыми.
+ * Определяет, является ли file бинарным согласно явному списку.
+ * Все остальные fileы считаются текстовыми.
  */
 function _isBinaryFile(filename) {
     const mime = _getMimeType(filename);
@@ -601,7 +577,7 @@ async function initDrive(){
 
     await drive.init(); 
     
-    // --- НОВОЕ: Обработка ссылки для просмотра файла ---
+    // --- НОВОЕ: Обработка ссылки для просмотра fileа ---
     await handleViewLink();
     // -------------------------------------------------
 
@@ -630,26 +606,26 @@ async function refreshList(){
         
         let fileType;
         if (item.type === 'folder') {
-            fileType = 'Папка';
+            fileType = 'Forder';
         } else if (_isBinaryFile(decodedName)) {
             const mime = _getMimeType(decodedName);
             if (mime.startsWith('image/')) {
-                fileType = 'Изображение';
+                fileType = 'Image';
             } else if (mime === 'application/pdf') {
                 fileType = 'PDF-документ';
             } else if (mime === 'application/zip') {
                 fileType = 'Архив (.zip)';
             } else {
-                fileType = 'Бинарный';
+                fileType = 'Binary';
             }
         } else {
             const mime = _getMimeType(decodedName);
             if(mime === 'image/svg+xml') {
-                fileType = 'SVG-изображение (Текст)';
+                fileType = 'SVG-Image (Текст)';
             } else if(mime === 'text/markdown') {
                 fileType = 'Markdown-документ';
             } else {
-                fileType = 'Текстовый файл';
+                fileType = 'Текстовый file';
             }
         }
 
@@ -732,34 +708,34 @@ async function openFile(encodedPath, decodedName){
         
         btnEdit.style.display = 'inline-block';
     } else if (!node.binary) { 
-        // 4. Текстовые и прочие текстоподобные файлы
+        // 4. Текстовые и прочие текстоподобные fileы
         const pre = document.createElement("pre"); 
         pre.textContent = node.value; 
         body.appendChild(pre);
         
         btnEdit.style.display = 'inline-block';
     } else {
-        // 5. Прочие бинарные файлы
+        // 5. Прочие бинарные fileы
         const a = document.createElement("a"); 
         a.href = "javascript:void(0)"; 
-        a.textContent = `Бинарный файл (${mimeType}): недоступен для просмотра`; 
+        a.textContent = `Binary file (${mimeType}): unavailable for viewing`; 
         body.appendChild(a);
     }
     
     fileModal.style.display = "flex";
 }
 
-// --- НОВАЯ ФУНКЦИЯ: ОТКРЫТИЕ ФАЙЛА ПО ССЫЛКЕ (Read-Only) ---
+// --- НОВАЯ ФУНКЦИЯ: ОТКРЫТИЕ fileА ПО ССЫЛКЕ (Read-Only) ---
 
 /**
- * Открывает файл в модальном окне в режиме только для чтения, используя отдельный объект PDrive.
+ * Открывает file в модальном окне в режиме только для чтения, используя отдельный объект PDrive.
  * @param {PDrive} pdriveInstance Экземпляр PDrive для целевого пользователя.
- * @param {Object} node Узел файла.
- * @param {string} fullDecodedPath Полный декодированный путь к файлу.
- * @param {string} userName Имя пользователя, которому принадлежит файл.
+ * @param {Object} node Узел fileа.
+ * @param {string} fullDecodedPath Полный декодированный путь к fileу.
+ * @param {string} userName Имя пользователя, которому принадлежит file.
  */
 async function openFileInReadOnlyMode(pdriveInstance, node, fullDecodedPath, userName) {
-    document.getElementById("modal-filename").textContent = `[ЧТЕНИЕ] ${fullDecodedPath} (от ${userName})`; 
+    document.getElementById("modal-filename").textContent = `[READING] ${fullDecodedPath} (от ${userName})`; 
     const body = document.getElementById("modal-body"); body.innerHTML = "";
     btnEdit.style.display = 'none'; // Всегда скрыто для режима чтения по ссылке
     
@@ -791,14 +767,14 @@ async function openFileInReadOnlyMode(pdriveInstance, node, fullDecodedPath, use
         rawDiv.id = "markdown-raw-view";
         rawDiv.innerHTML = `<h4>Исходный текст:</h4><pre>${node.value}</pre>`;
         body.appendChild(rawDiv);
-    } else if (!node.binary) { // 4. Текстовые файлы
+    } else if (!node.binary) { // 4. Текстовые fileы
         const pre = document.createElement("pre"); 
         pre.textContent = node.value; 
         body.appendChild(pre);
     } else {
-        // 5. Прочие бинарные файлы
+        // 5. Прочие бинарные fileы
         const p = document.createElement("p");
-        p.textContent = `Бинарный файл (${mimeType}): недоступен для просмотра.`;
+        p.textContent = `Binary file (${mimeType}): unavailable for viewing.`;
         body.appendChild(p);
     }
     
@@ -807,7 +783,7 @@ async function openFileInReadOnlyMode(pdriveInstance, node, fullDecodedPath, use
 
 
 /**
- * Обрабатывает хэш URL для открытия файла по прямой ссылке.
+ * Обрабатывает хэш URL для открытия fileа по прямой ссылке.
  * Ожидаемый формат хэша: #view/[username]/[path/to/file.ext]
  */
 async function handleViewLink() {
@@ -825,7 +801,7 @@ async function handleViewLink() {
         // Извлекаем имя пользователя
         const targetUser = parts[0]; 
         
-        // Извлекаем путь к файлу (все остальное)
+        // Извлекаем путь к fileу (все остальное)
         const filePathDecoded = '/' + parts.slice(1).join('/'); 
         
         // Кодируем путь, как это делает основная логика PDrive
@@ -835,8 +811,8 @@ async function handleViewLink() {
         }
         const filePathEncoded = filePathEncodedParts.join('/'); // /folder_encoded/file_encoded.txt
         
-        // Инициализируем временный PDrive для доступа к файлам другого пользователя
-        document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Загрузка файла по ссылке...</td></tr>';
+        // Инициализируем временный PDrive для доступа к fileам другого пользователя
+        document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Загрузка fileа по ссылке...</td></tr>';
 
         try {
             const viewDrive = new PDrive(targetUser);
@@ -853,10 +829,10 @@ async function handleViewLink() {
                 // Открываем в режиме чтения
                 await openFileInReadOnlyMode(viewDrive, fileNode, filePathDecoded, targetUser);
             } else {
-                alert(`Ошибка: Файл '${filePathDecoded}' пользователя '${targetUser}' не найден или является папкой.`);
+                alert(`Ошибка: file '${filePathDecoded}' пользователя '${targetUser}' не найден или является папкой.`);
             }
         } catch (e) {
-            alert(`Ошибка при открытии файла: ${e.message}. Возможно, пользователь '${targetUser}' не существует или нет доступа.`);
+            alert(`Ошибка при открытии fileа: ${e.message}. Возможно, пользователь '${targetUser}' не существует или нет доступа.`);
         }
     }
 }
@@ -873,11 +849,11 @@ btnEdit.onclick = () => {
 // --- EDITOR LOGIC ---
 async function editFile(encodedPath) {
     const node = drive._getNode(drive._resolvePath(encodedPath), false);
-    // Разрешаем редактировать текстовые файлы И SVG (которые хранятся как текст)
+    // Разрешаем редактировать текстовые fileы И SVG (которые хранятся как текст)
     const decodedName = drive._decodeKey(encodedPath.split('/').pop());
     const isSvg = _getMimeType(decodedName) === 'image/svg+xml';
     
-    if (!node || (node.binary && !isSvg)) { alert("Ошибка: Невозможно редактировать этот файл."); return; }
+    if (!node || (node.binary && !isSvg)) { alert("Ошибка: Невозможно редактировать этот file."); return; }
     
     document.getElementById("editor-filename").textContent = decodedName;
     editorTextarea.value = node.value;
@@ -892,11 +868,11 @@ document.getElementById("btn-editor-save").onclick = async () => {
     editorModal.style.display = "none";
     
     try {
-        // При сохранении текстового файла (или SVG, который обрабатывается как текст)
+        // При сохранении текстового fileа (или SVG, который обрабатывается как текст)
         // isBinary остается false
         await drive.writeFile(currentEncodedPath, newContent, false); 
         await refreshList();
-        alert("Файл успешно сохранен!");
+        alert("file успешно сохранен!");
     } catch (e) {
         alert("Ошибка сохранения: " + e.message);
     }
@@ -939,8 +915,8 @@ document.getElementById("btn-modal-create").onclick = async () => {
     try {
         if (modalAction === 'folder') {
             await drive.mkdir(fullEncodedPath);
-        } else if (modalAction === 'text' || modalAction === 'markdown') {
-            // При создании нового файла он всегда текстовый (binary=false)
+        } else if (modalAction === 'text' || modalAction === 'markdown' || modalAction === 'null') {
+            // При создании нового fileа он всегда текстовый (binary=false)
             let initialContent = (modalAction === 'markdown') ? `# ${finalName.replace(/\.md$/i, '')}` : "";
             await drive.writeFile(fullEncodedPath, initialContent, false);
         }
@@ -972,14 +948,14 @@ document.getElementById("btn-up").onclick=async()=>{ 
 
 // New folder opens modal
 document.getElementById("btn-new-folder").onclick=async()=>{ 
-    openNewModal("Новая папка", "folder");
+    openNewModal("New Folder", "folder");
 };
 
 // --- НОВАЯ КНОПКА: Ссылка для просмотра ---
 btnViewLink.onclick = () => {
     if (selectedFiles.size !== 1) return;
     
-    // Получаем имя выбранного файла
+    // Получаем имя выбранного fileа
     const fileName = selectedFiles.values().next().value;
     
     // Формируем полный путь
@@ -998,7 +974,7 @@ btnViewLink.onclick = () => {
 };
 
 
-// !!! ИСПРАВЛЕННАЯ ЛОГИКА ЗАГРУЗКИ ФАЙЛОВ !!!
+// !!! ИСПРАВЛЕННАЯ ЛОГИКА ЗАГРУЗКИ fileОВ !!!
 document.getElementById("btn-upload").onclick=async()=>{
     newMenu.style.display = "none";
     const fileInput=document.createElement("input"); 
@@ -1008,7 +984,7 @@ document.getElementById("btn-upload").onclick=async()=>{
         const reader=new FileReader(); 
         const isBinary = _isBinaryFile(file.name); // Используем новую функцию
 
-        document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Загрузка файла... Не закрывайте окно!</td></tr>';
+        document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Loading file... Don\'t close the window!</td></tr>';
 
         reader.onload=async()=>{ 
             let data;
@@ -1028,7 +1004,7 @@ document.getElementById("btn-upload").onclick=async()=>{
             }
         }; 
         
-        // Читаем файл в соответствии с его типом
+        // Читаем file в соответствии с его типом
         if (!isBinary) {
             reader.readAsText(file);
         } else {
@@ -1038,25 +1014,20 @@ document.getElementById("btn-upload").onclick=async()=>{
     fileInput.click();
 };
 
-// Upload folder from menu (simplified, remains alert)
-document.getElementById("btn-upload-folder").onclick=async()=>{
-    newMenu.style.display = "none";
-    alert("Функционал 'Загрузить папку' пока не реализован.");
-};
-
-// Create new Text File opens modal
 document.getElementById("btn-new-text").onclick=async()=>{
-    openNewModal("Новый текстовый файл", "text");
+    openNewModal("New Text file", "text");
 };
-
+document.getElementById("btn-castom-text").onclick=async()=>{
+    openNewModal("New file", "null");
+};
 // Create new Markdown File opens modal
 document.getElementById("btn-new-markdown").onclick=async()=>{
-    openNewModal("Новый Markdown файл", "markdown");
+    openNewModal("New Markdown file", "markdown");
 };
 
 document.getElementById("btn-delete").onclick=async()=>{
-    if(!selectedFiles.size){ alert("Выберите элементы"); return; }
-    if(!confirm("Удалить выбранные элементы?")) return;
+    if(!selectedFiles.size){ alert("Select elements"); return; }
+    if(!confirm("Delete selected items?")) return;
     
     for(const name of selectedFiles) {
         const encodedName = drive._encodeKey(name);
@@ -1067,7 +1038,7 @@ document.getElementById("btn-delete").onclick=async()=>{
 };
 
 
-// --- ЛОГИКА СКАЧИВАНИЯ ФАЙЛОВ ---
+// --- ЛОГИКА СКАЧИВАНИЯ fileОВ ---
 // Рекурсивная функция для создания ZIP-архива
 async function addNodeToZip(zip, node, nodeFullPath) {
     // nodeFullPath: полный PDrive-путь, содержит ЗАКОДИРОВАННЫЕ имена
@@ -1081,7 +1052,7 @@ async function addNodeToZip(zip, node, nodeFullPath) {
     if (node.type === "file") {
         let content;
         if (node.binary) {
-            // Если это бинарный файл, node.value - это чистая Base64 строка
+            // Если это Binary file, node.value - это чистая Base64 строка
             try {
                 const binary = atob(node.value); // Декодируем Base64
                 const array = new Uint8Array(binary.length);
@@ -1092,7 +1063,7 @@ async function addNodeToZip(zip, node, nodeFullPath) {
                 content = new Uint8Array(0); 
             }
         } else {
-            // Для текстовых файлов (включая SVG), node.value - это чистый текст
+            // Для текстовых fileов (включая SVG), node.value - это чистый текст
             content = node.value;
         }
         zip.file(fullZipPath, content);
@@ -1115,39 +1086,157 @@ async function addNodeToZip(zip, node, nodeFullPath) {
         }
     }
 }
+function base64ToUint8Array(base64) {
+    const raw = atob(base64);
+    const rawLength = raw.length;
+    const array = new Uint8Array(rawLength);
 
+    for (let i = 0; i < rawLength; i++) {
+        array[i] = raw.charCodeAt(i);
+    }
+    return array;
+}
+// ... (Функция base64ToUint8Array остается без изменений) ...
+
+// *Глобальная переменная drive и addNodeToZip предполагаются доступными*
+// *Функция _isBinaryFile предполагается доступной*
+
+/**
+ * Рекурсивно обрабатывает узел (файл или папку) и добавляет его в ZIP.
+ * @param {JSZip} zip - Экземпляр JSZip.
+ * @param {Object} node - Узел файловой системы.
+ * @param {string} fullPath - Полный путь к узлу в файловой системе (ДЕКОДИРОВАННЫЙ).
+ * @param {string} rootPathForZip - Часть пути, которую нужно отрезать, чтобы получить относительный ZIP-путь.
+ */
+async function processNodeForZip(zip, node, fullPath, rootPathForZip) {
+    const pathParts = drive._resolvePath(fullPath); 
+    const name = pathParts.pop(); 
+    
+    // 1. Вычисляем путь внутри ZIP-архива
+    const zipPathBase = fullPath.startsWith('/') ? fullPath.substring(1) : fullPath;
+    const zipPathRelativeToRoot = zipPathBase.startsWith(rootPathForZip) 
+        ? zipPathBase.substring(rootPathForZip.length) 
+        : zipPathBase;
+        
+    const cleanZipPath = zipPathRelativeToRoot.startsWith('/') 
+        ? zipPathRelativeToRoot.substring(1) 
+        : zipPathRelativeToRoot;
+
+    // 🔴 НОВОЕ ИЗМЕНЕНИЕ: Замена всех запятых (,) на точки (.) в пути ZIP
+    const zipPath = cleanZipPath.replace(/,/g, '.'); // <--- 🌟 Вот здесь происходит замена
+
+    if (zipPath === "") {
+        console.log(`Skipping root element for ZIP path: ${fullPath}`);
+    }
+
+
+    if (node.type === 'file') {
+        // --- БЛОК ОБРАБОТКИ ФАЙЛА (Чтение и конвертация) ---
+        let fileContent;
+        try {
+            fileContent = await drive.readFile(fullPath); 
+        } catch (e) {
+            console.error(`Error reading file ${name} (might be missing parts):`, e);
+            return; 
+        }
+        
+        // ... (Логика декодирования Data URL в Uint8Array остается прежней) ...
+        // ... (проверка и конвертация fileContent) ...
+        if (fileContent && typeof fileContent === 'string' && fileContent.startsWith('data:')) {
+            const dataUrl = decodeURIComponent(fileContent);
+            const base64PartWithCruft = dataUrl.split(',')[1];
+            const mimeType = dataUrl.substring(dataUrl.indexOf(':') + 1).split(';')[0];
+            
+            if (_isBinaryFile(mimeType) && base64PartWithCruft) { 
+                let cleanBase64 = base64PartWithCruft.replace(/\s/g, ''); 
+                while (cleanBase64.length % 4 !== 0) { cleanBase64 += '='; }
+                try {
+                    fileContent = base64ToUint8Array(cleanBase64); 
+                } catch(e) {
+                    console.error(`Error converting Base64 to Uint8Array for ${name}. Skipping file.`, e);
+                }
+            }
+        }
+        
+        // Добавляем файл в ZIP, используя модифицированный zipPath
+        if (zipPath) {
+            const isBinary = fileContent instanceof Uint8Array || fileContent instanceof ArrayBuffer;
+            zip.file(zipPath, fileContent, { binary: isBinary });
+            console.log(`Added file to ZIP: ${zipPath}`);
+        }
+        
+    } else if (node.type === 'folder' && node.children) {
+        // --- БЛОК ОБРАБОТКИ ПАПКИ (Рекурсия) ---
+        console.log(`Processing folder recursively: ${name}`);
+        
+        // Добавляем саму папку в ZIP, используя модифицированный zipPath
+        if (zipPath) {
+            zip.folder(zipPath); 
+            console.log(`Created folder in ZIP: ${zipPath}`);
+        }
+        
+        // Рекурсивно обходим все дочерние элементы
+        for (const childName in node.children) {
+            if (childName.includes('_part')) continue; 
+            
+            if (Object.hasOwnProperty.call(node.children, childName)) {
+                const childNode = node.children[childName];
+                
+                const decodedChildName = decodeURIComponent(childName);
+                const newFullPath = fullPath + (fullPath.endsWith('/') ? '' : '/') + decodedChildName;
+                
+                // Рекурсивный вызов
+                await processNodeForZip(zip, childNode, newFullPath, rootPathForZip);
+            }
+        }
+    }
+}
+// --- ИСПРАВЛЕНИЕ В ONCLICK ---
 document.getElementById("btn-download").onclick = async () => {
-    if (!selectedFiles.size) { 
-        alert("Выберите элементы"); 
-        return; 
-    }
+    if (!selectedFiles.size) { 
+        alert("Select elements"); 
+        return; 
+    }
+    document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Preparing to download... Do not close the window!</td></tr>';
 
-    document.getElementById("file-list").innerHTML = '<tr><td colspan="3">Подготовка к скачиванию... Не закрывайте окно!</td></tr>';
+    const zip = new JSZip();
 
-    const zip = new JSZip();
-    let rootPath = currentPath === "/" ? "" : currentPath; // Для правильной структуры ZIP
+    for (const name of selectedFiles) {
+        // 'name' — декодированное имя выбранного элемента (файл или папка)
+        
+        // 1. Формируем полный путь к выбранному элементу (например, /user/current/file.txt)
+        let fullPath = currentPath;
+        if (!fullPath.endsWith('/')) {
+            fullPath += '/';
+        }
+        fullPath += name; 
+        
+        // 2. Получаем узел
+        const node1 = drive._getNode(drive._resolvePath(fullPath), false); 
+        
+        if (!node1) continue;
+        
+        // 3. 🛑 ОПРЕДЕЛЯЕМ БАЗОВЫЙ ПУТЬ ДЛЯ ZIP
+        // Это часть, которую нужно "отрезать", чтобы файл оказался в корне архива.
+        // Если currentPath = /A/B, и мы выбрали C, то rootPathForZip = /A/B/
+        
+        let rootPathForZip = currentPath;
+        if (!rootPathForZip.endsWith('/')) {
+             rootPathForZip += '/';
+        }
 
-    for (const name of selectedFiles) {
-        const encodedName = drive._encodeKey(name);
-        const fullPath = currentPath + "/" + encodedName; // Полный PDrive путь элемента (ЗАКОДИРОВАННЫЙ)
-        
-        // NOTE: Используем fullPath, который включает текущий каталог
-        const node = drive._getNode(drive._resolvePath(fullPath), false); 
-        
-        if (!node) continue;
-        
-        await addNodeToZip(zip, node, fullPath); 
-    }
-
-    const blob = await zip.generateAsync({ type: "blob" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "archive.zip";
-    a.click();
-
-    await refreshList(); // Обновляем список после скачивания
+        // 4. Запускаем рекурсивный процесс
+        await processNodeForZip(zip, node1, fullPath, rootPathForZip); 
+    }
+    
+    // Генерация и скачивание ZIP-архива
+    const blob = await zip.generateAsync({ type: "blob" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "archive.zip";
+    a.click();
+    await refreshList(); 
 };
-
 document.getElementById("btn-theme").onclick=()=>{
     const isDark = document.body.classList.contains("dark");
     document.body.classList.toggle("dark", !isDark); 

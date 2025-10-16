@@ -4,6 +4,11 @@ class PDrive {
     name = "";
     root = {};
     count_files_max = 100;
+    
+    // 🗃️ Константа для лимита размера файла (900 КБ для запаса)
+    static FILE_SIZE_LIMIT = 921600; 
+    // Название метаданных для хранения информации о частях
+    static PART_INFO_KEY = '__file_parts'; 
 
     constructor(name) {
         this.name = name;
@@ -36,13 +41,17 @@ class PDrive {
 
     _resolvePath(path) {
         if (!path.startsWith("/")) throw new Error("Path must start with /");
-        return path.split("/").filter(Boolean);
+        return path.split("/").filter(Boolean).map(p => decodeURIComponent(p));
     }
 
+    _encodeKey(key) {
+        return encodeURIComponent(key);
+    }
+    
     _getNode(pathParts, createIfMissing = false, createType = "folder") {
         let node = this.root;
         for (let i = 0; i < pathParts.length; i++) {
-            const part = pathParts[i];
+            const part = this._encodeKey(pathParts[i]); 
             if (!node.children) node.children = {};
             if (!node.children[part]) {
                 if (createIfMissing) {
@@ -70,28 +79,216 @@ class PDrive {
         await this._save();
         return true;
     }
+// ------------------------------------------------------------------
+// 💾 ФУНКЦИИ ЧАНКОВАНИЯ (SPLIT/RECONSTRUCT)
+// ------------------------------------------------------------------
+
+    /**
+     * Конвертирует любые входные данные в чистую Base64 строку и определяет их тип.
+     */
+    _toBase64String(data) {
+        let base64 = '';
+        let originalType = typeof data;
+        let mimeType = null;
+        
+        if (typeof data === 'string') {
+            originalType = 'string';
+            if (data.startsWith('data:')) {
+                originalType = 'dataurl';
+                const parts = data.split(',');
+                if (parts[0].includes(';base64')) {
+                     mimeType = parts[0].substring(data.indexOf(':') + 1).split(';')[0];
+                }
+                base64 = parts[1] || '';
+            } else {
+                base64 = btoa(unescape(encodeURIComponent(data)));
+            }
+        } else if (data instanceof Uint8Array) {
+            originalType = 'uint8array';
+            base64 = btoa(String.fromCharCode(...data));
+        } else if (data && typeof data.toString === 'function') {
+            base64 = btoa(String(data));
+        } else {
+            base64 = btoa(JSON.stringify(data));
+        }
+        
+        return { base64, originalType, mimeType };
+    }
+    
+    /**
+     * Декодирует Base64 строку обратно в исходный формат данных.
+     */
+    _decodeBase64BackToOriginal(base64Data, metadata) {
+        const base64ToUint8Array = (base64) => {
+             const raw = atob(base64);
+             const array = new Uint8Array(raw.length);
+             for (let i = 0; i < raw.length; i++) {
+                 array[i] = raw.charCodeAt(i);
+             }
+             return array;
+        };
+
+        switch (metadata.originalType) {
+            case 'dataurl':
+                let prefix = `data:${metadata.mimeType || 'application/octet-stream'};base64,`;
+                return prefix + base64Data;
+            case 'uint8array':
+                return base64ToUint8Array(base64Data);
+            case 'string':
+            default:
+                try {
+                    return decodeURIComponent(escape(atob(base64Data)));
+                } catch (e) {
+                    return base64Data; 
+                }
+        }
+    }
+
+    /**
+     * Разбивает файл на части и сохраняет их.
+     */
+    async _splitFile(filename, folder, base64Data) {
+        const limit = PDrive.FILE_SIZE_LIMIT;
+        const totalParts = Math.ceil(base64Data.length / limit);
+        if (totalParts === 0) return 0;
+
+        for (let i = 0; i < totalParts; i++) {
+            const chunk = base64Data.substring(i * limit, (i + 1) * limit);
+            const partFilename = this._encodeKey(`${filename}_part${i}`);
+            
+            folder.children[partFilename] = { type: "file", value: chunk };
+        }
+        
+        console.log(`File ${filename} split into ${totalParts} parts.`);
+        return totalParts;
+    }
+
+    /**
+     * Собирает части файла обратно и восстанавливает исходный формат.
+     */
+    async _reconstructFile(path, metadata) {
+        const parts = this._resolvePath(path);
+        const filename = parts.pop();
+        const folder = this._getNode(parts);
+        const partsCount = metadata.count;
+        
+        if (!folder) throw new Error("Parent folder not found during reconstruct.");
+
+        let reconstructedBase64 = '';
+        for (let i = 0; i < partsCount; i++) {
+            const partFilenameEncoded = this._encodeKey(`${filename}_part${i}`);
+            const partNode = folder.children[partFilenameEncoded];
+
+            if (!partNode || partNode.type !== 'file') {
+                 console.error(`Missing file part: ${filename}_part${i}. Reconstruction stopped.`);
+                 throw new Error(`Missing file part: ${filename}_part${i}`);
+            }
+            reconstructedBase64 += partNode.value;
+        }
+
+        console.log(`File ${filename} reconstructed from ${partsCount} parts.`);
+        
+        return this._decodeBase64BackToOriginal(reconstructedBase64, metadata);
+    }
+    
+    /**
+     * Вспомогательный метод для удаления только частей файла.
+     */
+    _deleteFilePartsOnly(filename, parent, fileNode) {
+        const partInfo = fileNode.value?.[PDrive.PART_INFO_KEY];
+        
+        if (partInfo && partInfo.count > 0) {
+            for (let i = 0; i < partInfo.count; i++) {
+                const partFilenameEncoded = this._encodeKey(`${filename}_part${i}`);
+                delete parent.children[partFilenameEncoded];
+            }
+            console.log(`Deleted ${partInfo.count} parts for file: ${filename}`);
+            return true;
+        }
+        return false;
+    }
+
+// ------------------------------------------------------------------
+// 📂 ПУБЛИЧНЫЕ МЕТОДЫ 
+// ------------------------------------------------------------------
 
     async writeFile(path, data) {
         const parts = this._resolvePath(path);
         const filename = parts.pop();
+        const encodedFilename = this._encodeKey(filename);
         const folder = this._getNode(parts, true, "folder");
-        folder.children[filename] = { type: "file", value: data };
+        
+        const { base64: base64Data, originalType, mimeType } = this._toBase64String(data);
+        
+        const existingNode = folder.children[encodedFilename];
+        if (existingNode) {
+            this._deleteFilePartsOnly(filename, folder, existingNode);
+        }
+
+        if (base64Data.length > PDrive.FILE_SIZE_LIMIT) {
+            const partsCount = await this._splitFile(filename, folder, base64Data);
+            
+            folder.children[encodedFilename] = { 
+                type: "file", 
+                value: { 
+                    [PDrive.PART_INFO_KEY]: {
+                        count: partsCount,
+                        originalType: originalType,
+                        mimeType: mimeType
+                    }
+                } 
+            };
+        } else {
+            folder.children[encodedFilename] = { type: "file", value: data };
+        }
+        
         await this._save();
         return true;
     }
 
     async readFile(path) {
         const file = this._getNode(this._resolvePath(path));
-        if (!file || file.type !== "file") throw new Error("File not found");
+        // ... (проверка на ошибку)
+
+        const partInfo = file.value?.[PDrive.PART_INFO_KEY];
+
+        if (partInfo && partInfo.count && partInfo.count > 0) {
+            // ✅ Возвращает собранные и декодированные данные (string/Uint8Array)
+            return await this._reconstructFile(path, partInfo);
+        }
+
+        // ❌ ВНИМАНИЕ: Если это одиночный файл, `file.value` должно быть либо строкой, 
+        // либо массивом. Если вы случайно сохранили ОБЪЕКТ в `file.value` для маленьких файлов, 
+        // будет возвращено "[object Object]".
+        
+        // Убедитесь, что file.value не является объектом метаданных
+        if (typeof file.value === 'object' && file.value !== null && !Array.isArray(file.value)) {
+            // Если это объект, это может быть ошибка или метаданные.
+            // В идеале, эта ветка должна возвращать исходные данные.
+            // Если вы ожидаете строку, примените конвертацию:
+            // return String(file.value); 
+            
+            // Но в вашем коде file.value должно быть чистым контентом для одиночных файлов.
+            return file.value;
+        }
+        
         return file.value;
     }
-
+    
     async delete(path) {
         const parts = this._resolvePath(path);
         const name = parts.pop();
         const parent = this._getNode(parts);
-        if (!parent || !parent.children[name]) throw console.error("Path not found");
-        delete parent.children[name];
+        const encodedName = this._encodeKey(name);
+        
+        if (!parent || !parent.children[encodedName]) throw console.error("Path not found");
+        
+        const fileNode = parent.children[encodedName];
+        
+        this._deleteFilePartsOnly(name, parent, fileNode);
+        
+        delete parent.children[encodedName];
+        
         await this._save();
         return true;
     }
@@ -103,14 +300,35 @@ class PDrive {
         const nameNew = newParts.pop();
         const parentOld = this._getNode(oldParts);
         const parentNew = this._getNode(newParts, true, "folder");
+        
+        const encodedNameOld = this._encodeKey(nameOld);
+        const encodedNameNew = this._encodeKey(nameNew);
 
-        if (!parentOld || !parentOld.children[nameOld]) throw new Error("Old path not found");
-        parentNew.children[nameNew] = parentOld.children[nameOld];
-        delete parentOld.children[nameOld];
+        if (!parentOld || !parentOld.children[encodedNameOld]) throw new Error("Old path not found");
+        
+        parentNew.children[encodedNameNew] = parentOld.children[encodedNameOld];
+        delete parentOld.children[encodedNameOld];
+        
+        const fileNode = parentNew.children[encodedNameNew];
+        const partInfo = fileNode.value?.[PDrive.PART_INFO_KEY];
+
+        if (partInfo && partInfo.count > 0) {
+             for (let i = 0; i < partInfo.count; i++) {
+                const partFilenameOld = this._encodeKey(`${nameOld}_part${i}`);
+                const partFilenameNew = this._encodeKey(`${nameNew}_part${i}`);
+                
+                if (parentOld.children[partFilenameOld]) {
+                    parentNew.children[partFilenameNew] = parentOld.children[partFilenameOld];
+                    delete parentOld.children[partFilenameOld];
+                }
+            }
+            console.log(`Renamed and moved ${partInfo.count} parts for file: ${nameOld} -> ${nameNew}`);
+        }
+        
         await this._save();
         return true;
     }
-
+    
     async listDir(path = "/") {
         const parts = this._resolvePath(path);
         const node = parts.length === 0 ? this.root : this._getNode(parts);
@@ -118,38 +336,39 @@ class PDrive {
         if (!node) throw Error("Path not found");
         if (node.type !== "folder") throw new Error("Path is not a folder");
 
-        // Если children нет, создаём пустой объект
         if (!node.children) node.children = {};
 
-        return Object.keys(node.children).map(name => ({
-            name,
-            type: node.children[name].type
-        }));
+        return Object.keys(node.children)
+            .filter(encodedName => !encodedName.includes('_part'))
+            .map(encodedName => {
+                const name = decodeURIComponent(encodedName);
+                return {
+                    name,
+                    type: node.children[encodedName].type
+                };
+            });
     }
 
-    // ✅ ДОБАВЛЕННЫЙ МЕТОД: Рекурсивный обход и сбор всех файлов
     _searchFilesRecursive(node, currentPath = "/") {
         let foundFiles = [];
 
-        // Убедимся, что у папки есть children
         if (node.type === "folder" && node.children) {
             
-            for (const name in node.children) {
-                const child = node.children[name];
-                // Строим полный путь для текущего элемента
-                // Убеждаемся, что не добавляем двойной слеш, если currentPath уже заканчивается на '/'
+            for (const encodedName in node.children) {
+                if (encodedName.includes('_part')) continue; 
+                
+                const child = node.children[encodedName];
+                const name = decodeURIComponent(encodedName);
                 const fullPath = currentPath + name;
                 
                 if (child.type === "file") {
-                    // Нашли файл, добавляем его полную информацию
                     foundFiles.push({
                         name: name,
-                        path: fullPath, // Полный путь
+                        path: fullPath, 
                         type: "file",
-                        value: child.value // Содержимое файла
+                        value: child.value 
                     });
                 } else if (child.type === "folder") {
-                    // Рекурсивный вызов для подпапки, добавляем слеш в конце пути для папок
                     foundFiles = foundFiles.concat(this._searchFilesRecursive(child, fullPath + "/"));
                 }
             }
@@ -159,35 +378,26 @@ class PDrive {
 
     async progect_sys_PS() {
         let info = [];
-
-        // Предполагается, что dbManager.list("users") возвращает 
-        // массив объектов вида: [{ key: "имя_пользователя", value: {...} }, ...]
         const userEntries = await window.dbManager.list("users");
         
         for (const entry of userEntries) {
-            // Исправлена логика получения имени пользователя, как обсуждалось ранее
             const username = entry.key || entry.name; 
-            
             if (!username) continue; 
             
             try {
-                // Создаем новый экземпляр PDrive для каждого пользователя
                 const pdrive = new PDrive(username);
                 await pdrive.init();
                 
-                // ✅ ИСПОЛЬЗУЕМ рекурсивный поиск по всему диску
-                // Начинаем поиск с корня (pdrive.root)
                 const allFiles = pdrive._searchFilesRecursive(pdrive.root);
                 
                 for (const fileData of allFiles) {
-                    // Добавляем информацию о файле и его содержимое
+                    const fileContent = await pdrive.readFile(fileData.path); 
+
                     info.push({
                         username: username,
                         file: {
-                            name: fileData.name,
-                            path: fileData.path, // Полный путь
-                            type: fileData.type,
-                            value: fileData.value
+                            ...fileData,
+                            value: fileContent 
                         }
                     });
                     console.log(`PDrive for user ${username} added file: ${fileData.path}`);
@@ -201,18 +411,17 @@ class PDrive {
     }
 
     async get_progect_files(filetype) {
-        // Вызываем progect_sys_PS, чтобы получить уже обработанный список со всем содержимым
         const info = await this.progect_sys_PS(); 
         console.log("Collected file info from all users:", info);
         let files = [];
 
         for (const userEntry of info) {
             const file = userEntry.file;
-            // Проверяем, заканчивается ли имя файла на искомое расширение (например, ".ppsearch")
+            
             if (file.type === "file" && file.name.endsWith(filetype)) {
                 files.push({
                     user: userEntry.username,
-                    file: file // file содержит name, path, type и value
+                    file: file
                 });
                 console.log(`Matched project file: ${file.name} at ${file.path} for user: ${userEntry.username}`);
             }
