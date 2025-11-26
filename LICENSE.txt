@@ -1,0 +1,18 @@
+P Engine Proprietary Source-Available License
+
+Copyright (c) 2025 Yevheniy Fedorenko
+
+Permission is granted to
+
+- View and study the source code of P Engine.
+- Run P Engine in your projects.
+- Submit bug reports to the author.
+
+Restrictions
+
+- You may NOT modify, edit, or alter the source code of P Engine in any way.
+- You must NOT remove, hide, or alter the P Engine splash screen.
+- You must retain all author attribution, logos, and credits in the engine.
+- You may NOT redistribute modified versions of P Engine.
+
+By using P Engine, you agree to comply with all terms of this license.
