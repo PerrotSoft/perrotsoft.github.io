@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account settings</title>
+    <script src="https://quge5.com/88/tag.min.js" data-zone="225564" async data-cfasync="false"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="img/ico.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style1.css">
@@ -177,7 +178,71 @@
             <span>ParrotSoft Drive</span>
         </div>
         </div>
+        <style>
+    /* 1. Общие стили для всех уведомлений */
+    .hub-notif { font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, sans-serif; box-sizing: border-box; z-index: 999999; }
+    .hub-notif a.hub-btn { display: inline-block; background: #38bdf8; color: #0f172a; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px; transition: 0.2s; }
+    .hub-notif a.hub-btn:hover { background: #f472b6; transform: scale(1.05); }
+    .hub-close { position: absolute; top: 10px; right: 15px; cursor: pointer; color: #64748b; font-weight: bold; font-size: 18px; }
+    .hub-close:hover { color: #f472b6; }
 
+    /* 2. Стили Большого Центрального Окна */
+    #hub-large-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 450px; background: #1e293b; color: #f8fafc; border: 3px solid #f472b6; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 0 100px rgba(0,0,0,0.9); display: none; /* Скрыто по умолчанию */ }
+    #hub-large-modal h2 { color: #f472b6; margin: 0 0 15px 0; font-size: 24px; }
+
+    /* 3. Стили Бокового Уведомления */
+    #hub-side-banner { position: fixed; bottom: 20px; right: 20px; width: 300px; background: #1e293b; color: #f8fafc; border: 2px solid #38bdf8; border-radius: 12px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: none; /* Скрыто по умолчанию */ }
+    #hub-side-banner h3 { color: #38bdf8; margin: 0 0 10px 0; font-size: 18px; }
+
+    /* 4. Стили Автоматической надписи снизу (Нижний Бар) */
+    #hub-footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #e11d48; color: white; text-align: center; padding: 10px; font-size: 14px; font-weight: bold; }
+    #hub-footer-bar a { color: white; text-decoration: underline; margin-left: 10px; }
+</style>
+
+<div class="hub-notif">
+    <div id="hub-large-modal">
+        <span class="hub-close" onclick="closeHubNotif('hub-large-modal')">&times;</span>
+        <h2>УПС! Сайт устарел! ⚠️</h2>
+        <p>Этот проект больше не поддерживается. Мы переехали на новый, мощный <b>MultiHub</b>!</p>
+        <p style="font-size: 13px; color: #94a3b8; margin-top: 10px;">Всё работает быстрее и круче.</p>
+        <a href="https://parrotsoft.vercel.app/" class="hub-btn">ПЕРЕЙТИ НА НОВЫЙ</a>
+    </div>
+
+    <div id="hub-side-banner">
+        <span class="hub-close" onclick="closeHubNotif('hub-side-banner')">&times;</span>
+        <h3>Эй, мы переехали! 🚀</h3>
+        <p style="font-size: 14px; margin: 0;">Старый сайт устарел. Все новые фишки и инструменты ждут тебя на <b>MultiHub</b>.</p>
+        <a href="https://parrotsoft.vercel.app/" class="hub-btn">ПОСМОТРЕТЬ</a>
+    </div>
+
+    <div id="hub-footer-bar">
+        Извините, этот сайт устарел. Пожалуйста, перейдите по этой ссылке:
+        <a href="https://parrotsoft.vercel.app/">НОВЫЙ MULTIHUB</a>
+    </div>
+</div>
+
+<script>
+    // Функция закрытия уведомлений
+    function closeHubNotif(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    // ЛОГИКА ПОЯВЛЕНИЯ
+    window.addEventListener('load', function() {
+        // Шанс 50%
+        if (Math.random() < 0.5) {
+            // Показать БОЛЬШОЕ окно посередине через 3 секунды
+            setTimeout(function() {
+                document.getElementById('hub-large-modal').style.display = 'block';
+            }, 3000);
+        } else {
+            // Иначе показать БОКОВОЕ окно через 3 секунды
+            setTimeout(function() {
+                document.getElementById('hub-side-banner').style.display = 'block';
+            }, 3000);
+        }
+    });
+</script>
         <div style="height: 40px;margin-top: 40px;"></div>
         <div class="search-container"style="color: #000;position: fixed;top: 35px;">
             <h1>ParrotSearch</h1>
